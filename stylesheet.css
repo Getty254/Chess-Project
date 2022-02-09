@@ -65,3 +65,8 @@
 	-fx-background-color: orange;
 	-fx-text-fill: black;
 }
+
+.chess-pieces {
+	-fx-font-size: 75px;
+}
+

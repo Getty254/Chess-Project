@@ -23,9 +23,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -43,13 +45,20 @@ public class BoardGUI extends Application {
 	private long minP1, minP2, secP1, secP2; 
 	private long timerP1 = timeControl, timerP2 = timeControl;
 	
-	// Not used yet
-	String wPawn = "♙";
-	String wKnight = "♘";
-	String wBishop = "♗";
-	String wRook = "♖";
-	String wQueen = "♕";
-	String wKing = "♔";
+	/**0 if white's turn, 1 if black's turn*/
+	public int turn = 0;
+	
+	/**Keeps track of the current move number*/
+	public int moveNumber = 1;
+	
+	// Unicode Chess Pieces
+	String Pawn = "♟";
+	String Knight = "♞";
+	String Bishop = "♝";
+	String Rook = "♜";
+	String Queen = "♛";
+	String King = "♚";
+	
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -186,10 +195,10 @@ public class BoardGUI extends Application {
 	    	for(int row = 0; row < 10; row++) {
 	    		for(int column = 0; column < 3; column++) {
 	    			if(column == 0) {
-	    				Label moveNum = new Label((row+1) + ".");
+	    				Label moveNumLabel = new Label(moveNumber + ".");
 	    				// Center move number in grid
-	    				GridPane.setHalignment(moveNum, HPos.CENTER);
-	    				movesList.add(moveNum, column, row);
+	    				GridPane.setHalignment(moveNumLabel, HPos.CENTER);
+	    				movesList.add(moveNumLabel, column, row);
 	    			}
 	    			else if(column == 1) {
 	    				Label whiteMove = new Label("Qd1d3");
@@ -204,6 +213,7 @@ public class BoardGUI extends Application {
 	    				movesList.add(blackMove, column, row);
 	    			}
 	    		}
+	    		moveNumber++;
 	    	}
 	    	
 	    	// Moves list title/heading
@@ -227,17 +237,36 @@ public class BoardGUI extends Application {
 	    	    public void handle(KeyEvent ke) {
 	    	    	// Press enter to execute move
 	    	        if (ke.getCode().equals(KeyCode.ENTER)) {
+	    	        	// Start player one's timer
 	    	        	timelineP1.play();
-	    	        	inputMove.clear();
 	    	        	
-	    	        	// Add move to move list
-	    	        	// this is just a placeholder
-	    	        	Label moveNum = new Label("  " + (11) + ".");
-	    	        	GridPane.setHalignment(moveNum, HPos.CENTER);
-	    				movesList.add(moveNum, 0, 11);
-	    				Label whiteMove = new Label("Bc1b2");
-	    				GridPane.setHalignment(whiteMove, HPos.CENTER);
-	    				movesList.add(whiteMove, 1, 11);
+	    	        	// White's turn
+	    	        	if(turn == 0) {
+	    	        		// Add move to move list
+	    	        		Label moveNumLabel = new Label("  " + moveNumber + ".");
+	    	        		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
+	    	        		movesList.add(moveNumLabel, 0, moveNumber);
+	    	        		
+	    	        		Label whiteMove = new Label(inputMove.getText());
+		    				GridPane.setHalignment(whiteMove, HPos.CENTER);
+		    				movesList.add(whiteMove, 1, moveNumber);
+		    				
+		    				// Change to Black's turn
+		    				turn = 1;
+	    	        	}
+	    	        	else {
+	    	        		Label blackMove = new Label(inputMove.getText());
+		    				GridPane.setHalignment(blackMove, HPos.CENTER);
+		    				movesList.add(blackMove, 2, moveNumber);
+		    				
+		    				// Only increment move number after Black's turn
+		    				moveNumber++;
+		    				// Change to White's turn
+		    				turn = 0;
+	    	        	}
+	    				
+	    				// Clear input field
+	    				inputMove.clear();
 	    	        }
 	    	    }
 	    	});
@@ -259,11 +288,11 @@ public class BoardGUI extends Application {
 	    	// Add css class
 	    	chessBoard.getStyleClass().add("chess-board");
 	    	
-			// Create 64 rectangles (squares) and add them to the grid
+			
 			int numberOfSquares = 0;
 			double squareDimensions = 100;
 			
-			
+			// Create 64 rectangles (squares) and add them to the grid
 			for (int row = 0; row < 8; row++) {
 				numberOfSquares++;
 				for (int column = 0; column < 8; column++) {
@@ -283,6 +312,66 @@ public class BoardGUI extends Application {
 				    }
 				    
 				    StackPane squareStack = new StackPane(); 
+				    Text chessPiece = new Text();
+				   
+				    // Setup pieces in starting positions
+				    
+				    // Black pieces
+				    if(row == 0) {
+				    	// Black Rooks in top corners
+				    	if(column == 0 || column == 7) {
+				    		chessPiece = new Text(Rook);
+				    	}
+				    	// Black Knights
+				    	else if(column == 1 || column == 6) {
+				    		chessPiece = new Text(Knight);
+				    	}
+				    	// Black Bishops
+				    	else if(column == 2 || column == 5) {
+				    		chessPiece = new Text(Bishop);
+				    	}
+				    	// Black Queen
+				    	else if(column == 3) {
+				    		chessPiece = new Text(Queen);
+				    	}
+				    	else {
+				    		chessPiece = new Text(King);
+				    	}
+				    }
+				    // White pieces
+				    else if(row == 7) {
+				    	// White Rooks in top corners
+				    	if(column == 0 || column == 7) {
+				    		chessPiece = new Text(Rook);
+				    	}
+				    	// White Knights
+				    	else if(column == 1 || column == 6) {
+				    		chessPiece = new Text(Knight);
+				    	}
+				    	// White Bishops
+				    	else if(column == 2 || column == 5) {
+				    		chessPiece = new Text(Bishop);
+				    	}
+				    	// White Queen
+				    	else if(column == 3) {
+				    		chessPiece = new Text(Queen);
+				    	}
+				    	else {
+				    		chessPiece = new Text(King);
+				    	}
+				    	chessPiece.setFill(Color.rgb(250, 249, 246));
+				    }
+				    // Black Pawns
+				    else if(row == 1) {
+				    	chessPiece = new Text(Pawn);
+				    }
+				    // White Pawns
+				    else if(row == 6) {
+				    	chessPiece = new Text(Pawn);
+				    	chessPiece.setFill(Color.rgb(250, 249, 246));
+				    }
+				    
+				    
 				    Text colLet = new Text(" ");;
 				    Text rowNum = new Text(" ");
 				    
@@ -316,7 +405,7 @@ public class BoardGUI extends Application {
 								colLet = new Text("h ");
 						}
 						
-				    	squareStack.getChildren().addAll(square, colLet, rowNum);
+				    	squareStack.getChildren().addAll(square, colLet, rowNum, chessPiece);
 				    	// Position column letter in bottom right
 				    	// corner of the square
 				    	StackPane.setAlignment(colLet, Pos.BOTTOM_RIGHT);
@@ -354,18 +443,20 @@ public class BoardGUI extends Application {
 								rowNum = new Text(" ");
 				    	}
 				    	
-				    	squareStack.getChildren().addAll(square, rowNum);
+				    	squareStack.getChildren().addAll(square, rowNum, chessPiece);
 				    	// Position row number in top left 
 				    	// corner of the square
 						StackPane.setAlignment(rowNum, Pos.TOP_LEFT);
 				    	chessBoard.add(squareStack, column, row);
 				    }
 				    else {
+				    	squareStack.getChildren().addAll(square, chessPiece);
 				    	// Add the square to the grid
-				    	chessBoard.add(square, column, row);
+				    	chessBoard.add(squareStack, column, row);
 				    }
-				    
+
 				    // Add css class
+				    chessPiece.getStyleClass().add("chess-pieces");
 				    colLet.getStyleClass().add("square-coords");
 					rowNum.getStyleClass().add("square-coords");
 				     
@@ -383,7 +474,6 @@ public class BoardGUI extends Application {
 			root.setCenter(chessBoard);
 			// Add css class
 			root.getStyleClass().add("root");
-			
 			
 			
 			Scene scene = new Scene(root);

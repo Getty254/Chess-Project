@@ -40,7 +40,7 @@
 
 .clocks {
 	-fx-border-color: black;
-	-fx-padding: 5px;
+	-fx-padding: 5px 8px 5px 8px;
 	-fx-font-size: 40px;
 }
 

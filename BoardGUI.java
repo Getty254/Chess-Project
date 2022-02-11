@@ -11,9 +11,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -23,11 +22,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -41,7 +37,10 @@ import javafx.geometry.Pos;
 public class BoardGUI extends Application {
 	
 	private Timeline timelineP1, timelineP2;
+	/**Starting time in seconds for each player's clock*/
 	private long timeControl = 600; // 10 minutes in seconds
+	/**Time added to player's clock after they make a move*/
+	private long timeIncrement = 0;
 	private long minP1, minP2, secP1, secP2; 
 	private long timerP1 = timeControl, timerP2 = timeControl;
 	
@@ -75,6 +74,9 @@ public class BoardGUI extends Application {
 			
 			Label timerLabelP1 = new Label();
 			Label timerLabelP2 = new Label();
+			
+			timerLabelP1.setPrefWidth(125);
+			timerLabelP2.setPrefWidth(125);
 			
 			Button resignButton = new Button("Resign ⚑");
 			Button drawButton = new Button("Draw ½");
@@ -122,8 +124,8 @@ public class BoardGUI extends Application {
 			
 			
 			timelineP1 = new Timeline(new KeyFrame(Duration.seconds(1), 
-					new EventHandler() {
-						public void handle(Event event) {
+					new EventHandler<ActionEvent>() {
+						public void handle(ActionEvent event) {
 						    if(timerP1 <= 0) {
 						    	timelineP1.stop();
 						    }
@@ -136,8 +138,8 @@ public class BoardGUI extends Application {
 			}));
 			
 			timelineP2 = new Timeline(new KeyFrame(Duration.seconds(1), 
-					new EventHandler() {
-						public void handle(Event event) {
+					new EventHandler<ActionEvent>() {
+						public void handle(ActionEvent event) {
 						    if(timerP2 <= 0) {
 						    	timelineP2.stop();
 						    }
@@ -149,10 +151,9 @@ public class BoardGUI extends Application {
 						}
 			}));
 
+			// Clocks run until stopped
 			timelineP1.setCycleCount(Timeline.INDEFINITE);
 			timelineP2.setCycleCount(Timeline.INDEFINITE);
-				
-			
 			
 			//**************************************
 			//		Player Names and Ratings
@@ -237,11 +238,25 @@ public class BoardGUI extends Application {
 	    	    public void handle(KeyEvent ke) {
 	    	    	// Press enter to execute move
 	    	        if (ke.getCode().equals(KeyCode.ENTER)) {
-	    	        	// Start player one's timer
-	    	        	timelineP1.play();
 	    	        	
 	    	        	// White's turn
 	    	        	if(turn == 0) {
+	    	        		// Stop player one's timer
+	    	        		timelineP1.stop();
+	    	        		// Start player two's timer
+	    	        		timelineP2.play();
+	    	        		
+	    	        		// if there is increment update clock
+	    	        		if(timeIncrement > 0) {
+		    	        		// Add time to player one's clock
+		    	        		timerP1 += timeIncrement;
+		    	        		
+		    	        		minP1 = TimeUnit.SECONDS.toMinutes(timerP1);
+							    secP1 = timerP1 - (minP1 * 60);
+							    // Update clock label
+								timerLabelP1.setText(String.format("%02d:%02d", minP1, secP1));
+	    	        		}
+	    	        		
 	    	        		// Add move to move list
 	    	        		Label moveNumLabel = new Label("  " + moveNumber + ".");
 	    	        		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
@@ -255,6 +270,22 @@ public class BoardGUI extends Application {
 		    				turn = 1;
 	    	        	}
 	    	        	else {
+	    	        		// Stop player two's timer
+	    	        		timelineP2.stop();
+	    	        		// Start player one's timer
+	    	        		timelineP1.play();
+	    	        		
+	    	        		// if there is increment update clock
+	    	        		if(timeIncrement > 0) {
+		    	        		// Add time to player two's clock
+		    	        		timerP2 += timeIncrement;
+		    	        		
+		    	        		minP2 = TimeUnit.SECONDS.toMinutes(timerP2);
+							    secP2 = timerP2 - (minP2 * 60);
+							    // Update clock label
+								timerLabelP2.setText(String.format("%02d:%02d", minP2, secP2));
+	    	        		}
+	    	        		
 	    	        		Label blackMove = new Label(inputMove.getText());
 		    				GridPane.setHalignment(blackMove, HPos.CENTER);
 		    				movesList.add(blackMove, 2, moveNumber);

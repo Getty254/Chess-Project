@@ -70,3 +70,7 @@
 	-fx-font-size: 75px;
 }
 
+.target-square {
+	-fx-background-color: orange;
+}
+

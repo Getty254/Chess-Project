@@ -22,11 +22,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+
+
 
 
 
@@ -238,66 +246,32 @@ public class BoardGUI extends Application {
 	    	    public void handle(KeyEvent ke) {
 	    	    	// Press enter to execute move
 	    	        if (ke.getCode().equals(KeyCode.ENTER)) {
+	    	        	updatePlayerClocks(timerLabelP1, timerLabelP2);
 	    	        	
-	    	        	// White's turn
 	    	        	if(turn == 0) {
-	    	        		// Stop player one's timer
-	    	        		timelineP1.stop();
-	    	        		// Start player two's timer
-	    	        		timelineP2.play();
-	    	        		
-	    	        		// if there is increment update clock
-	    	        		if(timeIncrement > 0) {
-		    	        		// Add time to player one's clock
-		    	        		timerP1 += timeIncrement;
-		    	        		
-		    	        		minP1 = TimeUnit.SECONDS.toMinutes(timerP1);
-							    secP1 = timerP1 - (minP1 * 60);
-							    // Update clock label
-								timerLabelP1.setText(String.format("%02d:%02d", minP1, secP1));
-	    	        		}
-	    	        		
-	    	        		// Add move to move list
-	    	        		Label moveNumLabel = new Label("  " + moveNumber + ".");
-	    	        		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
-	    	        		movesList.add(moveNumLabel, 0, moveNumber);
-	    	        		
-	    	        		Label whiteMove = new Label(inputMove.getText());
+		    	        	// Add move to move list
+		    	    		Label moveNumLabel = new Label("  " + moveNumber + ".");
+		    	    		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
+		    	    		movesList.add(moveNumLabel, 0, moveNumber);
+		    	    		
+		    	    		Label whiteMove = new Label(inputMove.getText());
 		    				GridPane.setHalignment(whiteMove, HPos.CENTER);
 		    				movesList.add(whiteMove, 1, moveNumber);
-		    				
-		    				// Change to Black's turn
-		    				turn = 1;
 	    	        	}
 	    	        	else {
-	    	        		// Stop player two's timer
-	    	        		timelineP2.stop();
-	    	        		// Start player one's timer
-	    	        		timelineP1.play();
-	    	        		
-	    	        		// if there is increment update clock
-	    	        		if(timeIncrement > 0) {
-		    	        		// Add time to player two's clock
-		    	        		timerP2 += timeIncrement;
-		    	        		
-		    	        		minP2 = TimeUnit.SECONDS.toMinutes(timerP2);
-							    secP2 = timerP2 - (minP2 * 60);
-							    // Update clock label
-								timerLabelP2.setText(String.format("%02d:%02d", minP2, secP2));
-	    	        		}
-	    	        		
 	    	        		Label blackMove = new Label(inputMove.getText());
-		    				GridPane.setHalignment(blackMove, HPos.CENTER);
-		    				movesList.add(blackMove, 2, moveNumber);
-		    				
-		    				// Only increment move number after Black's turn
-		    				moveNumber++;
-		    				// Change to White's turn
-		    				turn = 0;
+	    	    			GridPane.setHalignment(blackMove, HPos.CENTER);
+	    	    			movesList.add(blackMove, 2, moveNumber);
+	    	    			
+	    	    			// Only increment move number after Black's turn
+	    	    			moveNumber++;
+	    	    			// Change to White's turn
 	    	        	}
-	    				
-	    				// Clear input field
-	    				inputMove.clear();
+	    	        	
+	    	        	turn = (turn==0)?1:0;
+	    	        	
+	    	        	// Clear input field
+	    	    		inputMove.clear();
 	    	        }
 	    	    }
 	    	});
@@ -344,9 +318,9 @@ public class BoardGUI extends Application {
 				    
 				    StackPane squareStack = new StackPane(); 
 				    Text chessPiece = new Text();
-				   
+
 				    // Setup pieces in starting positions
-				    
+
 				    // Black pieces
 				    if(row == 0) {
 				    	// Black Rooks in top corners
@@ -474,18 +448,179 @@ public class BoardGUI extends Application {
 								rowNum = new Text(" ");
 				    	}
 				    	
-				    	squareStack.getChildren().addAll(square, rowNum, chessPiece);
+				    	squareStack.getChildren().addAll(square, rowNum, new Text(), chessPiece);
 				    	// Position row number in top left 
 				    	// corner of the square
 						StackPane.setAlignment(rowNum, Pos.TOP_LEFT);
 				    	chessBoard.add(squareStack, column, row);
 				    }
 				    else {
-				    	squareStack.getChildren().addAll(square, chessPiece);
+				    	squareStack.getChildren().addAll(square, new Text(), new Text(), chessPiece);
 				    	// Add the square to the grid
 				    	chessBoard.add(squareStack, column, row);
 				    }
+				    
+				    
+				    
+				    squareStack.setOnDragDetected((MouseEvent event) -> {				    	
+				    	// Piece being dragged
+				    	Text pieceText = (Text) squareStack.getChildren().get(3);
+				    	
+				    	// Do not allow squares with no pieces to be dragged
+				    	if(pieceText.getText().equals("")) {
+				    		event.consume();
+				    	}
+				    	// Square has a piece, so it can be dragged
+				    	else {
+				    		Dragboard db = squareStack.startDragAndDrop(TransferMode.MOVE);
+				    					    		
+					    	// Delete the piece from square when picked up
+					    	squareStack.getChildren().remove(3);
+	
+					    	// Add a blank placeholder to the square
+					    	Text blankText = new Text();
+					    	squareStack.getChildren().add(blankText);
+					    	
+					    	ClipboardContent content = new ClipboardContent();
+				            content.putString(pieceText.getText());
+				            db.setContent(content);
+				            
+				            // Set drag icon to corresponding Black piece
+				            if(turn == 1) {
+				            	if(pieceText.getText().equals(Pawn)) {
+				            		db.setDragView(new Image("PieceImages/BlackPawn.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(Bishop)) {
+				            		db.setDragView(new Image("PieceImages/BlackBishop.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(Knight)) {
+				            		db.setDragView(new Image("PieceImages/BlackKnight.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(Rook)) {
+				            		db.setDragView(new Image("PieceImages/BlackRook.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(Queen)) {
+				            		db.setDragView(new Image("PieceImages/BlackQueen.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(King)) {
+				            		db.setDragView(new Image("PieceImages/BlackKing.png", 80, 80, true, true));
+				            	}
+				            }
+				            // Set drag icon to corresponding White piece
+				            else {
+				            	if(pieceText.getText().equals(Pawn)) {
+				            		db.setDragView(new Image("PieceImages/WhitePawn.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(Bishop)) {
+				            		db.setDragView(new Image("PieceImages/WhiteBishop.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(Knight)) {
+				            		db.setDragView(new Image("PieceImages/WhiteKnight.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(Rook)) {
+				            		db.setDragView(new Image("PieceImages/WhiteRook.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(Queen)) {
+				            		db.setDragView(new Image("PieceImages/WhiteQueen.png", 80, 80, true, true));
+				            	}
+				            	else if(pieceText.getText().equals(King)) {
+				            		db.setDragView(new Image("PieceImages/WhiteKing.png", 80, 80, true, true));
+				            	}
+				            }
+				    	}
+				    });
+				    
+				    squareStack.setOnDragOver((DragEvent event) -> {
+				    	event.acceptTransferModes(TransferMode.ANY);
+			        });
 
+				    squareStack.setOnDragDropped((DragEvent event) -> {
+			            Dragboard db = event.getDragboard();
+			            
+			            if (db.hasString()) {
+			            	// Get the piece being dropped
+			                Text chessPieceDropped = new Text(db.getString());
+			                
+			                // Add css class
+			                chessPieceDropped.getStyleClass().add("chess-pieces");
+			                
+			                // Set piece color to white if it's white's turn
+			                if(turn == 0) {
+			                	chessPieceDropped.setFill(Color.rgb(250, 249, 246));
+			                }
+			                squareStack.getChildren().remove(3);
+			                // Place the piece
+			                squareStack.getChildren().add(chessPieceDropped);
+			                
+			                event.setDropCompleted(true);
+			            } 
+			            else {
+			                event.setDropCompleted(false);
+			            }
+			            
+			            
+			            // Get the square the piece started on before the move
+			            StackPane squareFrom = (StackPane) event.getGestureSource();
+			            
+			            // Get column matrix numbers
+			            int colFrom = GridPane.getColumnIndex(squareFrom);
+			            int colTo = GridPane.getColumnIndex(squareStack);
+			            
+			            // Get row matrix numbers
+			            int rowFrom = GridPane.getRowIndex(squareFrom);
+			            int rowTo = GridPane.getRowIndex(squareStack);
+			            
+			            // Convert column number to letter a - h
+			            char colLetterFrom = (char) (97 + colFrom);
+			            char colLetterTo = (char) (97 + colTo);
+			            
+			            // if the piece does NOT get dropped on the 
+			            // square it was moved from
+			            if(colFrom != colTo || rowFrom != rowTo) {
+			            	updatePlayerClocks(timerLabelP1, timerLabelP2);
+			            
+		    	    		// Move that will be displayed in the moves list
+		    	    		Label fullMove = new Label(colLetterFrom + "" + (8 - rowFrom) + 
+		    	    				colLetterTo + "" + (8 - rowTo));
+		    	    		
+		    	    		// Center the move label
+		    	    		GridPane.setHalignment(fullMove, HPos.CENTER);
+		    	    		
+		    	    		// White's turn
+				            if(turn == 0) {
+			    	        	// Add move number to move list
+			    	    		Label moveNumLabel = new Label("  " + moveNumber + ".");
+			    	    		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
+			    	    		movesList.add(moveNumLabel, 0, moveNumber);
+			    	    		
+			    	    		// Add move to move list
+			    				movesList.add(fullMove, 1, moveNumber);
+		    	        	}
+				            // Black's Turn
+		    	        	else {
+		    	        		// Add move to move list
+		    	    			movesList.add(fullMove, 2, moveNumber);
+		    	    			
+		    	    			// Only increment move number after Black's turn
+		    	    			moveNumber++;
+		    	    			
+		    	        	}
+				            
+				            // Change whose turn it is
+				            turn = (turn==0)?1:0;
+			            }
+			            
+			            event.consume();
+			        });
+				    
+				    squareStack.setOnDragDone((DragEvent event) -> {
+			            event.consume();
+			        });
+				    
+				    chessBoard.setOnDragExited((DragEvent event) -> {
+			            event.consume();
+			        });
+				    
 				    // Add css class
 				    chessPiece.getStyleClass().add("chess-pieces");
 				    colLet.getStyleClass().add("square-coords");
@@ -494,6 +629,7 @@ public class BoardGUI extends Application {
 				    numberOfSquares++;
 				}
 			}
+			
 			
 			
 			root.setLeft(gameInfo);
@@ -517,6 +653,45 @@ public class BoardGUI extends Application {
 			e.printStackTrace();
 		}
 	}	
+	
+	
+	private void updatePlayerClocks(Label timerLabelP1, Label timerLabelP2) {
+		// White's turn
+    	if(turn == 0) {
+    		// Stop player one's timer
+    		timelineP1.stop();
+    		// Start player two's timer
+    		timelineP2.play();
+    		
+    		// if there is increment update clock
+    		if(timeIncrement > 0) {
+        		// Add time to player one's clock
+        		timerP1 += timeIncrement;
+        		
+        		minP1 = TimeUnit.SECONDS.toMinutes(timerP1);
+			    secP1 = timerP1 - (minP1 * 60);
+			    // Update clock label
+				timerLabelP1.setText(String.format("%02d:%02d", minP1, secP1));
+    		}
+    	}
+    	else {
+    		// Stop player two's timer
+    		timelineP2.stop();
+    		// Start player one's timer
+    		timelineP1.play();
+    		
+    		// if there is increment update clock
+    		if(timeIncrement > 0) {
+        		// Add time to player two's clock
+        		timerP2 += timeIncrement;
+        		
+        		minP2 = TimeUnit.SECONDS.toMinutes(timerP2);
+			    secP2 = timerP2 - (minP2 * 60);
+			    // Update clock label
+				timerLabelP2.setText(String.format("%02d:%02d", minP2, secP2));
+    		}	
+    	}
+	}
 	
 	
 	public static void main(String[] args) {

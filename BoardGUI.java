@@ -52,6 +52,10 @@ public class BoardGUI extends Application {
 	private long minP1, minP2, secP1, secP2; 
 	private long timerP1 = timeControl, timerP2 = timeControl;
 	
+	/**Used when rotating the board, true if the board is viewed
+	 * from white's POV and false if black's POV*/
+	private boolean isWhitesPerspective = true;
+	
 	/**0 if white's turn, 1 if black's turn*/
 	public int turn = 0;
 	
@@ -377,7 +381,7 @@ public class BoardGUI extends Application {
 				    }
 				    
 				    
-				    Text colLet = new Text(" ");;
+				    Text colLet = new Text(" ");
 				    Text rowNum = new Text(" ");
 				    
 				    // Label columns with letters a - h on the bottom row
@@ -385,29 +389,29 @@ public class BoardGUI extends Application {
 				    	
 						switch(column) {
 							case 0:
-								colLet = new Text("a ");
-								rowNum = new Text(" 1");
+								colLet = new Text(" a ");
+								rowNum = new Text(" 1 ");
 								break;
 							case 1:
-								colLet = new Text("b ");
+								colLet = new Text(" b ");
 								break;
 							case 2:
-								colLet = new Text("c ");
+								colLet = new Text(" c ");
 								break;
 							case 3:
-								colLet = new Text("d ");
+								colLet = new Text(" d ");
 								break;
 							case 4:
-								colLet = new Text("e ");
+								colLet = new Text(" e ");
 								break;
 							case 5:
-								colLet = new Text("f ");
+								colLet = new Text(" f ");
 								break;
 							case 6:
-								colLet = new Text("g ");
+								colLet = new Text(" g ");
 								break;
 							default:
-								colLet = new Text("h ");
+								colLet = new Text(" h ");
 						}
 						
 				    	squareStack.getChildren().addAll(square, colLet, rowNum, chessPiece);
@@ -424,31 +428,31 @@ public class BoardGUI extends Application {
 				    else if(column == 0) {
 				    	switch(row) {
 							case 0:
-								rowNum = new Text(" 8");							
+								rowNum = new Text(" 8 ");							
 								break;
 							case 1:
-								rowNum = new Text(" 7");
+								rowNum = new Text(" 7 ");
 								break;
 							case 2:
-								rowNum = new Text(" 6");
+								rowNum = new Text(" 6 ");
 								break;
 							case 3:
-								rowNum = new Text(" 5");
+								rowNum = new Text(" 5 ");
 								break;
 							case 4:
-								rowNum = new Text(" 4");
+								rowNum = new Text(" 4 ");
 								break;
 							case 5:
-								rowNum = new Text(" 3");
+								rowNum = new Text(" 3 ");
 								break;
 							case 6:
-								rowNum = new Text(" 2");
+								rowNum = new Text(" 2 ");
 								break;
 							default:
 								rowNum = new Text(" ");
 				    	}
 				    	
-				    	squareStack.getChildren().addAll(square, rowNum, new Text(), chessPiece);
+				    	squareStack.getChildren().addAll(square, new Text(), rowNum, chessPiece);
 				    	// Position row number in top left 
 				    	// corner of the square
 						StackPane.setAlignment(rowNum, Pos.TOP_LEFT);
@@ -474,59 +478,67 @@ public class BoardGUI extends Application {
 				    	else {
 				    		Dragboard db = squareStack.startDragAndDrop(TransferMode.MOVE);
 				    					    		
-					    	// Delete the piece from square when picked up
-					    	squareStack.getChildren().remove(3);
-	
-					    	// Add a blank placeholder to the square
-					    	Text blankText = new Text();
-					    	squareStack.getChildren().add(blankText);
-					    	
-					    	ClipboardContent content = new ClipboardContent();
-				            content.putString(pieceText.getText());
-				            db.setContent(content);
-				            
-				            // Set drag icon to corresponding Black piece
-				            if(turn == 1) {
-				            	if(pieceText.getText().equals(Pawn)) {
-				            		db.setDragView(new Image("PieceImages/BlackPawn.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(Bishop)) {
-				            		db.setDragView(new Image("PieceImages/BlackBishop.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(Knight)) {
-				            		db.setDragView(new Image("PieceImages/BlackKnight.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(Rook)) {
-				            		db.setDragView(new Image("PieceImages/BlackRook.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(Queen)) {
-				            		db.setDragView(new Image("PieceImages/BlackQueen.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(King)) {
-				            		db.setDragView(new Image("PieceImages/BlackKing.png", 80, 80, true, true));
-				            	}
-				            }
-				            // Set drag icon to corresponding White piece
-				            else {
-				            	if(pieceText.getText().equals(Pawn)) {
-				            		db.setDragView(new Image("PieceImages/WhitePawn.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(Bishop)) {
-				            		db.setDragView(new Image("PieceImages/WhiteBishop.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(Knight)) {
-				            		db.setDragView(new Image("PieceImages/WhiteKnight.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(Rook)) {
-				            		db.setDragView(new Image("PieceImages/WhiteRook.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(Queen)) {
-				            		db.setDragView(new Image("PieceImages/WhiteQueen.png", 80, 80, true, true));
-				            	}
-				            	else if(pieceText.getText().equals(King)) {
-				            		db.setDragView(new Image("PieceImages/WhiteKing.png", 80, 80, true, true));
-				            	}
-				            }
+				    		// if player trys to pick up opponents pieces
+				    		// cancel the drag
+				    		if((turn == 1 && pieceText.getFill().equals(Color.rgb(250, 249, 246)))
+				    				|| (turn == 0 && pieceText.getFill().equals(Color.rgb(0, 0, 0)))) {
+				    			event.consume();
+				    		}
+				    		else {
+						    	// Delete the piece from square when picked up
+						    	squareStack.getChildren().remove(3);
+		
+						    	// Add a blank placeholder to the square
+						    	Text blankText = new Text();
+						    	squareStack.getChildren().add(blankText);
+						    	
+						    	ClipboardContent content = new ClipboardContent();
+					            content.putString(pieceText.getText());
+					            db.setContent(content);
+					            
+					            // Set drag icon to corresponding Black piece
+					            if(turn == 1) {
+					            	if(pieceText.getText().equals(Pawn)) {
+					            		db.setDragView(new Image("PieceImages/BlackPawn.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(Bishop)) {
+					            		db.setDragView(new Image("PieceImages/BlackBishop.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(Knight)) {
+					            		db.setDragView(new Image("PieceImages/BlackKnight.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(Rook)) {
+					            		db.setDragView(new Image("PieceImages/BlackRook.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(Queen)) {
+					            		db.setDragView(new Image("PieceImages/BlackQueen.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(King)) {
+					            		db.setDragView(new Image("PieceImages/BlackKing.png", 80, 80, true, true));
+					            	}
+					            }
+					            // Set drag icon to corresponding White piece
+					            else {
+					            	if(pieceText.getText().equals(Pawn)) {
+					            		db.setDragView(new Image("PieceImages/WhitePawn.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(Bishop)) {
+					            		db.setDragView(new Image("PieceImages/WhiteBishop.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(Knight)) {
+					            		db.setDragView(new Image("PieceImages/WhiteKnight.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(Rook)) {
+					            		db.setDragView(new Image("PieceImages/WhiteRook.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(Queen)) {
+					            		db.setDragView(new Image("PieceImages/WhiteQueen.png", 80, 80, true, true));
+					            	}
+					            	else if(pieceText.getText().equals(King)) {
+					            		db.setDragView(new Image("PieceImages/WhiteKing.png", 80, 80, true, true));
+					            	}
+					            }
+				    		}
 				    	}
 				    });
 				    
@@ -538,8 +550,57 @@ public class BoardGUI extends Application {
 			            Dragboard db = event.getDragboard();
 			            
 			            if (db.hasString()) {
-			            	// Get the piece being dropped
+			            	// Get the square the piece started on before the move
+				            StackPane squareFrom = (StackPane) event.getGestureSource();
+				            
+				            // Get the piece being dropped
 			                Text chessPieceDropped = new Text(db.getString());
+				            
+				            // Get column matrix numbers
+				            int colFrom = GridPane.getColumnIndex(squareFrom);
+				            int colTo = GridPane.getColumnIndex(squareStack);
+				            
+				            // Get row matrix numbers
+				            int rowFrom = GridPane.getRowIndex(squareFrom);
+				            int rowTo = GridPane.getRowIndex(squareStack);
+				            
+				            // Convert column number to letter a - h
+				            char colLetterFrom = (char) (97 + colFrom);
+				            char colLetterTo = (char) (97 + colTo);
+				            
+				            
+				            boolean isCastle = false;
+				            boolean isCastleShort = false;
+				            boolean isPawnPromotion = false;
+				            
+				            // Check if move is a Pawn Promotion
+				            if(db.getString().equals(Pawn) 
+				            		&& ((turn == 0 && rowTo == 0) 
+				            		|| (turn == 1 && rowTo == 7))) {
+				            	
+				            	isPawnPromotion = true;
+				            	
+				            	// Pick Promotion piece here
+				            	chessPieceDropped = new Text(Queen);
+				            }
+				            // Check if move is Castle
+				            else if(db.getString().equals(King) 
+				            		&& ((turn == 0 
+				            		&& rowFrom == 7 && rowTo == 7 
+				            		&& colFrom == 4 && (colTo == 6 || colTo == 2)) 
+				            		|| (turn == 1 
+				            		&& rowFrom == 0 && rowTo == 0 
+						            && colFrom == 4 && (colTo == 6 || colTo == 2)))) {
+				            	
+				            	isCastle = true;
+				            	
+				            	if(colTo == 6) {
+				            		isCastleShort = true;
+				            	}
+				            	else {
+				            		isCastleShort = false;
+				            	}
+				            }
 			                
 			                // Add css class
 			                chessPieceDropped.getStyleClass().add("chess-pieces");
@@ -552,62 +613,205 @@ public class BoardGUI extends Application {
 			                // Place the piece
 			                squareStack.getChildren().add(chessPieceDropped);
 			                
-			                event.setDropCompleted(true);
-			            } 
-			            else {
-			                event.setDropCompleted(false);
-			            }
-			            
-			            
-			            // Get the square the piece started on before the move
-			            StackPane squareFrom = (StackPane) event.getGestureSource();
-			            
-			            // Get column matrix numbers
-			            int colFrom = GridPane.getColumnIndex(squareFrom);
-			            int colTo = GridPane.getColumnIndex(squareStack);
-			            
-			            // Get row matrix numbers
-			            int rowFrom = GridPane.getRowIndex(squareFrom);
-			            int rowTo = GridPane.getRowIndex(squareStack);
-			            
-			            // Convert column number to letter a - h
-			            char colLetterFrom = (char) (97 + colFrom);
-			            char colLetterTo = (char) (97 + colTo);
-			            
-			            // if the piece does NOT get dropped on the 
-			            // square it was moved from
-			            if(colFrom != colTo || rowFrom != rowTo) {
-			            	updatePlayerClocks(timerLabelP1, timerLabelP2);
-			            
-		    	    		// Move that will be displayed in the moves list
-		    	    		Label fullMove = new Label(colLetterFrom + "" + (8 - rowFrom) + 
-		    	    				colLetterTo + "" + (8 - rowTo));
+			                
+			                // Move that will be displayed in the moves list
+		    	    		Label fullMove = new Label();
 		    	    		
 		    	    		// Center the move label
 		    	    		GridPane.setHalignment(fullMove, HPos.CENTER);
 		    	    		
-		    	    		// White's turn
-				            if(turn == 0) {
-			    	        	// Add move number to move list
-			    	    		Label moveNumLabel = new Label("  " + moveNumber + ".");
-			    	    		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
-			    	    		movesList.add(moveNumLabel, 0, moveNumber);
+		    	    		// Check if move is a Pawn Promotion
+				            if(isPawnPromotion) {
+				            	
+				            	updatePlayerClocks(timerLabelP1, timerLabelP2);
+				            	
+				            	// Move that will be displayed in the moves list
+			    	    		fullMove.setText(colLetterFrom + "" + (8 - rowFrom) + 
+			    	    				colLetterTo + "" + (8 - rowTo) + "Q"); // Promo Piece letter at end
 			    	    		
-			    	    		// Add move to move list
-			    				movesList.add(fullMove, 1, moveNumber);
-		    	        	}
-				            // Black's Turn
-		    	        	else {
-		    	        		// Add move to move list
-		    	    			movesList.add(fullMove, 2, moveNumber);
-		    	    			
-		    	    			// Only increment move number after Black's turn
-		    	    			moveNumber++;
-		    	    			
-		    	        	}
+			    	    		if(turn == 0) {
+				    	    		// Add move number to move list
+				    	    		Label moveNumLabel = new Label("  " + moveNumber + ".");
+				    	    		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
+				    	    		movesList.add(moveNumLabel, 0, moveNumber);
+				    	    		
+				    	    		// Add move to move list
+				    				movesList.add(fullMove, 1, moveNumber);
+			    	    		}
+			    	    		else {
+			    	    			// Add move to move list
+				    				movesList.add(fullMove, 2, moveNumber);
+				    				
+				    				// Only increment move number after Black's turn
+			    	    			moveNumber++;
+			    	    		}
+		                		
+			    	    		// Change whose turn it is
+					            turn = (turn==0)?1:0;
+				            }
+			                // Player wants to castle
+				            else if(isCastle) {
+			                	updatePlayerClocks(timerLabelP1, timerLabelP2);
+			                	
+					            StackPane rookSquareFrom;
+					            StackPane rookSquareTo;
+					            
+					            // Move Rook with King
+				                Text rookText = new Text(Rook);
+				                // Add css class
+				                rookText.getStyleClass().add("chess-pieces");
+				                
+				                // Blank placeholder for the square
+		                		// the rook was on
+						    	Text blankText = new Text();
+				                
+						    	// White's Castles
+			                	if(turn == 0) {
+			                		rookText.setFill(Color.rgb(250, 249, 246));
+							    	
+							    	// Castle short side
+			                		if(isCastleShort) {
+			                			// Castle short notation
+			                			fullMove.setText("O-O");
+			                			
+			                			// Move Rook from bottom right square
+			                			rookSquareFrom = (StackPane) chessBoard.getChildren().get(63);
+			                			rookSquareFrom.getChildren().remove(3);
+			                			
+								    	rookSquareFrom.getChildren().add(blankText);
+								    	
+								    	// Move Rook to row 8 column f
+								    	rookSquareTo = (StackPane) chessBoard.getChildren().get(61);
+			                			rookSquareTo.getChildren().remove(3);
+			                			rookSquareTo.getChildren().add(rookText);
+			                		}
+			                		// Castle long side
+			                		else {
+			                			// Castle long notation
+			                			fullMove.setText("O-O-O");
+			                			
+			                			// Move Rook from bottom left square
+			                			rookSquareFrom = (StackPane) chessBoard.getChildren().get(56);
+			                			rookSquareFrom.getChildren().remove(3);
+			                			
+								    	rookSquareFrom.getChildren().add(blankText);
+								    	
+								    	// Move Rook to row 8 column d
+								    	rookSquareTo = (StackPane) chessBoard.getChildren().get(59);
+			                			rookSquareTo.getChildren().remove(3);
+			                			rookSquareTo.getChildren().add(rookText);
+			                		}
+			                		
+			                		// Add move number to move list
+				    	    		Label moveNumLabel = new Label("  " + moveNumber + ".");
+				    	    		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
+				    	    		movesList.add(moveNumLabel, 0, moveNumber);
+				    	    		
+			                		// Add move to move list
+				    				movesList.add(fullMove, 1, moveNumber);
+			                	}
+			                	// Black Castles
+			                	else {
+							    	// Castle short side
+			                		if(isCastleShort) {
+			                			// Castle short notation
+			                			fullMove.setText("O-O");
+			                			
+			                			// Move Rook from top right square
+			                			rookSquareFrom = (StackPane) chessBoard.getChildren().get(7);
+			                			rookSquareFrom.getChildren().remove(3);
+			                			
+								    	rookSquareFrom.getChildren().add(blankText);
+								    	
+								    	// Move Rook to row 1 column f
+								    	rookSquareTo = (StackPane) chessBoard.getChildren().get(5);
+			                			rookSquareTo.getChildren().remove(3);
+			                			rookSquareTo.getChildren().add(rookText);
+			                		}
+			                		// Castle long side
+			                		else {
+			                			// Castle long notation
+			                			fullMove.setText("O-O-O");
+			                			
+			                			// Move Rook from top left square
+			                			rookSquareFrom = (StackPane) chessBoard.getChildren().get(0);
+			                			rookSquareFrom.getChildren().remove(3);
+			                			
+								    	rookSquareFrom.getChildren().add(blankText);
+								    	
+								    	// Move Rook to row 1 column d
+								    	rookSquareTo = (StackPane) chessBoard.getChildren().get(3);
+			                			rookSquareTo.getChildren().remove(3);
+			                			rookSquareTo.getChildren().add(rookText);
+			                		}
+				    	    		
+			                		// Add move to move list
+				    				movesList.add(fullMove, 2, moveNumber);
+				    				
+				    				// Only increment move number after Black's turn
+			    	    			moveNumber++;
+			                	}
+			                	
+			                	// Change whose turn it is
+					            turn = (turn==0)?1:0;
+			                }
+				            // if the piece does NOT get dropped on the 
+				            // square it was moved from
+			                else if(colFrom != colTo || rowFrom != rowTo) {
+				            	updatePlayerClocks(timerLabelP1, timerLabelP2);
 				            
-				            // Change whose turn it is
-				            turn = (turn==0)?1:0;
+				            	String pieceLetter;
+					            
+					            if(db.getString().equals(Bishop)) {
+					            	pieceLetter = "B";
+					            }
+					            else if(db.getString().equals(Knight)) {
+					            	pieceLetter = "N";
+					            }
+					            else if(db.getString().equals(Rook)) {
+					            	pieceLetter = "R";
+					            }
+					            else if(db.getString().equals(Queen)) {
+					            	pieceLetter = "Q";
+					            }
+					            else if(db.getString().equals(King)) {
+					            	pieceLetter = "K";
+					            }
+					            else {
+					            	pieceLetter = "";
+					            }
+				            	
+			    	    		// Move that will be displayed in the moves list
+			    	    		fullMove.setText(pieceLetter + colLetterFrom + "" + (8 - rowFrom) + 
+			    	    				colLetterTo + "" + (8 - rowTo));
+			    	    		
+			    	    		// White's turn
+					            if(turn == 0) {
+				    	        	// Add move number to move list
+				    	    		Label moveNumLabel = new Label("  " + moveNumber + ".");
+				    	    		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
+				    	    		movesList.add(moveNumLabel, 0, moveNumber);
+				    	    		
+				    	    		// Add move to move list
+				    				movesList.add(fullMove, 1, moveNumber);
+			    	        	}
+					            // Black's Turn
+			    	        	else {
+			    	        		// Add move to move list
+			    	    			movesList.add(fullMove, 2, moveNumber);
+			    	    			
+			    	    			// Only increment move number after Black's turn
+			    	    			moveNumber++;	
+			    	        	}
+					            
+					            // Change whose turn it is
+					            turn = (turn==0)?1:0;
+				            }
+				            
+				            event.setDropCompleted(true);
+			            } 
+			            else {
+			                event.setDropCompleted(false);
 			            }
 			            
 			            event.consume();
@@ -618,6 +822,7 @@ public class BoardGUI extends Application {
 			        });
 				    
 				    chessBoard.setOnDragExited((DragEvent event) -> {
+				    	System.out.println("Outside board");
 			            event.consume();
 			        });
 				    
@@ -631,6 +836,75 @@ public class BoardGUI extends Application {
 			}
 			
 			
+			Button flipBoard = new Button("↑↓");
+			
+			flipBoard.setPrefWidth(50);
+			flipBoard.setPrefHeight(50);
+			
+			gameInfo.getChildren().add(flipBoard);
+			
+			
+			flipBoard.setOnAction((event) -> { 
+				if(isWhitesPerspective) {
+					chessBoard.setRotate(180);
+					
+					// Loop through each square of the board
+					for(int i = 0; i < 8; i++) {
+						for(int j = 0; j < 8; j++) {
+							// Flip pieces so they are not upside down
+							chessBoard.getChildren().get(i*8+j).setRotate(180);
+							
+							// Bottom row of the board when viewed before the flip
+							if(i == 7) {
+								StackPane stack = (StackPane) chessBoard.getChildren().get(i*8+j);
+								Text colLet = (Text) stack.getChildren().get(1);
+								// Align column letters to the top left of the square
+								StackPane.setAlignment(colLet, Pos.TOP_LEFT);
+							}
+							// Leftmost column of the board when viewed before the flip
+							if(j == 0) {
+								StackPane stack = (StackPane) chessBoard.getChildren().get(i*8+j);
+								Text rowNum = (Text) stack.getChildren().get(2);
+								// Align row numbers to the bottom right of the square
+								StackPane.setAlignment(rowNum, Pos.BOTTOM_RIGHT);
+							}
+							
+						}
+					}
+					
+					isWhitesPerspective = false;
+				}
+				else {
+					chessBoard.setRotate(0);
+					
+					// Loop through each square of the board
+					for(int i = 0; i < 8; i++) {
+						for(int j = 0; j < 8; j++) {
+							// Flip pieces so they are not upside down
+							chessBoard.getChildren().get(i*8+j).setRotate(0);
+							
+							// Top row of the board when viewed before the flip
+							if(i == 7) {
+								StackPane stack = (StackPane) chessBoard.getChildren().get(i*8+j);
+								Text colLet = (Text) stack.getChildren().get(1);
+								// Align column letters to the top left of the square
+								StackPane.setAlignment(colLet, Pos.BOTTOM_RIGHT);
+							}
+							// Leftmost column of the board when viewed before the flip
+							if(j == 0) {
+								StackPane stack = (StackPane) chessBoard.getChildren().get(i*8+j);
+								Text rowNum = (Text) stack.getChildren().get(2);
+								// Align row numbers to the bottom right of the square
+								StackPane.setAlignment(rowNum, Pos.TOP_LEFT);
+							}
+							
+						}
+					}
+					
+					isWhitesPerspective = true;
+				}
+				
+			});
 			
 			root.setLeft(gameInfo);
 			root.setBottom(playerOneLabel);

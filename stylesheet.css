@@ -70,7 +70,19 @@
 	-fx-font-size: 75px;
 }
 
-.target-square {
-	-fx-background-color: orange;
+.settings-button {
+	-fx-background-color: transparent;
 }
 
+.settings-button > .arrow-button {
+    -fx-padding: 0px;
+}
+
+.settings-button > .label {
+	-fx-font-size: 40px;
+	-fx-padding: 0px 0px 0px 10px;
+}
+
+.settings-button > .arrow-button > .arrow {
+    -fx-padding: 0px;
+}

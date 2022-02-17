@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -19,6 +20,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -33,6 +36,7 @@ import javafx.scene.input.TransferMode;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import java.util.regex.Pattern;
 
 
 
@@ -177,10 +181,8 @@ public class BoardGUI extends Application {
 			playerOneLabel.getStyleClass().add("player-names");
 			playerTwoLabel.getStyleClass().add("player-names");
 			
-			
 			// Insets(top, right, bottom, left)
 			BorderPane.setMargin(playerOneLabel, new Insets(15,0,20,280));
-			BorderPane.setMargin(playerTwoLabel, new Insets(20,20,15,280));
 			
 			
 			//**************************************
@@ -205,7 +207,7 @@ public class BoardGUI extends Application {
 	    	scrollPane.getStyleClass().add("scroll-pane");
 	    	
 	    	// Create 10 move placeholders
-	    	for(int row = 0; row < 10; row++) {
+	    	for(int row = 0; row < 100; row++) {
 	    		for(int column = 0; column < 3; column++) {
 	    			if(column == 0) {
 	    				Label moveNumLabel = new Label(moveNumber + ".");
@@ -237,6 +239,9 @@ public class BoardGUI extends Application {
 	    	// Center Moves Heading
 	    	BorderPane.setAlignment(movesLabel, Pos.CENTER);	    	
 	    	
+	    	
+	    	VBox inputAndFlip = new VBox();
+	    	
 	    	// Input box for players to enter their move
 	    	TextField inputMove = new TextField();
 	    	inputMove.setPromptText("Enter your move here");
@@ -244,46 +249,12 @@ public class BoardGUI extends Application {
 	    	moveTip.getStyleClass().add("tool-tip");
 	    	inputMove.setTooltip(moveTip);
 	    	
-	    	// Get player's move from textfield
-	    	inputMove.setOnKeyPressed(new EventHandler<KeyEvent>() {
-	    	    @Override
-	    	    public void handle(KeyEvent ke) {
-	    	    	// Press enter to execute move
-	    	        if (ke.getCode().equals(KeyCode.ENTER)) {
-	    	        	updatePlayerClocks(timerLabelP1, timerLabelP2);
-	    	        	
-	    	        	if(turn == 0) {
-		    	        	// Add move to move list
-		    	    		Label moveNumLabel = new Label("  " + moveNumber + ".");
-		    	    		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
-		    	    		movesList.add(moveNumLabel, 0, moveNumber);
-		    	    		
-		    	    		Label whiteMove = new Label(inputMove.getText());
-		    				GridPane.setHalignment(whiteMove, HPos.CENTER);
-		    				movesList.add(whiteMove, 1, moveNumber);
-	    	        	}
-	    	        	else {
-	    	        		Label blackMove = new Label(inputMove.getText());
-	    	    			GridPane.setHalignment(blackMove, HPos.CENTER);
-	    	    			movesList.add(blackMove, 2, moveNumber);
-	    	    			
-	    	    			// Only increment move number after Black's turn
-	    	    			moveNumber++;
-	    	    			// Change to White's turn
-	    	        	}
-	    	        	
-	    	        	turn = (turn==0)?1:0;
-	    	        	
-	    	        	// Clear input field
-	    	    		inputMove.clear();
-	    	        }
-	    	    }
-	    	});
+	    	inputAndFlip.getChildren().add(inputMove);
 	    	
 	    	BorderPane.setMargin(scrollPane, new Insets(10,10,100,10));
-	    	BorderPane.setMargin(inputMove, new Insets(0,30,100,30));
+	    	VBox.setMargin(inputMove, new Insets(0,30,80,30));
 	    	movesSection.setCenter(scrollPane);
-	    	movesSection.setBottom(inputMove);
+	    	movesSection.setBottom(inputAndFlip);
 	    	// Add css class
 	    	movesSection.getStyleClass().add("moves-section");
 	    	
@@ -613,7 +584,6 @@ public class BoardGUI extends Application {
 			                // Place the piece
 			                squareStack.getChildren().add(chessPieceDropped);
 			                
-			                
 			                // Move that will be displayed in the moves list
 		    	    		Label fullMove = new Label();
 		    	    		
@@ -835,14 +805,79 @@ public class BoardGUI extends Application {
 				}
 			}
 			
+			// Get player's move from textfield
+	    	inputMove.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	    	    @Override
+	    	    public void handle(KeyEvent ke) {
+	    	    	// Press enter to execute move
+	    	        if (ke.getCode().equals(KeyCode.ENTER)) {
+	    	        	updatePlayerClocks(timerLabelP1, timerLabelP2);
+	    	        	
+	    	        	
+	    	        	// Verify if input is valid
+	    	        	
+	    	        	// Pawn Move
+	    	        	if(Pattern.matches("[a-h][1-8][a-h][1-8]", inputMove.getText())) {
+	    	        		System.out.println("Pawn Move!");
+	    	        	}
+	    	        	// Pawn Promotion
+	    	        	else if(Pattern.matches("[a-h][1-8][a-h][1-8][QRNB]", inputMove.getText())) {
+	    	        		System.out.println("Pawn Promo!");
+	    	        	}
+	    	        	// Castle
+	    	        	else if(Pattern.matches("O(-O){1,2}", inputMove.getText())) {
+	    	        		System.out.println("Castles!");
+	    	        	}
+	    	        	// Piece move
+	    	        	else if(Pattern.matches("[KQRBN][a-h][1-8][a-h][1-8]", inputMove.getText())) {
+	    	        		System.out.println("Piece Move!");
+	    	        	}
+	    	        	// Not a valid move
+	    	        	else {
+	    	        		System.out.println("That's not a move!");
+	    	        	}
+	    	        	
+	    	        	
+	    	        	if(turn == 0) {
+		    	        	// Add move to move list
+		    	    		Label moveNumLabel = new Label("  " + moveNumber + ".");
+		    	    		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
+		    	    		movesList.add(moveNumLabel, 0, moveNumber);
+		    	    		
+		    	    		Label whiteMove = new Label(inputMove.getText());
+		    				GridPane.setHalignment(whiteMove, HPos.CENTER);
+		    				movesList.add(whiteMove, 1, moveNumber);
+	    	        	}
+	    	        	else {
+	    	        		Label blackMove = new Label(inputMove.getText());
+	    	    			GridPane.setHalignment(blackMove, HPos.CENTER);
+	    	    			movesList.add(blackMove, 2, moveNumber);
+	    	    			
+	    	    			// Only increment move number after Black's turn
+	    	    			moveNumber++;
+	    	        	}
+	    	        	
+	    	        	turn = (turn==0)?1:0;
+	    	        	
+	    	        	// Clear input field
+	    	    		inputMove.clear();
+	    	        }
+	    	    }
+	    	});
+			
 			
 			Button flipBoard = new Button("↑↓");
 			
-			flipBoard.setPrefWidth(50);
-			flipBoard.setPrefHeight(50);
+			flipBoard.setPrefWidth(40);
+			flipBoard.setPrefHeight(40);
 			
-			gameInfo.getChildren().add(flipBoard);
+			inputAndFlip.getChildren().add(flipBoard);
 			
+			Tooltip flipBoardTip = new Tooltip("Flip the board perspective");
+			flipBoardTip.getStyleClass().add("tool-tip");
+	    	flipBoard.setTooltip(flipBoardTip);
+			
+			VBox.setMargin(flipBoard, new Insets(0,30,0,30));
 			
 			flipBoard.setOnAction((event) -> { 
 				if(isWhitesPerspective) {
@@ -906,9 +941,162 @@ public class BoardGUI extends Application {
 				
 			});
 			
+			
+			//**************************************
+			//			Settings
+			//**************************************
+			
+			BorderPane topScreen = new BorderPane();
+			
+			MenuItem menuNewGame = new MenuItem("New Game");
+	        MenuItem menuBoardColor = new MenuItem("Change Board Colors");
+			
+			MenuButton settingsButton = new MenuButton("⚙", null, menuNewGame, menuBoardColor);
+			
+			settingsButton.getStyleClass().add("settings-button");
+			settingsButton.setPrefWidth(50);
+			settingsButton.setPrefHeight(50);
+			
+			topScreen.setLeft(settingsButton);
+			topScreen.setCenter(playerTwoLabel);
+			BorderPane.setAlignment(playerTwoLabel, Pos.CENTER_LEFT);
+			
+			
+			Stage stageColorChange = new Stage();
+			
+			menuBoardColor.setOnAction((event) -> {
+				// Close the window in case there is already one open
+				stageColorChange.hide();
+				
+				// Get the first and second StackPanes of the board
+				StackPane stackOne = (StackPane) chessBoard.getChildren().get(0);
+				StackPane stackTwo = (StackPane) chessBoard.getChildren().get(1);
+				
+				// Get the first and second squares of the board
+				Rectangle squareOne = (Rectangle) stackOne.getChildren().get(0);
+				Rectangle squareTwo = (Rectangle) stackTwo.getChildren().get(0);
+				
+				// Set color pickers' starting colors to the colors of 
+				// the first two squares
+				ColorPicker squareColorOne = new ColorPicker((Color) squareOne.getFill());
+				ColorPicker squareColorTwo = new ColorPicker((Color) squareTwo.getFill());
+				
+				// Button to change colors back to light/dark brown
+				Button defaultColors = new Button("Change back to default colors");
+
+				VBox colorLayout = new VBox();
+				HBox colorSelectors = new HBox();
+				
+				colorLayout.setAlignment(Pos.CENTER);
+				VBox.setMargin(colorSelectors, new Insets(10,10,10,10));
+				HBox.setMargin(squareColorOne, new Insets(0,10,0,0));
+				VBox.setMargin(defaultColors, new Insets(0,0,10,0));
+				
+				colorSelectors.getChildren().addAll(squareColorOne, squareColorTwo);
+				colorLayout.getChildren().addAll(colorSelectors, defaultColors);
+				
+				Scene sceneColorChange = new Scene(colorLayout);
+				
+				// Color Change Window Title
+				stageColorChange.setTitle("Chess Board Colors");
+				
+				stageColorChange.setScene(sceneColorChange); 
+				
+				// Position the window appears at on screen 
+				stageColorChange.setX(250);
+				stageColorChange.setY(150);
+				
+				// Display Color Change Window
+				stageColorChange.show();
+				
+				stageColorChange.focusedProperty().addListener((eventColor) -> {
+					if(stageColorChange.isFocused()) {
+						primaryStage.focusedProperty().addListener((eventPrim) -> {
+							if(primaryStage.isFocused()) {
+								stageColorChange.hide();
+							}
+						});
+					}
+				});
+				
+				squareColorOne.setOnAction((eventColor) -> {
+					int numSquares = 0;
+					
+					// Loop through each square of the board
+					for(int i = 0; i < 8; i++) {
+						numSquares++;
+						for(int j = 0; j < 8; j++) {
+							StackPane stack = (StackPane) chessBoard.getChildren().get(i*8+j);
+							Rectangle square = (Rectangle) stack.getChildren().get(0);
+							
+							// Alternate squares
+						    if (numSquares % 2 != 0) {
+						    	// Set square color
+						    	square.setFill(squareColorOne.getValue());
+						    }
+
+						    numSquares++;
+						}
+					}
+				});
+				
+				squareColorTwo.setOnAction((eventColor) -> {
+					int numSquares = 0;
+					
+					// Loop through each square of the board
+					for(int i = 0; i < 8; i++) {
+						numSquares++;
+						for(int j = 0; j < 8; j++) {
+							StackPane stack = (StackPane) chessBoard.getChildren().get(i*8+j);
+							Rectangle square = (Rectangle) stack.getChildren().get(0);
+							
+							// Alternate squares
+						    if (numSquares % 2 == 0) {
+						    	// Set square color
+						    	square.setFill(squareColorTwo.getValue());
+						    }
+
+						    numSquares++;
+						}
+					}
+				});
+				
+				// Change board colors back to light/dark brown
+				defaultColors.setOnAction((eventDefault) -> {
+					int numSquares = 0;
+					// Loop through each square of the board
+					for(int i = 0; i < 8; i++) {
+						numSquares++;
+						for(int j = 0; j < 8; j++) {
+							StackPane stack = (StackPane) chessBoard.getChildren().get(i*8+j);
+							Rectangle square = (Rectangle) stack.getChildren().get(0);
+							
+							// Alternate squares
+						    if (numSquares % 2 != 0) {
+						    	// Light brown
+						    	square.setFill(Color.rgb(222,184,135));
+						    }
+						    else {
+						    	// Dark Brown
+						    	square.setFill(Color.rgb(139, 69, 19));
+						    }
+
+						    numSquares++;
+						}
+					}
+				});
+			});
+			
+			
+			// Move player names when window width is adjusted
+			primaryStage.widthProperty().addListener((eventResize, oldX, newX) -> {
+				BorderPane.setMargin(playerTwoLabel, new Insets(0,0,0,chessBoard.getLayoutX()-settingsButton.getWidth()));
+				BorderPane.setMargin(playerOneLabel, new Insets(15,0,20,chessBoard.getLayoutX()));
+			});
+			
 			root.setLeft(gameInfo);
 			root.setBottom(playerOneLabel);
-			root.setTop(playerTwoLabel);
+			root.setTop(topScreen);
 			root.setRight(movesSection);
 			
 			// Place chess board in center of app
@@ -916,12 +1104,16 @@ public class BoardGUI extends Application {
 			// Add css class
 			root.getStyleClass().add("root");
 			
-			
 			Scene scene = new Scene(root);
 			// Use css file to style elements
 			scene.getStylesheets().add("stylesheet.css");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+			// Constrain the board dimensions so the border 
+			// stays with the board when window is adjusted
+			chessBoard.setMaxHeight(chessBoard.getHeight());
+			chessBoard.setMaxWidth(chessBoard.getWidth());
 		}
 		catch(Exception e) {
 			e.printStackTrace();

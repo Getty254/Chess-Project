@@ -1,16 +1,14 @@
-import java.util.ArrayList;
-import java.util.Collection;
+import pieces.*;
 
 public class GameLogic {
-	public ChessPieces[][] board = new ChessPieces[8][8];
+	public ChessPiece[][] board = new ChessPiece[8][8];
 	
 //	public Collection<ArrayList> getPossibleMoves() {
 //		for each piece add getLegalMoves to a master list
 //	}
 	
 	public boolean isCheck() {
-		
-		
+
 		return false;
 	}
 	
@@ -51,7 +49,7 @@ public class GameLogic {
 		}
 	}
 	public void printBoard() {
-        char[] letters = new char[] {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+        char[] letters = new char[] {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h','i'};
         System.out.println("  |-------------------------------|");
 
 		for(int i = 0; i < 9; i++) {

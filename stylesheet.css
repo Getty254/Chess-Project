@@ -1,7 +1,3 @@
-.board-squares {
-	-fx-background: url("PieceSVGs/BlackBish.png");
-}
-
 .resign-button:hover {
 	-fx-background-color: red;
 }

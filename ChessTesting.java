@@ -1,0 +1,903 @@
+package chess;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+import junit.framework.Assert;
+
+public class ChessTesting {
+	
+	@Test
+	public void createBoardTest() {
+		GameLogic logic = new GameLogic();
+	}
+
+	@Test
+	public void legalMoveTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move move = new Move("e2e4", 6, 4, 4, 4);
+		BoardGUI.turn = 0;
+		
+		assertEquals(0,logic.isMoveLegal(move));
+	}
+
+	@Test
+	public void illegalMoveTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move move = new Move("e2e5", 6, 4, 3, 4);
+		BoardGUI.turn = 0;
+		
+		assertEquals(-1,logic.isMoveLegal(move));
+	}
+	
+	@Test
+	public void validStringMoveTest() {
+		GameLogic logic = new GameLogic();
+		
+		BoardGUI.turn = 0;
+		Move move1 = new Move("e2e4", 6, 4, 4, 4);
+		Move move2 = logic.isInputMoveValid("e2e4");
+
+		assertEquals(move1.getMoveLAN(), move2.getMoveLAN());
+		assertEquals(move1.getRowFrom(), move2.getRowFrom());
+		assertEquals(move1.getColumnFrom(), move2.getColumnFrom());
+		assertEquals(move1.getRowTo(), move2.getRowTo());
+		assertEquals(move1.getColumnTo(), move2.getColumnTo());
+	}
+	
+	@Test
+	public void invalidStringMoveTest() {
+		GameLogic logic = new GameLogic();
+		
+		assertEquals(null,logic.isInputMoveValid("e2e5"));
+	}
+	
+	@Test
+	public void whiteCastleShortTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e3", 6, 4, 5, 4);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("Ng1f3", 7, 6, 5, 5);
+		Move moveB2 = new Move("e5e4", 3, 4, 4, 4);
+		Move moveW3 = new Move("Bf1d3", 7, 5, 5, 3);
+		Move moveB3 = new Move("e4d3", 4, 4, 5, 3);
+		Move moveW4 = new Move("O-O", 7, 4, 7, 6);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+	}
+	
+	@Test
+	public void whiteCastleLongTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("d2d4", 6, 3, 4, 3);
+		Move moveB1 = new Move("d7d5", 1, 3, 3, 3);
+		Move moveW2 = new Move("Qd1d3", 7, 3, 5, 3);
+		Move moveB2 = new Move("e7e6", 1, 4, 2, 4);
+		Move moveW3 = new Move("Bc1e3", 7, 2, 5, 4);
+		Move moveB3 = new Move("e6e5", 2, 4, 3, 4);
+		Move moveW4 = new Move("Nb1c3", 7, 1, 5, 2);
+		Move moveB4 = new Move("e5e4", 3, 4, 4, 4);
+		Move moveW5 = new Move("O-O-O", 7, 4, 7, 2);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+	}
+	
+	@Test
+	public void blackCastleShortTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("Bf1d3", 7, 5, 5, 3);
+		Move moveB2 = new Move("Bf8b4", 0, 5, 4, 1);
+		Move moveW3 = new Move("Ng1f3", 7, 6, 5, 5);
+		Move moveB3 = new Move("Ng8f6", 0, 6, 2, 5);
+		Move moveW4 = new Move("Rh1g1", 7, 7, 7, 6);
+		Move moveB4 = new Move("O-O", 0, 4, 0, 6);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+	}
+	
+	@Test
+	public void blackCastleLongTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("d7d5", 1, 3, 3, 3);
+		Move moveW2 = new Move("d2d4", 6, 3, 4, 3);
+		Move moveB2 = new Move("Qd8d6", 0, 3, 2, 3);
+		Move moveW3 = new Move("c2c3", 6, 2, 5, 2);
+		Move moveB3 = new Move("Bc8e6", 0, 2, 2, 4);
+		Move moveW4 = new Move("c3c4", 5, 2, 4, 2);
+		Move moveB4 = new Move("Nb8c6", 0, 1, 2, 2);
+		Move moveW5 = new Move("c4c5", 4, 2, 3, 2);
+		Move moveB5 = new Move("O-O-O", 0, 4, 0, 2);
+
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB5));
+	}
+	
+	@Test
+	public void illegalWhiteCastleShortTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("b7b6", 1, 1, 2, 1);
+		Move moveW2 = new Move("Bf1a6", 7, 5, 2, 0);
+		Move moveB2 = new Move("Bc8a6", 0, 2, 2, 0);
+		Move moveW3 = new Move("Ng1f3", 7, 6, 5, 5);
+		Move moveB3 = new Move("c7c6", 1, 2, 2, 2);
+		Move moveW4 = new Move("O-O", 7, 4, 7, 6);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(-1,logic.isMoveLegal(moveW4));
+	}
+	
+	@Test
+	public void illegalWhiteCastleLongTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("d2d4", 6, 3, 4, 3);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("Qd1d3", 7, 3, 5, 3);
+		Move moveB2 = new Move("d7d6", 1, 3, 2, 3);
+		Move moveW3 = new Move("Bc1g5", 7, 2, 3, 6);
+		Move moveB3 = new Move("Qd8g5", 0, 3, 3, 6);
+		Move moveW4 = new Move("Nb1c3", 7, 1, 5, 2);
+		Move moveB4 = new Move("d6d5", 2, 3, 3, 3);
+		Move moveW5 = new Move("O-O-O", 7, 4, 7, 2);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(-1,logic.isMoveLegal(moveW5));
+	}
+	
+	@Test
+	public void illegalWhiteCastleLongTest2() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("d7d5", 1, 3, 3, 3);
+		Move moveW2 = new Move("Qd1g4", 7, 3, 4, 6);
+		Move moveB2 = new Move("Bc8g4", 0, 2, 4, 6);
+		Move moveW3 = new Move("d2d3", 6, 3, 5, 3);
+		Move moveB3 = new Move("c7c6", 1, 2, 2, 2);
+		Move moveW4 = new Move("Bc1e3", 7, 2, 5, 4);
+		Move moveB4 = new Move("c6c5", 2, 2, 3, 2);
+		Move moveW5 = new Move("Nb1c3", 7, 1, 5, 2);
+		Move moveB5 = new Move("c5c4", 3, 2, 4, 2);
+		Move moveW6 = new Move("O-O-O", 7, 4, 7, 2);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB5));
+		BoardGUI.turn = 0;
+		assertEquals(-1,logic.isMoveLegal(moveW6));
+	}
+	
+	@Test
+	public void illegalBlackCastleLongTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("d7d5", 1, 3, 3, 3);
+		Move moveW2 = new Move("h2h3", 6, 7, 5, 7);
+		Move moveB2 = new Move("Bc8g4", 0, 2, 4, 6);
+		Move moveW3 = new Move("Qd1g4", 7, 3, 4, 6);
+		Move moveB3 = new Move("Nb8c6", 0, 1, 2, 2);
+		Move moveW4 = new Move("d2d3", 6, 3, 5, 3);
+		Move moveB4 = new Move("Qd8d6", 0, 3, 2, 3);
+		Move moveW5 = new Move("d3d4", 5, 3, 4, 3);
+		Move moveB5 = new Move("O-O-O", 0, 4, 0, 2);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+		BoardGUI.turn = 1;
+		assertEquals(-1,logic.isMoveLegal(moveB5));
+	}
+	
+	@Test
+	public void whitePawnPromotionQueenTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("f2f4", 6, 5, 4, 5);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("f4e5", 4, 5, 3, 4);
+		Move moveB2 = new Move("d7d6", 1, 3, 2, 3);
+		Move moveW3 = new Move("e5d6", 3, 4, 2, 3);
+		Move moveB3 = new Move("Qd8e7", 0, 3, 1, 4);
+		Move moveW4 = new Move("d6c7", 2, 3, 1, 2);
+		Move moveB4 = new Move("Bc8d7", 0, 2, 1, 3);
+		Move moveW5 = new Move("c7b8Q", 1, 2, 0, 1);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+	}
+	
+	@Test
+	public void whitePawnPromotionRookTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("f2f4", 6, 5, 4, 5);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("f4e5", 4, 5, 3, 4);
+		Move moveB2 = new Move("d7d6", 1, 3, 2, 3);
+		Move moveW3 = new Move("e5d6", 3, 4, 2, 3);
+		Move moveB3 = new Move("Qd8e7", 0, 3, 1, 4);
+		Move moveW4 = new Move("d6c7", 2, 3, 1, 2);
+		Move moveB4 = new Move("Bc8d7", 0, 2, 1, 3);
+		Move moveW5 = new Move("c7b8R", 1, 2, 0, 1);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+	}
+	
+	@Test
+	public void whitePawnPromotionBishopTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("f2f4", 6, 5, 4, 5);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("f4e5", 4, 5, 3, 4);
+		Move moveB2 = new Move("d7d6", 1, 3, 2, 3);
+		Move moveW3 = new Move("e5d6", 3, 4, 2, 3);
+		Move moveB3 = new Move("Qd8e7", 0, 3, 1, 4);
+		Move moveW4 = new Move("d6c7", 2, 3, 1, 2);
+		Move moveB4 = new Move("Bc8d7", 0, 2, 1, 3);
+		Move moveW5 = new Move("c7b8B", 1, 2, 0, 1);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+	}
+	
+	@Test
+	public void whitePawnPromotionKnightTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("f2f4", 6, 5, 4, 5);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("f4e5", 4, 5, 3, 4);
+		Move moveB2 = new Move("d7d6", 1, 3, 2, 3);
+		Move moveW3 = new Move("e5d6", 3, 4, 2, 3);
+		Move moveB3 = new Move("Qd8e7", 0, 3, 1, 4);
+		Move moveW4 = new Move("d6c7", 2, 3, 1, 2);
+		Move moveB4 = new Move("Bc8d7", 0, 2, 1, 3);
+		Move moveW5 = new Move("c7b8N", 1, 2, 0, 1);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+	}
+	
+	@Test
+	public void whitePawnCheckTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("c2c4", 6, 2, 4, 2);
+		Move moveB1 = new Move("g7g6", 1, 6, 2, 6);
+		Move moveW2 = new Move("c4c5", 4, 2, 3, 2);
+		Move moveB2 = new Move("g6g5", 2, 6, 3, 6);
+		Move moveW3 = new Move("c5c6", 3, 2, 2, 2);
+		Move moveB3 = new Move("g5g4", 3, 6, 4, 6);
+		Move moveW4 = new Move("c6d7", 2, 2, 1, 3);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+	}
+	
+	@Test
+	public void blackPawnCheckTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("c2c3", 6, 2, 5, 2);
+		Move moveB1 = new Move("g7g5", 1, 6, 3, 6);
+		Move moveW2 = new Move("c3c4", 5, 2, 4, 2);
+		Move moveB2 = new Move("g5g4", 3, 6, 4, 6);
+		Move moveW3 = new Move("c4c5", 4, 2, 3, 2);
+		Move moveB3 = new Move("g4g3", 4, 6, 5, 6);
+		Move moveW4 = new Move("c5c6", 3, 2, 2, 2);
+		Move moveB4 = new Move("g3f2", 5, 6, 6, 5);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+	}
+	
+	@Test
+	public void blackPawnCheckTest2() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("g2g3", 6, 6, 5, 6);
+		Move moveB1 = new Move("c7c5", 1, 2, 3, 2);
+		Move moveW2 = new Move("g3g4", 5, 6, 4, 6);
+		Move moveB2 = new Move("c5c4", 3, 2, 4, 2);
+		Move moveW3 = new Move("g4g5", 4, 6, 3, 6);
+		Move moveB3 = new Move("c4c3", 4, 2, 5, 2);
+		Move moveW4 = new Move("g5g6", 3, 6, 2, 6);
+		Move moveB4 = new Move("c3d2", 5, 2, 6, 3);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+	}
+	
+	@Test
+	public void rookCheckTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("a2a4", 6, 0, 4, 0);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("Ra1a3", 7, 0, 5, 0);
+		Move moveB2 = new Move("e5e4", 3, 4, 4, 4);
+		Move moveW3 = new Move("Ra3e3", 5, 0, 5, 4);
+		Move moveB3 = new Move("a7a6", 1, 0, 2, 0);
+		Move moveW4 = new Move("Re3e4", 5, 4, 4, 4);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+	}
+	
+	@Test
+	public void rookCheckTest2() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("a7a5", 1, 0, 3, 0);
+		Move moveW2 = new Move("e4e5", 4, 4, 3, 4);
+		Move moveB2 = new Move("Ra8a6", 0, 0, 2, 0);
+		Move moveW3 = new Move("a2a3", 6, 0, 5, 0);
+		Move moveB3 = new Move("Ra6e6", 2, 0, 2, 4);
+		Move moveW4 = new Move("a3a4", 5, 0, 4, 0);
+		Move moveB4 = new Move("Re6e5", 2, 4, 3, 4);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+	}
+	
+	@Test
+	public void rookCheckTest3() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("h2h4", 6, 7, 4, 7);
+		Move moveB1 = new Move("g7g5", 1, 6, 3, 6);
+		Move moveW2 = new Move("h4g5", 4, 7, 3, 6);
+		Move moveB2 = new Move("Ng8h6", 0, 6, 2, 7);
+		Move moveW3 = new Move("Rh1h6", 7, 7, 2, 7);
+		Move moveB3 = new Move("f7f6", 1, 5, 2, 5);
+		Move moveW4 = new Move("Rh6h7", 2, 7, 1, 7);
+		Move moveB4 = new Move("Bf8h6", 0, 5, 2, 7);
+		Move moveW5 = new Move("Rh7h8", 1, 7, 0, 7);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+	}
+	
+	@Test
+	public void queenCheckTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e3", 6, 4, 5, 4);
+		Move moveB1 = new Move("e7e6", 1, 4, 2, 4);
+		Move moveW2 = new Move("Qd1g4", 7, 3, 4, 6);
+		Move moveB2 = new Move("d7d6", 1, 3, 2, 3);
+		Move moveW3 = new Move("Qg4e6", 4, 6, 2, 4);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+	}
+	
+	@Test
+	public void queenCheckTest2() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e3", 6, 4, 5, 4);
+		Move moveB1 = new Move("e7e6", 1, 4, 2, 4);
+		Move moveW2 = new Move("d2d3", 6, 3, 5, 3);
+		Move moveB2 = new Move("Qd8g5", 0, 3, 3, 6);
+		Move moveW3 = new Move("g2g3", 6, 6, 5, 6);
+		Move moveB3 = new Move("Qg5e3", 3, 6, 5, 4);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+	}
+	
+	@Test
+	public void queenCheckTest3() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("f7f5", 1, 5, 3, 5);
+		Move moveW2 = new Move("Qd1f3", 7, 3, 5, 5);
+		Move moveB2 = new Move("f5e4", 3, 5, 4, 4);
+		Move moveW3 = new Move("Qf3f8", 5, 5, 0, 5);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+	}
+	
+	@Test
+	public void knightCheckTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("Ng1f3", 7, 6, 5, 5);
+		Move moveB1 = new Move("f7f6", 1, 5, 2, 5);
+		Move moveW2 = new Move("Nf3h4", 5, 5, 4, 7);
+		Move moveB2 = new Move("e7e6", 1, 4, 2, 4);
+		Move moveW3 = new Move("Nh4f5", 4, 7, 3, 5);
+		Move moveB3 = new Move("e6e5", 2, 4, 3, 4);
+		Move moveW4 = new Move("Nf5g7", 3, 5, 1, 6);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+	}
+	
+	@Test
+	public void bishopCheckTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("d7d5", 1, 3, 3, 3);
+		Move moveW2 = new Move("Bf1b5", 7, 5, 3, 1);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+	}
+	
+	@Test
+	public void bishopCheckTest2() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e4", 6, 4, 4, 4);
+		Move moveB1 = new Move("f7f5", 1, 5, 3, 5);
+		Move moveW2 = new Move("Bf1e2", 7, 5, 6, 4);
+		Move moveB2 = new Move("f5f4", 3, 5, 4, 5);
+		Move moveW3 = new Move("Be2h5", 6, 4, 3, 7);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+	}
+	
+	@Test
+	public void illegalKingMoveTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e3", 6, 4, 5, 4);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("Ke1e2", 7, 4, 6, 4);
+		Move moveB2 = new Move("Ke8e7", 0, 4, 1, 4);
+		Move moveW3 = new Move("Ke2f3", 6, 4, 5, 5);
+		Move moveB3 = new Move("Ke7f6", 1, 4, 2, 5);
+		Move moveW4 = new Move("Kf3g4", 5, 5, 4, 6);
+		Move moveB4 = new Move("Kf6f5", 2, 5, 3, 5);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(-1,logic.isMoveLegal(moveB4));
+	}
+	
+	@Test
+	public void emptyPieceMovesTest() {
+		EmptyPiece ep = new EmptyPiece(4,4);
+		ChessPiece[][] board = new ChessPiece[8][8];
+		
+		assertEquals(null, ep.getMoves(board));
+	}
+	
+	@Test
+	public void twoMoveCheckmateTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("g2g4", 6, 6, 4, 6);
+		Move moveB1 = new Move("e7e5", 1, 4, 3, 4);
+		Move moveW2 = new Move("f2f3", 6, 5, 5, 5);
+		Move moveB2 = new Move("Qd8h4", 0, 3, 4, 7);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(1,logic.isMoveLegal(moveB2));
+	}
+	
+	@Test
+	public void stalemateTest() {
+		GameLogic logic = new GameLogic();
+		
+		Move moveW1 = new Move("e2e3", 6, 4, 5, 4);
+		Move moveB1 = new Move("a7a5", 1, 0, 3, 0);
+		Move moveW2 = new Move("Qd1h5", 7, 3, 3, 7);
+		Move moveB2 = new Move("Ra8a6", 0, 0, 2, 0);
+		Move moveW3 = new Move("Qh5a5", 3, 7, 3, 0);
+		Move moveB3 = new Move("h7h5", 1, 7, 3, 7);
+		Move moveW4 = new Move("h2h4", 6, 7, 4, 7);
+		Move moveB4 = new Move("Ra6h6", 2, 0, 2, 7);
+		Move moveW5 = new Move("Qa5c7", 3, 0, 1, 2);
+		Move moveB5 = new Move("f7f6", 1, 5, 2, 5);
+		Move moveW6 = new Move("Qc7d7", 1, 2, 1, 3);
+		Move moveB6 = new Move("Ke8f7", 0, 4, 1, 5);
+		Move moveW7 = new Move("Qd7b7", 1, 3, 1, 1);
+		Move moveB7 = new Move("Qd8d3", 0, 3, 5, 3);
+		Move moveW8 = new Move("Qb7b8", 1, 1, 0, 1);
+		Move moveB8 = new Move("Qd3h7", 5, 3, 1, 7);
+		Move moveW9 = new Move("Qb8c8", 0, 1, 0, 2);
+		Move moveB9 = new Move("Kf7g6", 1, 5, 2, 6);
+		Move moveW10 = new Move("Qc8e6", 0, 2, 2, 4);
+		
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW1));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB1));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW2));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB2));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW3));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB3));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW4));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB4));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW5));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB5));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW6));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB6));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW7));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB7));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW8));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB8));
+		BoardGUI.turn = 0;
+		assertEquals(0,logic.isMoveLegal(moveW9));
+		BoardGUI.turn = 1;
+		assertEquals(0,logic.isMoveLegal(moveB9));
+		BoardGUI.turn = 0;
+		assertEquals(2,logic.isMoveLegal(moveW10));
+	}
+
+}

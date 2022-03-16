@@ -1,0 +1,184 @@
+package chess;
+
+import java.util.concurrent.TimeUnit;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+
+public class Clocks {
+	
+	/** Clock for player one.*/
+	private Timeline timelineP1;
+	/** Clock for player two.*/
+	private Timeline timelineP2;
+	/** Starting time in seconds for each player's clock.*/
+	private long timeControl = 600;
+	/** Time added to player's clock after they make a move.*/
+	private long timeIncrement = 0;
+	/** Minutes left on player one's clock.*/
+	private long minP1;
+	/** Minutes left on player two's clock.*/
+	private long minP2;
+	/** Seconds left on player one's clock.*/
+	private long secP1;
+	/** Seconds left on player two's clock.*/
+	private long secP2;
+	/** Time in seconds left on player one's clock.*/
+	private long timerP1 = timeControl;
+	/** Time in seconds left on player two's clock.*/
+	private long timerP2 = timeControl;
+	
+	/** Label that shows the time left on
+	 * player one's clock.
+	 */
+	private Label timerLabelP1;
+	/** Label that shows the time left on
+	 * player two's clock.
+	 */
+	private Label timerLabelP2;
+	
+	public Clocks(VBox gameInfo, HBox endGameButtons,
+			Label timerLabelP1, Label timerLabelP2) {
+		this.timerLabelP1 = timerLabelP1;
+		this.timerLabelP2 = timerLabelP2;
+		
+		timerLabelP1.setPrefWidth(125);
+		timerLabelP2.setPrefWidth(125);
+		
+		// Add css class
+		timerLabelP1.getStyleClass().add("clocks");
+		timerLabelP2.getStyleClass().add("clocks");
+		
+		gameInfo.getChildren().add(timerLabelP2);
+		gameInfo.getChildren().add(endGameButtons);
+		gameInfo.getChildren().add(timerLabelP1);
+		
+		
+		initializeClocks();
+	}
+	
+	
+	/**
+	 * Creates the instances of the timelines for the player
+	 * clocks to function.
+	 */
+	private void initializeClocks() {
+		// Set remaining clock time to the starting time
+		timerP1 = timeControl;
+		timerP2 = timeControl;
+		minP1 = TimeUnit.SECONDS.toMinutes(timeControl);
+		secP1 = timeControl - (minP1 * 60);
+		
+		// Starting clock values
+		timerLabelP1.setText(String.format("%02d:%02d", minP1, secP1));
+		timerLabelP2.setText(String.format("%02d:%02d", minP1, secP1));
+		
+		timelineP1 = new Timeline(new KeyFrame(Duration.seconds(1), 
+				new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent event) {
+						// Stop the clock if the game is over
+						if(BoardGUI.isGameOver) {
+					    	timelineP1.stop();
+					    }
+						// Player one's clock runs out
+					    if(timerP1 <= 0) {
+					    	timelineP1.stop();
+					    	BoardGUI.isGameOver = true;
+					    }
+					    
+					    minP1 = TimeUnit.SECONDS.toMinutes(timerP1);
+					    secP1 = timerP1 - (minP1 * 60);
+						
+						timerLabelP1.setText(
+								String.format("%02d:%02d",
+										minP1, secP1));
+						timerP1--;
+					}
+		}));
+		
+		timelineP2 = new Timeline(new KeyFrame(Duration.seconds(1), 
+				new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent event) {
+						// Stop the clock if the game is over
+					    if(BoardGUI.isGameOver) {
+					    	timelineP2.stop();
+					    }
+						// Player two's clock runs out
+					    if(timerP2 <= 0) {
+					    	timelineP2.stop();
+					    	BoardGUI.isGameOver = true;
+					    }
+					    
+					    minP2 = TimeUnit.SECONDS.toMinutes(timerP2);
+					    secP2 = timerP2 - (minP2 * 60);
+						
+						timerLabelP2.setText(
+								String.format("%02d:%02d",
+										minP2, secP2));
+						timerP2--;
+					}
+		}));
+		
+		// Clocks run until stopped
+		timelineP1.setCycleCount(Timeline.INDEFINITE);
+		timelineP2.setCycleCount(Timeline.INDEFINITE);
+	}
+	
+	/**
+	 * Called at the end of a player's turn. Stops the 
+	 * clock of the player whose turn just ended and 
+	 * starts the clock for their opponent.
+	 * Also updates the clock labels.
+	 */
+	public void updatePlayerClocks() {
+		// White's turn
+    	if(BoardGUI.turn == 0) {
+    		// Stop player one's timer
+    		timelineP1.stop();
+    		// Start player two's timer
+    		timelineP2.play();
+    		
+    		// if there is increment update clock
+    		if(timeIncrement > 0) {
+        		// Add time to player one's clock
+        		timerP1 += timeIncrement;
+        		
+        		minP1 = TimeUnit.SECONDS.toMinutes(timerP1);
+			    secP1 = timerP1 - (minP1 * 60);
+			    // Update clock label
+				timerLabelP1.setText(String.format("%02d:%02d", minP1, secP1));
+    		}
+    	}
+    	else {
+    		// Stop player two's timer
+    		timelineP2.stop();
+    		// Start player one's timer
+    		timelineP1.play();
+    		
+    		// if there is increment update clock
+    		if(timeIncrement > 0) {
+        		// Add time to player two's clock
+        		timerP2 += timeIncrement;
+        		
+        		minP2 = TimeUnit.SECONDS.toMinutes(timerP2);
+			    secP2 = timerP2 - (minP2 * 60);
+			    // Update clock label
+				timerLabelP2.setText(String.format("%02d:%02d", minP2, secP2));
+    		}	
+    	}
+	}
+	
+	/**
+	 * Stops both clocks and resets them.
+	 */
+	public void resetClocks() {
+		timelineP1.stop();
+		timelineP2.stop();
+		initializeClocks();
+	}
+}

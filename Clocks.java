@@ -10,6 +10,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/**
+ * This class controls the clocks for both players.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class Clocks {
 	
 	/** Clock for player one.*/

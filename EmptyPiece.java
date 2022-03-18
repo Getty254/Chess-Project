@@ -2,6 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents a spot on the chess board
+ * that does not contain a piece.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class EmptyPiece extends ChessPiece{
 	
 	/** Row the piece is placed on.*/

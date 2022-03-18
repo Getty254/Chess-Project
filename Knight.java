@@ -2,6 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents a knight and is used to
+ * identify all of the moves a knight can make.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class Knight extends ChessPiece {
 
 	/** Color of the piece.*/
@@ -29,6 +36,7 @@ public class Knight extends ChessPiece {
 	/**
 	 * Finds all the moves the knight can make.
 	 * 
+	 * @param board ChessPiece 2d array
 	 * @return ArrayList of Moves of all the
 	 * 			 moves the knight can make
 	 */
@@ -82,6 +90,9 @@ public class Knight extends ChessPiece {
 	}
 
 	/**
+	 * Gets the color of the piece.
+	 * 0 for white. 1 for black.
+	 * 
 	 * @return int color of the piece
 	 */
 	@Override
@@ -90,6 +101,8 @@ public class Knight extends ChessPiece {
 	}
 
 	/**
+	 * Gets if the knight is attacking the opponent's king.
+	 * 
 	 * @return boolean true is the piece is attacking
 	 * 			the opponent's king, false if not
 	 */
@@ -117,15 +130,19 @@ public class Knight extends ChessPiece {
 		
 		char colFromLetter = (char) (column + 97);
 		char colToLetter = (char) (colTo + 97);
-		String moveLAN = "N" + colFromLetter + (8-row) + colToLetter + (8-rowTo);
+		String moveLAN = "N" + colFromLetter + (8-row)
+						+ colToLetter + (8-rowTo);
+		
+		Move knightMove = new Move(moveLAN, row, column,
+				rowTo, colTo, PieceType.KNIGHT);
 		
 		// Move to empty square
 		if(board[rowTo][colTo] instanceof EmptyPiece) {
-			moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+			moves.add(knightMove);
 		}
 		// Capture opponent's piece
 		else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
-			moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+			moves.add(knightMove);
 			
 			if(board[rowTo][colTo] instanceof King) {
 				isAttackingKing = true;

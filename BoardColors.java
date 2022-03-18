@@ -13,9 +13,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+/**
+ * This class is used to create a pop up window
+ * that allows the players to change the colors
+ * of the squares on the chess board.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class BoardColors extends Stage {
 
+	/** RGB color for half of squares.*/
 	public static Color colorOne = Color.rgb(222, 184, 135);
+	/** RGB color for half of squares.*/
 	public static Color colorTwo = Color.rgb(139, 69, 19);
 	
 	public BoardColors(Stage primaryStage, GridPane chessBoard) {

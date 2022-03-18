@@ -16,6 +16,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+/**
+ * This class is used to create the chess board
+ * on the GUI, and set up all the event
+ * handlers for dragging and dropping
+ * the pieces.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class ChessBoard extends GridPane {
 	
 	private BorderPane topScreen; 
@@ -386,15 +395,12 @@ public class ChessBoard extends GridPane {
 				            
 				            boolean isCastle = false;
 				            boolean isCastleShort = false;
-				            boolean isPawnPromotion = false;
 				            
 				            // Check if move is a Pawn Promotion
 				            if(db.getString().equals(ChessPiece.PAWN) 
 				            		&& ((BoardGUI.turn == 0 && rowTo == 0) 
 				            		|| (BoardGUI.turn == 1 && rowTo == 7))) {
-				            	
-				            	isPawnPromotion = true;
-				            	
+				            					            	
 				            	// Pick Promotion piece here
 				            	chessPieceDropped = new Text(ChessPiece.QUEEN);
 				            	
@@ -439,10 +445,12 @@ public class ChessBoard extends GridPane {
 			    	    				+ colLetterTo + (8 - rowTo);
 				            }
 			            	
-				            Move move = new Move(fullMove, rowFrom,
-				            		colFrom, rowTo, colTo);
+				            Move move = logic.isInputMoveValid(fullMove);
+				            int moveStatus = -1;
 				            
-				            int moveStatus = logic.isMoveLegal(move);
+				            if(move != null) {
+				            	moveStatus = logic.isMoveLegal(move);
+				            }
 				            
 		    	    		if(moveStatus == -1) {
 		    	    			resetPiece(event);
@@ -554,6 +562,21 @@ public class ChessBoard extends GridPane {
 				                		}
 				                	}				    	    		
 					            }
+					            // Pawn capture by en passant
+					            else if(move.isEnPassant()) {
+					            	
+					            	StackPane opponentPawnSquare = (StackPane)
+		                					this.getChildren().get(
+		                							move.getRowFrom() * 8 
+		                							+ move.getColumnTo());
+					            	
+					            	Text blankText = new Text();
+					            	
+					            	// Remove the catured pawn
+					            	opponentPawnSquare.getChildren().remove(3);
+					            	opponentPawnSquare.getChildren().add(blankText);
+					            }
+					            
 					            
 					            clocks.updatePlayerClocks();
 			    	    		movesList.updateMovesList(fullMove);

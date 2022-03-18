@@ -2,10 +2,22 @@ package chess;
 
 import java.util.ArrayList;
 
+/**
+ * This class controls the logic for the 
+ * chess game such as verifying moves and identifying
+ * checkmates and stalemates.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class GameLogic {
 	
 	/** Matrix of the chess board containing all the pieces.*/
 	private ChessPiece[][] board = new ChessPiece[8][8];
+	/** Indicates if the white king is in check.*/
+	public static boolean isInCheckP1 = false;
+	/** Indicates if the black king is in check.*/
+	public static boolean isInCheckP2 = false;
 	
 	/**
 	 * Creates a new instance of the logic.
@@ -90,17 +102,19 @@ public class GameLogic {
 	 * 				1 if the move results in a checkmate.
 	 * 				2 if the move results in a stalemate.
 	 */
-	public int isMoveLegal(Move move) {
-		
-		// Prints the move code for JUnits
-//		System.out.println("Move move" + ((BoardGUI.turn==0)?"W":"B") + 
-//				BoardGUI.moveNumber + " = new Move(" + "\"" + move.getMoveLAN() + "\", "
-//					+ move.getRowFrom() + ", " + move.getColumnFrom() + ", "
-//					+ move.getRowTo() + ", " + move.getColumnTo() + ");");
-		
+	public int isMoveLegal(Move move) {	
 		
 		// Valid move
 		if(isMoveValid(move.getMoveLAN())) {
+			
+			// Set opposing king to be in check
+			// to prevent castling
+			if(BoardGUI.turn == 0) {
+				isInCheckP1 = false;
+			}
+			else if(BoardGUI.turn == 1) {
+				isInCheckP2 = false;
+			}
 			
 			// Create a temporary board
 			ChessPiece[][] tempBoard = new ChessPiece[8][8];
@@ -108,21 +122,24 @@ public class GameLogic {
 
 			// Move is short castle
 			if(move.getMoveLAN().equals("O-O")) {
+				Move tempMove;
 				if(BoardGUI.turn == 0) {
-					// Make the move on the temp board
-					updateBoard(tempBoard, "Ke1f1",
+					tempMove = new Move("Ke1f1", 
 							move.getRowFrom(),
 							move.getColumnFrom(),
 							move.getRowTo(),
-							move.getColumnFrom()+1, BoardGUI.turn);
+							move.getColumnFrom()+1, PieceType.KING);
+					// Make the move on the temp board
+					updateBoard(tempBoard, tempMove, BoardGUI.turn);
 				}
 				else if(BoardGUI.turn == 1) {
-					// Make the move on the temp board
-					updateBoard(tempBoard, "Ke8f8", 
+					tempMove = new Move("Ke8f8", 
 							move.getRowFrom(),
 							move.getColumnFrom(),
 							move.getRowTo(),
-							move.getColumnFrom()+1, BoardGUI.turn);
+							move.getColumnFrom()+1, PieceType.KING);
+					// Make the move on the temp board
+					updateBoard(tempBoard, tempMove, BoardGUI.turn);
 				}
 					
 				// Cannot castle if an opponent's piece
@@ -137,21 +154,24 @@ public class GameLogic {
 			}
 			// Move is long castle
 			else if(move.getMoveLAN().equals("O-O-O")) {
+				Move tempMove;
 				if(BoardGUI.turn == 0) {
-					// Make the move on the temp board
-					updateBoard(tempBoard, "Ke1d1", 
+					tempMove = new Move("Ke1d1", 
 							move.getRowFrom(),
 							move.getColumnFrom(),
 							move.getRowTo(),
-							move.getColumnFrom()-1, BoardGUI.turn);
+							move.getColumnFrom()-1, PieceType.KING);
+					// Make the move on the temp board
+					updateBoard(tempBoard, tempMove, BoardGUI.turn);
 				}
 				else if(BoardGUI.turn == 1) {
-					// Make the move on the temp board
-					updateBoard(tempBoard, "Ke8d8", 
+					tempMove = new Move("Ke8d8", 
 							move.getRowFrom(),
 							move.getColumnFrom(),
 							move.getRowTo(),
-							move.getColumnFrom()-1, BoardGUI.turn);
+							move.getColumnFrom()-1, PieceType.KING);
+					// Make the move on the temp board
+					updateBoard(tempBoard, tempMove, BoardGUI.turn);
 				}
 					
 				// Cannot castle if an opponent's piece
@@ -167,23 +187,15 @@ public class GameLogic {
 			
 			
 			// Make the move on the temp board
-			updateBoard(tempBoard, move.getMoveLAN(), 
-					move.getRowFrom(),
-					move.getColumnFrom(),
-					move.getRowTo(),
-					move.getColumnTo(), BoardGUI.turn);
+			updateBoard(tempBoard, move, BoardGUI.turn);
 			
 			// Move does not put yourself in check
 			if(!isOwnKingAttacked(tempBoard, BoardGUI.turn)) {
 				
 				// Update the main board
-				updateBoard(board, move.getMoveLAN(), 
-						move.getRowFrom(),
-						move.getColumnFrom(),
-						move.getRowTo(),
-						move.getColumnTo(), BoardGUI.turn);
+				updateBoard(board, move, BoardGUI.turn);
 				
-				
+				MovesList.movesAL.add(move);
 				// Get all moves to see if you put your
 				// opponent in check
 				getAllMoves(board, BoardGUI.turn);
@@ -195,6 +207,15 @@ public class GameLogic {
 					for(int j = 0; j<8; j++) {
 						if(board[i][j].isAttackingKing()) {
 							isCheck = true;
+							
+							// Set opposing king to be in check
+							// to prevent castling
+							if(BoardGUI.turn == 0) {
+								isInCheckP2 = true;
+							}
+							else if(BoardGUI.turn == 1) {
+								isInCheckP1 = true;
+							}
 						}
 					}
 				}
@@ -228,11 +249,7 @@ public class GameLogic {
 			Move move = allMoves.get(i);
 
 			// Make the move on the temp board
-			updateBoard(tempBoard, move.getMoveLAN(), 
-					move.getRowFrom(),
-					move.getColumnFrom(),
-					move.getRowTo(),
-					move.getColumnTo(), ((BoardGUI.turn==0)?1:0));
+			updateBoard(tempBoard, move, ((BoardGUI.turn==0)?1:0));
 			
 			// Move does not put yourself in check
 			if(!isOwnKingAttacked(tempBoard, ((BoardGUI.turn==0)?1:0))) {
@@ -312,53 +329,65 @@ public class GameLogic {
 	 * @return ChessPiece 2d array of the updated board
 	 */
 	private ChessPiece[][] updateBoard(ChessPiece[][] board, 
-			String move, int rowFrom, int colFrom, 
-			int rowTo, int colTo, int turn) {
-		String lastCharacter = move.substring(move.length() - 1);
+			Move move, int turn) {
 
+		int rowFrom = move.getRowFrom();
+		int rowTo = move.getRowTo();
+		int colFrom = move.getColumnFrom();
+		int colTo = move.getColumnTo();
+		
 		// Short Castles
-		if(move.equals("O-O")) {
+		if(move.getMoveLAN().equals("O-O")) {
 			if(turn == 0) {
+				Rook rk = new Rook(0, 7, 5);
+				rk.removeCastleRights();
 				board[7][4] = new EmptyPiece(7, 4);
 				board[7][7] = new EmptyPiece(7, 7);
-				board[7][5] = new Rook(0, 7, 5);
+				board[7][5] = rk;
 				board[7][6] = new King(0, 7, 6, false);
 			}
 			else {
+				Rook rk = new Rook(1, 0, 5);
+				rk.removeCastleRights();
 				board[0][4] = new EmptyPiece(0, 4);
 				board[0][7] = new EmptyPiece(0, 7);
-				board[0][5] = new Rook(1, 0, 5);
+				board[0][5] = rk;
 				board[0][6] = new King(1, 0, 6, false);
 			}
 		}
 		// Long Castle
-		else if(move.equals("O-O-O")) {
+		else if(move.getMoveLAN().equals("O-O-O")) {
 			if(turn == 0) {
+				Rook rk = new Rook(0, 7, 3);
+				rk.removeCastleRights();
 				board[7][4] = new EmptyPiece(7, 4);
 				board[7][0] = new EmptyPiece(7, 0);
-				board[7][3] = new Rook(0, 7, 3);
+				board[7][3] = rk;
 				board[7][2] = new King(0, 7, 2, false);
 			}
 			else {
+				Rook rk = new Rook(1, 0, 3);
+				rk.removeCastleRights();
 				board[0][4] = new EmptyPiece(0, 4);
 				board[0][0] = new EmptyPiece(0, 0);
-				board[0][3] = new Rook(1, 0, 3);
+				board[0][3] = rk;
 				board[0][2] = new King(1, 0, 2, false);
 			}
 		}
 		// Pawn Promotion
-		else if(lastCharacter.equals("Q")
-				|| lastCharacter.equals("R")
-				|| lastCharacter.equals("B")
-				|| lastCharacter.equals("N")){
-
+		else if(move.isPawnPromo()){
+			String lastCharacter = move.getMoveLAN().
+					substring(move.getMoveLAN().length() - 1);
+			
 			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
 			
 			if(lastCharacter.equals("Q")) {
 				board[rowTo][colTo] = new Queen(turn, rowTo, colTo);
 			}
 			else if(lastCharacter.equals("R")) {
-				board[rowTo][colTo] = new Rook(turn, rowTo, colTo);
+				Rook rk = new Rook(turn, rowTo, colTo);
+				rk.removeCastleRights();
+				board[rowTo][colTo] = rk;
 			}
 			else if(lastCharacter.equals("B")) {
 				board[rowTo][colTo] = new Bishop(turn, rowTo, colTo);
@@ -367,28 +396,36 @@ public class GameLogic {
 				board[rowTo][colTo] = new Knight(turn, rowTo, colTo);
 			}
 		}
+		else if(move.isEnPassant()) {
+			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
+			board[rowFrom][colTo] = new EmptyPiece(rowFrom, colTo);
+			
+			board[rowTo][colTo] = new Pawn(turn, rowTo, colTo);
+		}
 		// Queen move
-		else if(board[rowFrom][colFrom] instanceof Queen) {
+		else if(move.getPieceMoved() == PieceType.QUEEN) {
 			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
 			board[rowTo][colTo] = new Queen(turn, rowTo, colTo);
 		}
 		// Rook move
-		else if(board[rowFrom][colFrom] instanceof Rook) {
+		else if(move.getPieceMoved() == PieceType.ROOK) {
+			Rook rk = new Rook(turn, rowTo, colTo);
+			rk.removeCastleRights();
 			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
-			board[rowTo][colTo] = new Rook(turn, rowTo, colTo);
+			board[rowTo][colTo] = rk;
 		}
 		// Bishop move
-		else if(board[rowFrom][colFrom] instanceof Bishop) {
+		else if(move.getPieceMoved() == PieceType.BISHOP) {
 			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
 			board[rowTo][colTo] = new Bishop(turn, rowTo, colTo);
 		}
 		// Knight move
-		else if(board[rowFrom][colFrom] instanceof Knight) {
+		else if(move.getPieceMoved() == PieceType.KNIGHT) {
 			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
 			board[rowTo][colTo] = new Knight(turn, rowTo, colTo);
 		}
 		// King move
-		else if(board[rowFrom][colFrom] instanceof King) {
+		else if(move.getPieceMoved() == PieceType.KING) {
 			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
 			board[rowTo][colTo] = new King(turn, rowTo, colTo, false);
 		}

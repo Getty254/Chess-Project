@@ -11,6 +11,13 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * This class is used to create a pop up window
+ * to display the results when the game has concluded.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class GameOverDialog extends Alert {
 
 	/** What button is pressed in the

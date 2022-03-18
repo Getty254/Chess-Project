@@ -2,6 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents a queen and is used to
+ * identify all of the moves a queen can make.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class Queen extends ChessPiece {
 
 	/** Color of the piece.*/
@@ -29,6 +36,7 @@ public class Queen extends ChessPiece {
 	/**
 	 * Finds all the moves the queen can make.
 	 * 
+	 * @param board ChessPiece 2d array
 	 * @return ArrayList of Moves of all the
 	 * 			 moves the queen can make
 	 */
@@ -41,6 +49,8 @@ public class Queen extends ChessPiece {
 		char colToLetter;
 		String moveLAN;
 		
+		Move queenMove;
+		
 		// North moves
 		for(int rowTo = row - 1; rowTo >= 0; rowTo--) {
 			
@@ -48,13 +58,16 @@ public class Queen extends ChessPiece {
 			moveLAN = "Q" + colFromLetter + (8-row)
 					+ colToLetter + (8-rowTo);
 			
+			queenMove = new Move(moveLAN, row, column,
+					rowTo, column, PieceType.QUEEN);
+			
 			// Move to empty square
 			if(board[rowTo][column] instanceof EmptyPiece) {
-				moves.add(new Move(moveLAN, row, column, rowTo, column));
+				moves.add(queenMove);
 			}
 			// Capture opponent's piece
 			else if(board[rowTo][column].getPieceColor() != this.pieceColor) {
-				moves.add(new Move(moveLAN, row, column, rowTo, column));
+				moves.add(queenMove);
 				
 				if(board[rowTo][column] instanceof King) {
 					isAttackingKing = true;
@@ -73,14 +86,17 @@ public class Queen extends ChessPiece {
 			colToLetter = (char) (column + 97);
 			moveLAN = "Q" + colFromLetter + (8-row)
 					+ colToLetter + (8-rowTo);
+
+			queenMove = new Move(moveLAN, row, column,
+					rowTo, column, PieceType.QUEEN);
 			
 			// Move to empty square
 			if(board[rowTo][column] instanceof EmptyPiece) {
-				moves.add(new Move(moveLAN, row, column, rowTo, column));
+				moves.add(queenMove);
 			}
 			// Capture opponent's piece
 			else if(board[rowTo][column].getPieceColor() != this.pieceColor) {
-				moves.add(new Move(moveLAN, row, column, rowTo, column));
+				moves.add(queenMove);
 				
 				if(board[rowTo][column] instanceof King) {
 					isAttackingKing = true;
@@ -100,13 +116,16 @@ public class Queen extends ChessPiece {
 			moveLAN = "Q" + colFromLetter + (8-row)
 					+ colToLetter + (8-row);
 			
+			queenMove = new Move(moveLAN, row, column,
+					row, colTo, PieceType.QUEEN);
+			
 			// Move to empty square
 			if(board[row][colTo] instanceof EmptyPiece) {
-				moves.add(new Move(moveLAN, row, column, row, colTo));
+				moves.add(queenMove);
 			}
 			// Capture opponent's piece
 			else if(board[row][colTo].getPieceColor() != this.pieceColor) {
-				moves.add(new Move(moveLAN, row, column, row, colTo));
+				moves.add(queenMove);
 				
 				if(board[row][colTo] instanceof King) {
 					isAttackingKing = true;
@@ -126,13 +145,16 @@ public class Queen extends ChessPiece {
 			moveLAN = "Q" + colFromLetter + (8-row)
 					+ colToLetter + (8-row);
 			
+			queenMove = new Move(moveLAN, row, column,
+					row, colTo, PieceType.QUEEN);
+			
 			// Move to empty square
 			if(board[row][colTo] instanceof EmptyPiece) {
-				moves.add(new Move(moveLAN, row, column, row, colTo));
+				moves.add(queenMove);
 			}
 			// Capture opponent's piece
 			else if(board[row][colTo].getPieceColor() != this.pieceColor) {
-				moves.add(new Move(moveLAN, row, column, row, colTo));
+				moves.add(queenMove);
 				
 				if(board[row][colTo] instanceof King) {
 					isAttackingKing = true;
@@ -153,13 +175,16 @@ public class Queen extends ChessPiece {
 			moveLAN = "Q" + colFromLetter + (8-row)
 					+ colToLetter + (8-rowTo);
 			
+			queenMove = new Move(moveLAN, row, column,
+					rowTo, colTo, PieceType.QUEEN);
+			
 			// Move to empty square
 			if(board[rowTo][colTo] instanceof EmptyPiece) {
-				moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+				moves.add(queenMove);
 			}
 			// Capture opponent's piece
 			else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
-				moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+				moves.add(queenMove);
 				
 				if(board[rowTo][colTo] instanceof King) {
 					isAttackingKing = true;
@@ -180,13 +205,16 @@ public class Queen extends ChessPiece {
 			moveLAN = "Q" + colFromLetter + (8-row)
 					+ colToLetter + (8-rowTo);
 			
+			queenMove = new Move(moveLAN, row, column,
+					rowTo, colTo, PieceType.QUEEN);
+			
 			// Move to empty square
 			if(board[rowTo][colTo] instanceof EmptyPiece) {
-				moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+				moves.add(queenMove);
 			}
 			// Capture opponent's piece
 			else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
-				moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+				moves.add(queenMove);
 				
 				if(board[rowTo][colTo] instanceof King) {
 					isAttackingKing = true;
@@ -207,13 +235,16 @@ public class Queen extends ChessPiece {
 			moveLAN = "Q" + colFromLetter + (8-row)
 					+ colToLetter + (8-rowTo);
 			
+			queenMove = new Move(moveLAN, row, column,
+					rowTo, colTo, PieceType.QUEEN);
+			
 			// Move to empty square
 			if(board[rowTo][colTo] instanceof EmptyPiece) {
-				moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+				moves.add(queenMove);
 			}
 			// Capture opponent's piece
 			else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
-				moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+				moves.add(queenMove);
 				
 				if(board[rowTo][colTo] instanceof King) {
 					isAttackingKing = true;
@@ -234,13 +265,16 @@ public class Queen extends ChessPiece {
 			moveLAN = "Q" + colFromLetter + (8-row)
 					+ colToLetter + (8-rowTo);
 			
+			queenMove = new Move(moveLAN, row, column,
+					rowTo, colTo, PieceType.QUEEN);
+			
 			// Move to empty square
 			if(board[rowTo][colTo] instanceof EmptyPiece) {
-				moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+				moves.add(queenMove);
 			}
 			// Capture opponent's piece
 			else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
-				moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+				moves.add(queenMove);
 				
 				if(board[rowTo][colTo] instanceof King) {
 					isAttackingKing = true;
@@ -257,6 +291,9 @@ public class Queen extends ChessPiece {
 	}
 
 	/**
+	 * Gets the color of the piece.
+	 * 0 for white. 1 for black.
+	 * 
 	 * @return int color of the piece
 	 */
 	@Override
@@ -265,6 +302,8 @@ public class Queen extends ChessPiece {
 	}
 
 	/**
+	 * Gets if the queen is attacking the opponent's king.
+	 * 
 	 * @return boolean true is the piece is attacking
 	 * 			the opponent's king, false if not
 	 */

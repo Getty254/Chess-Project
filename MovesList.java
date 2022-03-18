@@ -4,9 +4,18 @@ import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import java.util.ArrayList;
 
+/**
+ * This class represents the grid of moves
+ * that is displayed under the heading Game Moves.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class MovesList extends GridPane {
 	private StringBuilder movesPGN = new StringBuilder();
+	public static ArrayList<Move> movesAL = new ArrayList<Move>();
 	
 	public MovesList() {
 		// Add boundaries to the columns of the
@@ -48,7 +57,7 @@ public class MovesList extends GridPane {
 			this.add(blackMove, 2, BoardGUI.moveNumber);
 			
 			movesPGN.append(" " + move + " ");
-			
+
 			// Only increment move number after Black's turn
 			BoardGUI.moveNumber++;
     	}

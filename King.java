@@ -2,6 +2,13 @@ package chess;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents a king and is used to
+ * identify all of the moves a king can make.
+ * 
+ * @author Seth Steinbrook and Getty Muthiani
+ * @version 1.0
+ */
 public class King extends ChessPiece {
 
 	/** Color of the piece.*/
@@ -35,6 +42,7 @@ public class King extends ChessPiece {
 	/**
 	 * Finds all the moves the king can make.
 	 * 
+	 * @param board ChessPiece 2d array
 	 * @return ArrayList of Moves of all the
 	 * 			 moves the king can make
 	 */
@@ -84,19 +92,23 @@ public class King extends ChessPiece {
 		if(column - 1 >= 0) {
 			moves.addAll(checkMove(board, row, column-1));
 		}
-		
-		// TODO: do not allow castle if in check
+
+		// Castling
 		if(canCastle) {
 			// White's move
-			if(this.pieceColor == 0) {
+			if(this.pieceColor == 0 && !GameLogic.isInCheckP1) {
 				// Short Castle
 				if(row == 7 && column == 4 
 					&& board[7][5] instanceof EmptyPiece
 					&& board[7][6] instanceof EmptyPiece
 					&& board[7][7] instanceof Rook
 					&& board[7][7].getPieceColor() == this.pieceColor) {
-					
-					moves.add(new Move("O-O", row, column, row, 6));
+
+					Rook rk = (Rook) board[7][7];
+					// if the rook has never moved, the king can castle
+					if(rk.canCastle()) {
+						moves.add(new Move("O-O", row, column, row, 6, PieceType.KING));
+					}
 				}
 				
 				// Long Castle
@@ -106,12 +118,16 @@ public class King extends ChessPiece {
 					&& board[7][1] instanceof EmptyPiece
 					&& board[7][0] instanceof Rook
 					&& board[7][0].getPieceColor() == this.pieceColor) {
-					
-					moves.add(new Move("O-O-O", row, column, row, 2));
+
+					Rook rk = (Rook) board[7][0];
+					// if the rook has never moved, the king can castle
+					if(rk.canCastle()) {
+						moves.add(new Move("O-O-O", row, column, row, 2, PieceType.KING));
+					}
 				}
 			}
 			// Black's move
-			else if(this.pieceColor == 1){
+			else if(this.pieceColor == 1 && !GameLogic.isInCheckP2){
 				// Short Castle
 				if(row == 0 && column == 4 
 					&& board[0][5] instanceof EmptyPiece
@@ -119,7 +135,11 @@ public class King extends ChessPiece {
 					&& board[0][7] instanceof Rook
 					&& board[0][7].getPieceColor() == this.pieceColor) {
 					
-					moves.add(new Move("O-O", row, column, row, 6));
+					Rook rk = (Rook) board[0][7];
+					// if the rook has never moved, the king can castle
+					if(rk.canCastle()) {
+						moves.add(new Move("O-O", row, column, row, 6, PieceType.KING));
+					}
 				}
 				
 				// Long Castle
@@ -130,16 +150,22 @@ public class King extends ChessPiece {
 					&& board[0][0] instanceof Rook
 					&& board[0][0].getPieceColor() == this.pieceColor) {
 					
-					moves.add(new Move("O-O-O", row, column, row, 2));
+					Rook rk = (Rook) board[0][0];
+					// if the rook has never moved, the king can castle
+					if(rk.canCastle()) {
+						moves.add(new Move("O-O-O", row, column, row, 2, PieceType.KING));
+					}
 				}
 			}
 		}
-		
 		
 		return moves;
 	}
 
 	/**
+	 * Gets the color of the piece.
+	 * 0 for white. 1 for black.
+	 * 
 	 * @return int color of the piece
 	 */
 	@Override
@@ -148,6 +174,8 @@ public class King extends ChessPiece {
 	}
 
 	/**
+	 * Gets if the king is attacking the opponent's king.
+	 * 
 	 * @return boolean true is the piece is attacking
 	 * 			the opponent's king, false if not
 	 */
@@ -158,7 +186,7 @@ public class King extends ChessPiece {
 	
 	@Override
 	public char getPieceChar() {
-		return '♜';
+		return ChessPiece.KING.charAt(0);
 	}
 	
 	
@@ -176,15 +204,19 @@ public class King extends ChessPiece {
 		
 		char colFromLetter = (char) (column + 97);
 		char colToLetter = (char) (colTo + 97);
-		String moveLAN = "K" + colFromLetter + (8-row) + colToLetter + (8-rowTo);
+		String moveLAN = "K" + colFromLetter + (8-row)
+						+ colToLetter + (8-rowTo);
+		
+		Move kingMove = new Move(moveLAN, row, column,
+				rowTo, colTo, PieceType.KING);
 		
 		// Move to empty square
 		if(board[rowTo][colTo] instanceof EmptyPiece) {
-			moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+			moves.add(kingMove);
 		}
 		// Capture opponent's piece
 		else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
-			moves.add(new Move(moveLAN, row, column, rowTo, colTo));
+			moves.add(kingMove);
 			
 			if(board[rowTo][colTo] instanceof King) {
 				isAttackingKing = true;

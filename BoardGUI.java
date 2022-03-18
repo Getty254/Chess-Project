@@ -325,7 +325,7 @@ public class BoardGUI extends Application {
 			    	        				squareFrom.getChildren().get(3);
 
 			    	        		// Get the last letter of the input
-			    	        		String promoLetter = 
+			    	        		String promoLetter =
 			    	        			inputMove.getText().substring(4, 5);
 			    	        		
 			    	        		// Promote to Queen

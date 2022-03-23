@@ -52,6 +52,10 @@ public class ChessBoard extends GridPane {
 		createBoard();
 	}
 	
+	/**
+	 * Creates the chess board gridpane with all
+	 * of the pieces and event handling.
+	 */
 	public void createBoard() {		
 		
 		// Remove all squares and pieces to create new ones
@@ -401,14 +405,41 @@ public class ChessBoard extends GridPane {
 				            		&& ((BoardGUI.turn == 0 && rowTo == 0) 
 				            		|| (BoardGUI.turn == 1 && rowTo == 7))) {
 				            					            	
-				            	// Pick Promotion piece here
-				            	chessPieceDropped = new Text(ChessPiece.QUEEN);
+				            	// Pick promotion piece here
+				            	PawnPromotionDialog dialog = new PawnPromotionDialog();	
 				            	
-				            	// TODO: allow promotions for other piece
-				            	fullMove = pieceLetter + colLetterFrom 
+				            	// Player promotes to a rook
+								if(dialog.getCloseStatus() == ChessPiece.ROOK){
+									fullMove = pieceLetter + colLetterFrom 
 				    	    				+ (8 - rowFrom) 
 				    	    				+ colLetterTo + (8 - rowTo)
-				    	    				+ "Q";
+				    	    				+ "R";
+									chessPieceDropped = new Text(ChessPiece.ROOK);
+						    	}
+								// Player promotes to a bishop
+								else if(dialog.getCloseStatus() == ChessPiece.BISHOP){
+									fullMove = pieceLetter + colLetterFrom 
+				    	    				+ (8 - rowFrom) 
+				    	    				+ colLetterTo + (8 - rowTo)
+				    	    				+ "B";
+									chessPieceDropped = new Text(ChessPiece.BISHOP);
+						    	}
+								// Player promotes to a knight
+								else if(dialog.getCloseStatus() == ChessPiece.KNIGHT){
+									fullMove = pieceLetter + colLetterFrom 
+				    	    				+ (8 - rowFrom) 
+				    	    				+ colLetterTo + (8 - rowTo)
+				    	    				+ "N";
+									chessPieceDropped = new Text(ChessPiece.KNIGHT);
+						    	}
+								// Player promotes to a queen
+								else {
+					            	fullMove = pieceLetter + colLetterFrom 
+					    	    			+ (8 - rowFrom) 
+					    	    			+ colLetterTo + (8 - rowTo)
+					    	    			+ "Q";
+					            	chessPieceDropped = new Text(ChessPiece.QUEEN);
+								}
 				            }
 				            // Pawn move, but not a promotion
 				            else if(db.getString().equals(ChessPiece.PAWN)) {

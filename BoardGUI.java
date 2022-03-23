@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 /**
  * This class creates the GUI application
  * for a chess game.
- * 
+ *
  * @author Seth Steinbrook and Getty Muthiani
  * @version 1.0
  */
@@ -48,6 +48,9 @@ public class BoardGUI extends Application {
 	public static int turn = 0;
 	/** Keeps track of the current move number.*/
 	public static int moveNumber = 1;
+	/** Label used to listen for a move to be made.
+	 * This label is never displayed.*/
+	public static Label triggerMoveNum = new Label();
 	
 	
 	/** Controls the logic for the piece movements.*/
@@ -79,6 +82,10 @@ public class BoardGUI extends Application {
 	private Label playerOneLabel = new Label("Player 1 (1200)");
 	/** Label that shows the name for player two.*/
 	private Label playerTwoLabel = new Label("Player 2 (1200)");
+	/** ScrollPane to allow players to scroll through the
+	* moves list if it goes down too far
+	*/
+	ScrollPane scrollPane = new ScrollPane();
 	/** Right section of the main screen that holds
 	 * the moves list, textfield, and flip board button.
 	 */
@@ -243,10 +250,6 @@ public class BoardGUI extends Application {
 			//**************************************
 			//			Move List
 			//**************************************
-	    	
-	    	// Allows players to scroll through the
-	    	// moves list if it goes down too far
-	    	ScrollPane scrollPane = new ScrollPane();
 
 	    	// Adds the moves list to the ScrollPane
 	    	scrollPane.setContent(movesList);
@@ -621,10 +624,12 @@ public class BoardGUI extends Application {
 					new MenuItem("New Game");
 	        MenuItem menuBoardColor =
 	        		new MenuItem("Change Board Colors");
+	        MenuItem menuLoadPGN =
+	        		new MenuItem("Import PGN");
 			
 			MenuButton settingsButton = 
 					new MenuButton("⚙", null, 
-					menuNewGame, menuBoardColor);
+					menuNewGame, menuBoardColor, menuLoadPGN);
 			
 			settingsButton.getStyleClass().add("settings-button");
 			settingsButton.setPrefWidth(50);
@@ -637,8 +642,92 @@ public class BoardGUI extends Application {
 	    	});
 			
 			menuBoardColor.setOnAction((event) -> {
-				BoardColors boardColors = 
-						new BoardColors(primaryStage, chessBoard);
+				new BoardColors(primaryStage, chessBoard);
+			});
+			
+			menuLoadPGN.setOnAction((event) -> {
+				// Start a new game if there is a game in progress
+				if(moveNumber != 1 || turn != 0) {
+					startNewGame();
+				}
+				
+				VBox loadPgnLayout = new VBox();
+				HBox PgnButtons = new HBox();
+				Button submitPGN = new Button("Submit");
+				Button cancelPGN = new Button("Cancel");
+				TextField loadPgnTF = new TextField();
+				
+				// Textfield settings
+				loadPgnTF.setPromptText("Paste your pgn here\r\r\r"
+						+ "Example:\r"
+						+ "1. e2e4 e7e5 2. Ng1f3 Nb8c6 \r"
+						+ "3. Bf1b5 Ng8f6 4. O-O Nf6e4");
+				loadPgnTF.setPrefHeight(500);
+				loadPgnTF.setMaxWidth(200);
+				
+				// Add elements to the layout
+				PgnButtons.getChildren().addAll(
+						submitPGN, cancelPGN);
+				loadPgnLayout.getChildren().addAll(
+						loadPgnTF, PgnButtons);
+				
+				// Center alignment for textfield and buttons
+				PgnButtons.setAlignment(Pos.CENTER);
+				loadPgnLayout.setAlignment(Pos.CENTER);
+				
+				// Spacing between textfield and buttons
+				VBox.setMargin(loadPgnTF, new Insets(0, 0, 20, 0));
+				HBox.setMargin(submitPGN, new Insets(0, 20, 0, 0));
+				
+				movesSection.setCenter(loadPgnLayout);
+				
+				// Reset trigger
+				triggerMoveNum.setText("");
+				
+				// Listener to switch the load pgn textfield
+				// back to the moves list
+				triggerMoveNum.textProperty().addListener((changed) -> {
+					// if player made a move instead of loading a pgn
+					if(triggerMoveNum.getText().equals("moved")) {
+						movesSection.setCenter(scrollPane);
+					}
+				});
+
+				// Player cancels the pgn
+				cancelPGN.setOnAction((click) -> {
+					movesSection.setCenter(scrollPane);
+				});
+				
+				// Player submits pgn
+				submitPGN.setOnAction((click) -> {
+					String gamePGN = loadPgnTF.getText();
+					
+					// Remove all move numbers, periods, 
+					// and space directly after the periods
+					gamePGN = gamePGN.replaceAll("[0-9]{1,2}\\p{Punct}\\s", "");
+
+					// Turn the string into an array of strings with
+					// each move being its own element
+					String pgnArr[] = gamePGN.split(" ");
+					
+					// Type each move in the textfield
+					for(String currentMove: pgnArr){
+						// Puts the textfield in focus
+						inputMove.requestFocus();
+						
+						// Enters the move into the textfield
+						inputMove.setText(currentMove);
+						
+						// Presses the enter key to perform the move
+						inputMove.fireEvent(new KeyEvent(
+								KeyEvent.KEY_PRESSED, " ", " ",
+								KeyCode.ENTER, false, false,
+								false, false));
+					}
+					
+					// Display the moves list
+					movesSection.setCenter(scrollPane);
+				});
 			});
 			
 			
@@ -706,6 +795,11 @@ public class BoardGUI extends Application {
 		// Reset moves list
 		movesList.getChildren().clear();
 		movesList.clearPGN();
+		
+		// Display moves list if not already showing
+		if(!(movesSection.getCenter() instanceof ScrollPane)) {
+			movesSection.setCenter(scrollPane);
+		}
 		
 		moveNumber = 1;
 		turn = 0;

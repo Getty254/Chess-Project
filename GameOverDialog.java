@@ -161,7 +161,11 @@ public class GameOverDialog extends Alert {
 		exitPopup.setPrefWidth(newGame.getWidth());
 	}
 	
-	
+	/**
+	 * Get what button was pressed.
+	 * 
+	 * @return int 0 for new game, 1 for cancel
+	 */
 	public int getCloseStatus() {
 		return closeStatus;
 	}

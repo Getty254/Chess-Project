@@ -48,6 +48,7 @@ public class MovesList extends GridPane {
 			GridPane.setHalignment(whiteMove, HPos.CENTER);
 			this.add(whiteMove, 1, BoardGUI.moveNumber);
 			
+			BoardGUI.triggerMoveNum.setText("moved");
 			movesPGN.append(BoardGUI.moveNumber + ". " + move);
     	}
     	else {

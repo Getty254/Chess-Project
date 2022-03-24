@@ -91,3 +91,17 @@
 	-fx-font-size: 20px;
 }
 
+.promotion {
+	-fx-font-size: 75px;
+	-fx-border-color: black;
+	-fx-border-width: 2px;
+}
+
+.white-piece {
+	-fx-text-fill: rgb(250, 249, 246);
+}
+
+.black-piece {
+	-fx-text-fill: black;
+}
+

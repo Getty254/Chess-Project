@@ -445,7 +445,16 @@ public class BoardGUI extends Application {
 	    	        			if(moveStatus != -1) {
 	    	        				clocks.updatePlayerClocks();
 			    	        		movesList.updateMovesList(inputMove.getText());
-	    	        			}	
+	    	        			}
+	    	        			
+	    	        			// Checkmate
+			    	    		if(moveStatus == 1) {
+			    	    			triggerGameOver.setText("checkmate");
+			    	    		}
+			    	    		// Stalemate
+			    	    		else if(moveStatus == 2) {
+			    	    			triggerGameOver.setText("stalemate");
+			    	    		}
 	    	        		}
 	    	        	}
 	    	        	

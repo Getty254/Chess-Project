@@ -48,10 +48,7 @@ public class BoardGUI extends Application {
 	public static int turn = 0;
 	/** Keeps track of the current move number.*/
 	public static int moveNumber = 1;
-	/** Label used to listen for a move to be made.
-	 * This label is never displayed.*/
-	public static Label triggerMoveNum = new Label();
-	
+
 	
 	/** Controls the logic for the piece movements.*/
 	private GameLogic logic = new GameLogic();
@@ -90,12 +87,15 @@ public class BoardGUI extends Application {
 	 * the moves list, textfield, and flip board button.
 	 */
 	private BorderPane movesSection = new BorderPane();
+	/** Label used to listen for a move to be made.
+	 * This label is never displayed.*/
+	private Label triggerMoveNum = new Label();
 	/** GridPane that holds the list of moves.
 	 * The first column contains the move number.
 	 * The second column contains white's move.
 	 * The third column contains black's move.
 	 */
-	private MovesList movesList = new MovesList();
+	private MovesList movesList = new MovesList(triggerMoveNum);
 	/** Label headings to indicate the list of moves section.*/
 	private Label movesLabel = new Label("Game Moves");
 	/** Layout that holds the textfield and flip board button.*/

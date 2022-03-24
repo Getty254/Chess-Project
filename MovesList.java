@@ -14,10 +14,12 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class MovesList extends GridPane {
-	private StringBuilder movesPGN = new StringBuilder();
-	public static ArrayList<Move> movesAL = new ArrayList<Move>();
 	
-	public MovesList() {
+	public static ArrayList<Move> movesAL = new ArrayList<Move>();
+	private StringBuilder movesPGN = new StringBuilder();
+	private Label triggerMoveNum;
+	
+	public MovesList(Label triggerMoveNum) {
 		// Add boundaries to the columns of the
 		// moves list GridPane
 		this.getColumnConstraints().add(
@@ -26,6 +28,8 @@ public class MovesList extends GridPane {
 				new ColumnConstraints(75));
 		this.getColumnConstraints().add(
 				new ColumnConstraints(75));
+		this.triggerMoveNum = triggerMoveNum;
+		
 	}
 	
 	
@@ -48,7 +52,7 @@ public class MovesList extends GridPane {
 			GridPane.setHalignment(whiteMove, HPos.CENTER);
 			this.add(whiteMove, 1, BoardGUI.moveNumber);
 			
-			BoardGUI.triggerMoveNum.setText("moved");
+			triggerMoveNum.setText("moved");
 			movesPGN.append(BoardGUI.moveNumber + ". " + move);
     	}
     	else {

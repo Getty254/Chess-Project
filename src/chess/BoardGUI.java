@@ -74,9 +74,9 @@ public class BoardGUI extends Application {
 	/** Layout that holds the resign/draw buttons.*/
 	private HBox endGameButtons = new HBox();
 	/** Label that shows the name for player one.*/
-	private Label playerOneLabel = new Label("Player 1 (1200)");
+	private Label playerOneLabel = new Label("Player 1");
 	/** Label that shows the name for player two.*/
-	private Label playerTwoLabel = new Label("Player 2 (1200)");
+	private Label playerTwoLabel = new Label("Player 2");
 	/** ScrollPane to allow players to scroll through the
 	* moves list if it goes down too far.
 	*/
@@ -516,7 +516,7 @@ public class BoardGUI extends Application {
 	        MenuItem menuBoardColor =
 	        		new MenuItem("Change Board Colors");
 	        MenuItem menuLoadPGN =
-	        		new MenuItem("Import PGN");
+	        		new MenuItem("Load PGN");
 
 			MenuButton settingsButton =
 					new MenuButton("⚙", null,

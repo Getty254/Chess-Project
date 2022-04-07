@@ -1,0 +1,12 @@
+# Ignore Mac system file
+.DS_store
+
+bin/
+
+.checkstyle
+
+.classpath
+
+.project
+
+.settings/

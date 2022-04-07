@@ -28,6 +28,11 @@ public class BoardColors extends Stage {
 	/** RGB color for half of squares.*/
 	public static Color colorTwo = Color.rgb(139, 69, 19);
 	
+	/**
+	 * BoardColors constructor.
+	 * @param primaryStage Stage
+	 * @param chessBoard GridPane
+	 */
 	public BoardColors(Stage primaryStage, GridPane chessBoard) {
 		
 		// Set the color pickers' starting colors
@@ -35,7 +40,8 @@ public class BoardColors extends Stage {
 		ColorPicker squareColorTwo = new ColorPicker(colorTwo);
 		
 		// Button to change colors back to light/dark brown
-		Button defaultColors = new Button("Change back to default colors");
+		Button defaultColors =
+				new Button("Change back to default colors");
 
 		VBox colorLayout = new VBox();
 		HBox colorSelectors = new HBox();
@@ -45,8 +51,10 @@ public class BoardColors extends Stage {
 		HBox.setMargin(squareColorOne, new Insets(0,10,0,0));
 		VBox.setMargin(defaultColors, new Insets(0,0,10,0));
 		
-		colorSelectors.getChildren().addAll(squareColorOne, squareColorTwo);
-		colorLayout.getChildren().addAll(colorSelectors, defaultColors);
+		colorSelectors.getChildren().addAll(
+				squareColorOne, squareColorTwo);
+		colorLayout.getChildren().addAll(
+				colorSelectors, defaultColors);
 		
 		Scene sceneColorChange = new Scene(colorLayout);
 		
@@ -62,7 +70,8 @@ public class BoardColors extends Stage {
 		// Close the color change window if it loses focus
 		this.focusedProperty().addListener((eventColor) -> {
 			if(this.isFocused()) {
-				primaryStage.focusedProperty().addListener((eventPrim) -> {
+				primaryStage.focusedProperty().addListener(
+				(eventPrim) -> {
 					if(primaryStage.isFocused()) {
 						this.hide();
 					}
@@ -81,8 +90,10 @@ public class BoardColors extends Stage {
 				numSquares++;
 				for(int j = 0; j < 8; j++) {
 					StackPane stack = (StackPane)
-							chessBoard.getChildren().get(i * 8 + j);
-					Rectangle square = (Rectangle) stack.getChildren().get(0);
+							chessBoard.getChildren().
+							get(i * 8 + j);
+					Rectangle square = (Rectangle)
+							stack.getChildren().get(0);
 					
 					// Alternate squares
 				    if (numSquares % 2 != 0) {
@@ -104,8 +115,10 @@ public class BoardColors extends Stage {
 				numSquares++;
 				for(int j = 0; j < 8; j++) {
 					StackPane stack = (StackPane)
-							chessBoard.getChildren().get(i * 8 + j);
-					Rectangle square = (Rectangle) stack.getChildren().get(0);
+							chessBoard.getChildren().
+							get(i * 8 + j);
+					Rectangle square = (Rectangle)
+							stack.getChildren().get(0);
 					
 					// Alternate squares
 				    if (numSquares % 2 == 0) {
@@ -127,8 +140,10 @@ public class BoardColors extends Stage {
 				numSquares++;
 				for(int j = 0; j < 8; j++) {
 					StackPane stack = (StackPane)
-							chessBoard.getChildren().get(i * 8 + j);
-					Rectangle square = (Rectangle) stack.getChildren().get(0);
+							chessBoard.getChildren().
+							get(i * 8 + j);
+					Rectangle square = (Rectangle)
+							stack.getChildren().get(0);
 					
 					// Alternate squares
 				    if (numSquares % 2 != 0) {

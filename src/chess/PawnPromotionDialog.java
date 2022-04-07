@@ -23,7 +23,10 @@ public class PawnPromotionDialog extends Stage {
 	 *  pawn promotion popup.
 	 */
 	private String closeStatus;
-	
+
+	/**
+	 * PawnPromotionDialog constructor.
+	 */
 	public PawnPromotionDialog() {
 		
 		Label queen = new Label(ChessPiece.QUEEN);

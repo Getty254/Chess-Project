@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
+
 /**
  * This class represents a rook and is used to
  * identify all of the moves a rook can make.
@@ -26,13 +27,13 @@ public class Rook extends ChessPiece {
 	 * Creates a rook.
 	 * 
 	 * @param color int color of the piece
-	 * @param row int row the piece is placed on
-	 * @param column int column the piece is placed on
+	 * @param r int row the piece is placed on
+	 * @param col int column the piece is placed on
 	 */
-	public Rook(int color, int row, int column) {
+	public Rook(int color, int r, int col) {
 		this.pieceColor = color;
-		this.row = row;
-		this.column = column;
+		this.row = r;
+		this.column = col;
 	}
 	
 	/**
@@ -194,12 +195,7 @@ public class Rook extends ChessPiece {
 	public boolean isAttackingKing() {
 		return isAttackingKing;
 	}
-	
-	@Override
-	public char getPieceChar() {
-		return ChessPiece.ROOK.charAt(0);
-	}
-	
+
 	/**
 	 * Removes the castling rights to the side
 	 * the rook was on.

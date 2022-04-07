@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
+
 /**
  * This class represents a pawn and is used to
  * identify all of the moves a pawn can make.
@@ -29,13 +30,13 @@ public class Pawn extends ChessPiece {
 	 * Creates a pawn.
 	 * 
 	 * @param color int color of the piece
-	 * @param row int row the piece is placed on
-	 * @param column int column the piece is placed on
+	 * @param r int row the piece is placed on
+	 * @param col int column the piece is placed on
 	 */
-	public Pawn(int color, int row, int column) {
+	public Pawn(int color, int r, int col) {
 		this.pieceColor = color;
-		this.row = row;
-		this.column = column;
+		this.row = r;
+		this.column = col;
 		
 		// White pawn is not on the 2nd row
 		if(color == 0 && row != 6) {
@@ -182,12 +183,7 @@ public class Pawn extends ChessPiece {
 	public boolean isAttackingKing() {
 		return isAttackingKing;
 	}
-	
-	@Override
-	public char getPieceChar() {
-		return ChessPiece.PAWN.charAt(0);
-	}
-	
+
 	/**
 	 * Checks if the pawn move is possible.
 	 * 

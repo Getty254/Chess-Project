@@ -1,5 +1,8 @@
 package chess;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -30,7 +34,10 @@ public class GameOverDialog extends Alert {
 	/** Close status of the popup to exit the popup.*/
 	public static final int EXIT = 1;
 
-	
+	/**
+	 * GameOverDialog constructor.
+	 * @param result int
+	 */
 	public GameOverDialog(int result) {
 		super(AlertType.NONE);
 		Stage stageGameOver = new Stage();
@@ -52,12 +59,14 @@ public class GameOverDialog extends Alert {
 		// 1 checkmate
 		else if(result == 1) {
 			if(BoardGUI.turn == 0) {
-				resultHeading.setText("Player Two won by checkmate!!");
+				resultHeading.setText(
+						"Player Two won by checkmate!!");
 				gameResult.setText(
 						"Player One 0 - 1 Player Two");
 			}
 			else {
-				resultHeading.setText("Player One won by checkmate!!");
+				resultHeading.setText(
+						"Player One won by checkmate!!");
 				gameResult.setText(
 						"Player One 1 - 0 Player Two");
 			}
@@ -70,12 +79,14 @@ public class GameOverDialog extends Alert {
 		// 3 resign
 		else if(result == 3) {
 			if(BoardGUI.turn == 0) {
-				resultHeading.setText("Player Two won by resignation!!");
+				resultHeading.setText(
+						"Player Two won by resignation!!");
 				gameResult.setText(
 						"Player One 0 - 1 Player Two");
 			}
 			else {
-				resultHeading.setText("Player One won by resignation!!");
+				resultHeading.setText(
+						"Player One won by resignation!!");
 				gameResult.setText(
 						"Player One 1 - 0 Player Two");
 			}
@@ -83,12 +94,14 @@ public class GameOverDialog extends Alert {
 		// 4 timeout
 		else {
 			if(BoardGUI.turn == 0) {
-				resultHeading.setText("Player Two won on time!!");
+				resultHeading.setText(
+						"Player Two won on time!!");
 				gameResult.setText(
 						"Player One 0 - 1 Player Two");
 			}
 			else {
-				resultHeading.setText("Player One won on time!!");
+				resultHeading.setText(
+						"Player One won on time!!");
 				gameResult.setText(
 						"Player One 1 - 0 Player Two");
 			}
@@ -99,13 +112,16 @@ public class GameOverDialog extends Alert {
 		
 		Button newGame = new Button("New Game");
 		Button exitPopup = new Button("Exit");
+		Button downloadPGN = new Button("Download PGN");
 		
 		// Add css class
 		newGame.getStyleClass().add("result-buttons");
 		exitPopup.getStyleClass().add("result-buttons");
+		downloadPGN.getStyleClass().add("result-buttons");
 		
 		// Add buttons to the layout
-		buttonOptions.getChildren().addAll(newGame, exitPopup);
+		buttonOptions.getChildren().addAll(
+				newGame, exitPopup, downloadPGN);
 		
 		newGame.setOnAction((event) -> {
 			closeStatus = NEWGAME;
@@ -120,6 +136,41 @@ public class GameOverDialog extends Alert {
 			// Close the popup window
 			stageGameOver.hide();
     	});
+		
+		downloadPGN.setOnAction((event) -> {
+			// Choose a file name and place to save the file
+			FileChooser fileChooser = new FileChooser();
+			
+			// Set the default file name
+			fileChooser.setInitialFileName("chess-game");
+			
+			// Set the file extension to pgn
+			FileChooser.ExtensionFilter extFilter =
+					new FileChooser.ExtensionFilter(
+						"Portable Game Notation (*.pgn)", "*.pgn");
+            fileChooser.getExtensionFilters().add(extFilter);
+            
+            // Get the file
+			File fileSelected =
+					fileChooser.showSaveDialog(stageGameOver);
+			
+			// if player picked a file
+			if(fileSelected != null) {
+				try {
+					FileWriter fileWriter =
+							new FileWriter(fileSelected);
+										
+					// Write the moves to the file
+					fileWriter.write(MovesList.movesPGN.toString());
+					
+					// Close the file
+					fileWriter.close();
+				}
+				catch(IOException e) {
+					System.out.println("Error writing to the file");
+				}
+			}			
+    	});
 
 		// Add labels and buttons to the layout
 		layoutGameOver.setTop(resultHeading);
@@ -128,11 +179,14 @@ public class GameOverDialog extends Alert {
 		
 		// Spacing/Alignment for the heading
 		BorderPane.setAlignment(resultHeading, Pos.CENTER);
-		BorderPane.setMargin(layoutGameOver.getTop(), new Insets(15,0,0,0));
+		BorderPane.setMargin(layoutGameOver.getTop(),
+				new Insets(15,0,0,0));
 		
 		// Spacing/Alignment for the buttons
-		BorderPane.setMargin(layoutGameOver.getBottom(), new Insets(0,0,15,0));
+		BorderPane.setMargin(layoutGameOver.getBottom(),
+				new Insets(0,0,15,0));
 		HBox.setMargin(newGame, new Insets(0,25,0,0));
+		HBox.setMargin(downloadPGN, new Insets(0,0,0,25));
 		buttonOptions.setAlignment(Pos.CENTER);
 		
 		

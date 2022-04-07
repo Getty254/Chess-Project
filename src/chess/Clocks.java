@@ -22,10 +22,14 @@ public class Clocks {
 	private Timeline timelineP1;
 	/** Clock for player two.*/
 	private Timeline timelineP2;
-	/** Starting time in seconds for each player's clock.*/
-	private long timeControl = 600;
-	/** Time added to player's clock after they make a move.*/
-	private long timeIncrement = 0;
+	/** Starting time in seconds for player one's clock.*/
+	private long timeControlP1;
+	/** Starting time in seconds for player two's clock.*/
+	private long timeControlP2;
+	/** Time added to player one's clock after they make a move.*/
+	private long timeIncrementP1;
+	/** Time added to player two's clock after they make a move.*/
+	private long timeIncrementP2;
 	/** Minutes left on player one's clock.*/
 	private long minP1;
 	/** Minutes left on player two's clock.*/
@@ -35,9 +39,9 @@ public class Clocks {
 	/** Seconds left on player two's clock.*/
 	private long secP2;
 	/** Time in seconds left on player one's clock.*/
-	private long timerP1 = timeControl;
+	private long timerP1;
 	/** Time in seconds left on player two's clock.*/
-	private long timerP2 = timeControl;
+	private long timerP2;
 	
 	/** Label that shows the time left on
 	 * player one's clock.
@@ -48,10 +52,17 @@ public class Clocks {
 	 */
 	private Label timerLabelP2;
 	
+	/**
+	 * Clocks constructor.
+	 * @param gameInfo VBox
+	 * @param endGameButtons HBox
+	 * @param tLabelP1 Label
+	 * @param tLabelP2 Label
+	 */
 	public Clocks(VBox gameInfo, HBox endGameButtons,
-			Label timerLabelP1, Label timerLabelP2) {
-		this.timerLabelP1 = timerLabelP1;
-		this.timerLabelP2 = timerLabelP2;
+			Label tLabelP1, Label tLabelP2) {
+		this.timerLabelP1 = tLabelP1;
+		this.timerLabelP2 = tLabelP2;
 		
 		timerLabelP1.setPrefWidth(125);
 		timerLabelP2.setPrefWidth(125);
@@ -75,14 +86,16 @@ public class Clocks {
 	 */
 	private void initializeClocks() {
 		// Set remaining clock time to the starting time
-		timerP1 = timeControl;
-		timerP2 = timeControl;
-		minP1 = TimeUnit.SECONDS.toMinutes(timeControl);
-		secP1 = timeControl - (minP1 * 60);
+		timerP1 = timeControlP1;
+		timerP2 = timeControlP2;
+		minP1 = TimeUnit.SECONDS.toMinutes(timeControlP1);
+		secP1 = timeControlP1 - (minP1 * 60);
+		minP2 = TimeUnit.SECONDS.toMinutes(timeControlP2);
+		secP2 = timeControlP2 - (minP2 * 60);
 		
 		// Starting clock values
 		timerLabelP1.setText(String.format("%02d:%02d", minP1, secP1));
-		timerLabelP2.setText(String.format("%02d:%02d", minP1, secP1));
+		timerLabelP2.setText(String.format("%02d:%02d", minP2, secP2));
 		
 		timelineP1 = new Timeline(new KeyFrame(Duration.seconds(1), 
 				new EventHandler<ActionEvent>() {
@@ -150,9 +163,9 @@ public class Clocks {
     		timelineP2.play();
     		
     		// if there is increment update clock
-    		if(timeIncrement > 0) {
+    		if(timeIncrementP1 > 0) {
         		// Add time to player one's clock
-        		timerP1 += timeIncrement;
+        		timerP1 += timeIncrementP1;
         		
         		minP1 = TimeUnit.SECONDS.toMinutes(timerP1);
 			    secP1 = timerP1 - (minP1 * 60);
@@ -167,9 +180,9 @@ public class Clocks {
     		timelineP1.play();
     		
     		// if there is increment update clock
-    		if(timeIncrement > 0) {
+    		if(timeIncrementP2 > 0) {
         		// Add time to player two's clock
-        		timerP2 += timeIncrement;
+        		timerP2 += timeIncrementP2;
         		
         		minP2 = TimeUnit.SECONDS.toMinutes(timerP2);
 			    secP2 = timerP2 - (minP2 * 60);
@@ -186,5 +199,53 @@ public class Clocks {
 		timelineP1.stop();
 		timelineP2.stop();
 		initializeClocks();
+	}
+	
+	/**
+	 * Set the time control for player one.
+	 * 
+	 * @param min int minutes to start with
+	 * @param sec int seconds to start with
+	 */
+	public void setTimePlayerOne(int min, int sec) {
+		timeControlP1 = min * 60 + sec;
+	}
+	
+	/**
+	 * Set the time control for player two.
+	 * 
+	 * @param min int minutes to start with
+	 * @param sec int seconds to start with
+	 */
+	public void setTimePlayerTwo(int min, int sec) {
+		timeControlP2 = min * 60 + sec;
+	}
+	
+	/**
+	 * Set the increment for player one.
+	 * 
+	 * @param inc int increment in seconds
+	 */
+	public void setIncrementPlayerOne(int inc) {
+		timeIncrementP1 = inc;
+	}
+	
+	/**
+	 * Set the increment for player two.
+	 * 
+	 * @param inc int increment in seconds
+	 */
+	public void setIncrementPlayerTwo(int inc) {
+		timeIncrementP2 = inc;
+	}
+	
+	/**
+	 * Set both clocks to 10 minutes with no increment.
+	 */
+	public void setDefaultTimes() {
+		timeControlP1 = 600;
+		timeControlP2 = 600;
+		timeIncrementP1 = 0;
+		timeIncrementP2 = 0;
 	}
 }

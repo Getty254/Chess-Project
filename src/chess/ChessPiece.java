@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
+
 /**
  * This is the parent class of each chess piece class.
  *
@@ -10,18 +11,19 @@ import java.util.ArrayList;
  */
 public abstract class ChessPiece {
 	/** Unicode character for a pawn.*/
-	public static String PAWN = "♟";
+	public static final String PAWN = "♟";
 	/** Unicode character for a knight.*/
-	public static String KNIGHT = "♞";
+	public static final String KNIGHT = "♞";
 	/** Unicode character for a bishop.*/
-	public static String BISHOP = "♝";
+	public static final String BISHOP = "♝";
 	/** Unicode character for a rook.*/
-	public static String ROOK = "♜";
+	public static final String ROOK = "♜";
 	/** Unicode character for a queen.*/
-	public static String QUEEN = "♛";
+	public static final String QUEEN = "♛";
 	/** Unicode character for a king.*/
-	public static String KING = "♚";
-	
+	public static final String KING = "♚";
+
+
 	/**
 	 * Finds all the moves a piece can make.
 	 * 
@@ -37,7 +39,6 @@ public abstract class ChessPiece {
 	 * @return int color of the piece
 	 */
 	public abstract int getPieceColor();
-	public abstract char getPieceChar();
 	/**
 	 * Gets if a piece is attacking the opponent's king.
 	 * 

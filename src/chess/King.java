@@ -20,23 +20,23 @@ public class King extends ChessPiece {
 	/** Indicates if the opponent's king is attacked.*/
 	private boolean isAttackingKing = false;
 	/** Indicates if the king is allowed to castle.*/
-	public boolean canCastle;
+	private boolean canCastle;
 
 
 	/**
 	 * Creates a king.
 	 * 
 	 * @param color int color of the piece
-	 * @param row int row the piece is placed on
-	 * @param column int column the piece is placed on
-	 * @param canCastle boolean true if the king is 
+	 * @param r int row the piece is placed on
+	 * @param col int column the piece is placed on
+	 * @param castle boolean true if the king is
 	 * 				allowed to castle, false if not
 	 */
-	public King(int color, int row, int column, boolean canCastle) {
+	public King(int color, int r, int col, boolean castle) {
 		this.pieceColor = color;
-		this.row = row;
-		this.column = column;
-		this.canCastle = canCastle;
+		this.row = r;
+		this.column = col;
+		this.canCastle = castle;
 	}
 	
 	/**
@@ -183,13 +183,7 @@ public class King extends ChessPiece {
 	public boolean isAttackingKing() {
 		return isAttackingKing;
 	}
-	
-	@Override
-	public char getPieceChar() {
-		return ChessPiece.KING.charAt(0);
-	}
-	
-	
+
 	/**
 	 * Checks if the king move is possible.
 	 * 

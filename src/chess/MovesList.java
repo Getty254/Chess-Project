@@ -9,17 +9,24 @@ import java.util.ArrayList;
 /**
  * This class represents the grid of moves
  * that is displayed under the heading Game Moves.
- * 
+ *
  * @author Seth Steinbrook and Getty Muthiani
  * @version 1.0
  */
 public class MovesList extends GridPane {
-	
+
+	/** List of moves.*/
 	public static ArrayList<Move> movesAL = new ArrayList<Move>();
-	private StringBuilder movesPGN = new StringBuilder();
+	/** String of moves with move numbers.*/
+	public static StringBuilder movesPGN = new StringBuilder();
+	/** Label to listen for change in move number.*/
 	private Label triggerMoveNum;
-	
-	public MovesList(Label triggerMoveNum) {
+
+	/**
+	 * MovesList constructor.
+	 * @param trigger Label
+	 */
+	public MovesList(Label trigger) {
 		// Add boundaries to the columns of the
 		// moves list GridPane
 		this.getColumnConstraints().add(
@@ -28,11 +35,11 @@ public class MovesList extends GridPane {
 				new ColumnConstraints(75));
 		this.getColumnConstraints().add(
 				new ColumnConstraints(75));
-		this.triggerMoveNum = triggerMoveNum;
-		
+		this.triggerMoveNum = trigger;
+
 	}
-	
-	
+
+
 	/**
 	 * Adds the player's move to the list of moves on the right
 	 * side of the screen.
@@ -46,12 +53,12 @@ public class MovesList extends GridPane {
     		Label moveNumLabel = new Label(BoardGUI.moveNumber + ".");
     		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
     		this.add(moveNumLabel, 0, BoardGUI.moveNumber);
-    		
+
     		// Add white move to move list
     		Label whiteMove = new Label(move);
 			GridPane.setHalignment(whiteMove, HPos.CENTER);
 			this.add(whiteMove, 1, BoardGUI.moveNumber);
-			
+
 			triggerMoveNum.setText("moved");
 			movesPGN.append(BoardGUI.moveNumber + ". " + move);
     	}
@@ -60,28 +67,28 @@ public class MovesList extends GridPane {
     		Label blackMove = new Label(move);
 			GridPane.setHalignment(blackMove, HPos.CENTER);
 			this.add(blackMove, 2, BoardGUI.moveNumber);
-			
+
 			movesPGN.append(" " + move + " ");
 
 			// Only increment move number after Black's turn
 			BoardGUI.moveNumber++;
     	}
-    	
+
 		// Change whose turn it is
 		BoardGUI.turn = (BoardGUI.turn == 0) ? 1 : 0;
 	}
-	
+
 	/**
 	 * Gets the Portable Game Notation (PGN).
-	 * 
+	 *
 	 * @return String of all the moves of the game
 	 */
 	public String getPGN() {
 		return movesPGN.toString();
 	}
-	
+
 	/**
-	 * Clears all the moves in the pgn
+	 * Clears all the moves in the pgn.
 	 */
 	public void clearPGN() {
 		movesPGN.setLength(0);

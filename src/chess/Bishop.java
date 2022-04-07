@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
+
 /**
  * This class represents a bishop and is used to
  * identify all of the moves a bishop can make.
@@ -24,13 +25,13 @@ public class Bishop extends ChessPiece {
 	 * Creates a bishop.
 	 * 
 	 * @param color int color of the piece
-	 * @param row int row the piece is placed on
-	 * @param column int column the piece is placed on
+	 * @param r int row the piece is placed on
+	 * @param col int column the piece is placed on
 	 */
-	public Bishop(int color, int row, int column) {
+	public Bishop(int color, int r, int col) {
 		this.pieceColor = color;
-		this.row = row;
-		this.column = column;
+		this.row = r;
+		this.column = col;
 	}
 	
 	/**
@@ -67,7 +68,8 @@ public class Bishop extends ChessPiece {
 				moves.add(bishopMove);
 			}
 			// Capture opponent's piece
-			else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
+			else if(board[rowTo][colTo].getPieceColor()
+					!= this.pieceColor) {
 				moves.add(bishopMove);
 				
 				if(board[rowTo][colTo] instanceof King) {
@@ -97,7 +99,8 @@ public class Bishop extends ChessPiece {
 				moves.add(bishopMove);
 			}
 			// Capture opponent's piece
-			else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
+			else if(board[rowTo][colTo].getPieceColor()
+					!= this.pieceColor) {
 				moves.add(bishopMove);
 				
 				if(board[rowTo][colTo] instanceof King) {
@@ -127,7 +130,8 @@ public class Bishop extends ChessPiece {
 				moves.add(bishopMove);
 			}
 			// Capture opponent's piece
-			else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
+			else if(board[rowTo][colTo].getPieceColor()
+					!= this.pieceColor) {
 				moves.add(bishopMove);
 				
 				if(board[rowTo][colTo] instanceof King) {
@@ -157,7 +161,8 @@ public class Bishop extends ChessPiece {
 				moves.add(bishopMove);
 			}
 			// Capture opponent's piece
-			else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
+			else if(board[rowTo][colTo].getPieceColor()
+					!= this.pieceColor) {
 				moves.add(bishopMove);
 				
 				if(board[rowTo][colTo] instanceof King) {
@@ -196,10 +201,4 @@ public class Bishop extends ChessPiece {
 	public boolean isAttackingKing() {
 		return isAttackingKing;
 	}
-	
-	@Override
-	public char getPieceChar() {
-		return ChessPiece.BISHOP.charAt(0);
-	}
-
 }

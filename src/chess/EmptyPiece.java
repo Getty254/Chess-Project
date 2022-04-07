@@ -10,15 +10,11 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class EmptyPiece extends ChessPiece{
-	
-	/** Row the piece is placed on.*/
-	private int row;
-	/** Column the piece is placed on.*/
-	private int column;
-	
-	public EmptyPiece(int row, int column) {
-		this.row = row;
-		this.column = column;
+
+	/**
+	 * EmptyPiece constructor.
+	 */
+	public EmptyPiece() {
 	}
 	
 	/**
@@ -48,11 +44,5 @@ public class EmptyPiece extends ChessPiece{
 	@Override
 	public boolean isAttackingKing() {
 		return false;
-	}
-	
-
-	@Override
-	public char getPieceChar() {
-		return ' ';
 	}
 }

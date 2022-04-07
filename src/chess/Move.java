@@ -27,23 +27,23 @@ public class Move {
 	private PieceType piece;
 	
 	/**
-	 * Creates a new move
+	 * Move constructor.
 	 * 
-	 * @param moveLAN String of the move in long algebraic notation
-	 * @param rowFrom int row the piece is moving from
-	 * @param columnFrom int column the piece is moving from
-	 * @param rowTo int row the piece is moving to
-	 * @param columnTo int column the piece is moving to
-	 * @param piece PieceType for what piece was moved
+	 * @param move String of the move in long algebraic notation
+	 * @param rFrom int row the piece is moving from
+	 * @param colFrom int column the piece is moving from
+	 * @param rTo int row the piece is moving to
+	 * @param colTo int column the piece is moving to
+	 * @param pieceType PieceType for what piece was moved
 	 */
-	public Move(String moveLAN, int rowFrom, 
-			int columnFrom, int rowTo, int columnTo, PieceType piece) {
-		this.moveLAN = moveLAN;
-		this.rowFrom = rowFrom;
-		this.columnFrom = columnFrom;
-		this.rowTo = rowTo;
-		this.columnTo = columnTo;
-		this.piece = piece;
+	public Move(String move, int rFrom, 
+			int colFrom, int rTo, int colTo, PieceType pieceType) {
+		this.moveLAN = move;
+		this.rowFrom = rFrom;
+		this.columnFrom = colFrom;
+		this.rowTo = rTo;
+		this.columnTo = colTo;
+		this.piece = pieceType;
 	}
 	
 	/**

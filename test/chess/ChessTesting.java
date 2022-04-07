@@ -1,17 +1,10 @@
 package chess;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
-import junit.framework.Assert;
 
 public class ChessTesting {
-	
-	@Test
-	public void createBoardTest() {
-		GameLogic logic = new GameLogic();
-	}
 
 	@Test
 	public void legalMoveTest() {
@@ -1243,7 +1236,7 @@ public class ChessTesting {
 	
 	@Test
 	public void emptyPieceMovesTest() {
-		EmptyPiece ep = new EmptyPiece(4,4);
+		EmptyPiece ep = new EmptyPiece();
 		ChessPiece[][] board = new ChessPiece[8][8];
 		
 		assertEquals(null, ep.getMoves(board));
@@ -1269,7 +1262,7 @@ public class ChessTesting {
 	}
 	
 	@Test
-	public void EnPassantCheckmateTest() {
+	public void enPassantCheckmateTest() {
 		GameLogic logic = new GameLogic();
 		
 		Move moveW1 = new Move("e2e4", 6, 4, 4, 4, PieceType.PAWN);

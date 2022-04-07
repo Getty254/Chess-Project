@@ -29,19 +29,19 @@ public class GameLogic {
 	/**
 	 * Finds all the possible moves.
 	 * 
-	 * @param board ChessPiece 2d array
+	 * @param cboard ChessPiece 2d array
 	 * @param turn int to get that player's moves
 	 * @return ArrayList of Moves of all the moves for that player
 	 */
-	private ArrayList<Move> getAllMoves(ChessPiece[][] board, int turn) {
+	private ArrayList<Move> getAllMoves(ChessPiece[][] cboard, int turn) {
 		
 		ArrayList<Move> allMoves = new ArrayList<Move>();
 		
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++) {
-				if(!(board[i][j] instanceof EmptyPiece)
-						&& board[i][j].getPieceColor() == turn) {
-					allMoves.addAll(board[i][j].getMoves(board));
+				if(!(cboard[i][j] instanceof EmptyPiece)
+						&& cboard[i][j].getPieceColor() == turn) {
+					allMoves.addAll(cboard[i][j].getMoves(cboard));
 				}
 			}
 		}
@@ -107,8 +107,7 @@ public class GameLogic {
 		// Valid move
 		if(isMoveValid(move.getMoveLAN())) {
 			
-			// Set opposing king to be in check
-			// to prevent castling
+			// Set king to be out of check
 			if(BoardGUI.turn == 0) {
 				isInCheckP1 = false;
 			}
@@ -276,19 +275,19 @@ public class GameLogic {
 	/**
 	 * Checks if a player puts themself in check.
 	 * 
-	 * @param board ChessPiece 2d array
+	 * @param cboard ChessPiece 2d array
 	 * @param turn int for who just made a move
 	 * @return boolean true if the player puts
 	 * 		themself in check, false if otherwise.
 	 */
-	private boolean isOwnKingAttacked(ChessPiece[][] board, int turn) {
-		ArrayList<Move> opponentMoves = getAllMoves(board, ((turn==0)?1:0));
+	private boolean isOwnKingAttacked(ChessPiece[][] cboard, int turn) {
+		getAllMoves(cboard, ((turn==0)?1:0));
 
 		for(int i = 0; i<8; i++) {
 			for(int j = 0; j<8; j++) {
 				
-				if(board[i][j].getPieceColor() != turn
-						&& board[i][j].isAttackingKing()) {
+				if(cboard[i][j].getPieceColor() != turn
+						&& cboard[i][j].isAttackingKing()) {
 					return true;
 				}
 			}
@@ -301,15 +300,15 @@ public class GameLogic {
 	 * Creates a duplicate of the main
 	 * chess board matrix.
 	 * 
-	 * @param board ChessPiece 2d array that will be copied
+	 * @param cboard ChessPiece 2d array that will be copied
 	 * @return ChessPiece 2d array of the copied board
 	 */
-	private ChessPiece[][] dupeBoard(ChessPiece[][] board) {
+	private ChessPiece[][] dupeBoard(ChessPiece[][] cboard) {
 		ChessPiece[][] tempBoard = new ChessPiece[8][8];
 		
 		for(int i = 0; i<8; i++) {
 			for(int j = 0; j<8; j++) {
-				tempBoard[i][j] = board[i][j];
+				tempBoard[i][j] = cboard[i][j];
 			}
 		}
 		
@@ -319,16 +318,12 @@ public class GameLogic {
 	/**
 	 * Makes the move in the board matrix.
 	 * 
-	 * @param board ChessPiece 2d array
-	 * @param move String move in long algebraic notation
-	 * @param rowFrom int row the piece was moved from
-	 * @param colFrom int column the piece was moved from
-	 * @param rowTo int row the piece was moved to
-	 * @param colTo int column the piece was moved to
+	 * @param cboard ChessPiece 2d array
+	 * @param move Move containing the move details
 	 * @param turn int whose turn it is
 	 * @return ChessPiece 2d array of the updated board
 	 */
-	private ChessPiece[][] updateBoard(ChessPiece[][] board, 
+	private ChessPiece[][] updateBoard(ChessPiece[][] cboard, 
 			Move move, int turn) {
 
 		int rowFrom = move.getRowFrom();
@@ -341,18 +336,18 @@ public class GameLogic {
 			if(turn == 0) {
 				Rook rk = new Rook(0, 7, 5);
 				rk.removeCastleRights();
-				board[7][4] = new EmptyPiece(7, 4);
-				board[7][7] = new EmptyPiece(7, 7);
-				board[7][5] = rk;
-				board[7][6] = new King(0, 7, 6, false);
+				cboard[7][4] = new EmptyPiece();
+				cboard[7][7] = new EmptyPiece();
+				cboard[7][5] = rk;
+				cboard[7][6] = new King(0, 7, 6, false);
 			}
 			else {
 				Rook rk = new Rook(1, 0, 5);
 				rk.removeCastleRights();
-				board[0][4] = new EmptyPiece(0, 4);
-				board[0][7] = new EmptyPiece(0, 7);
-				board[0][5] = rk;
-				board[0][6] = new King(1, 0, 6, false);
+				cboard[0][4] = new EmptyPiece();
+				cboard[0][7] = new EmptyPiece();
+				cboard[0][5] = rk;
+				cboard[0][6] = new King(1, 0, 6, false);
 			}
 		}
 		// Long Castle
@@ -360,18 +355,18 @@ public class GameLogic {
 			if(turn == 0) {
 				Rook rk = new Rook(0, 7, 3);
 				rk.removeCastleRights();
-				board[7][4] = new EmptyPiece(7, 4);
-				board[7][0] = new EmptyPiece(7, 0);
-				board[7][3] = rk;
-				board[7][2] = new King(0, 7, 2, false);
+				cboard[7][4] = new EmptyPiece();
+				cboard[7][0] = new EmptyPiece();
+				cboard[7][3] = rk;
+				cboard[7][2] = new King(0, 7, 2, false);
 			}
 			else {
 				Rook rk = new Rook(1, 0, 3);
 				rk.removeCastleRights();
-				board[0][4] = new EmptyPiece(0, 4);
-				board[0][0] = new EmptyPiece(0, 0);
-				board[0][3] = rk;
-				board[0][2] = new King(1, 0, 2, false);
+				cboard[0][4] = new EmptyPiece();
+				cboard[0][0] = new EmptyPiece();
+				cboard[0][3] = rk;
+				cboard[0][2] = new King(1, 0, 2, false);
 			}
 		}
 		// Pawn Promotion
@@ -379,60 +374,60 @@ public class GameLogic {
 			String lastCharacter = move.getMoveLAN().
 					substring(move.getMoveLAN().length() - 1);
 			
-			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
+			cboard[rowFrom][colFrom] = new EmptyPiece();
 			
 			if(lastCharacter.equals("Q")) {
-				board[rowTo][colTo] = new Queen(turn, rowTo, colTo);
+				cboard[rowTo][colTo] = new Queen(turn, rowTo, colTo);
 			}
 			else if(lastCharacter.equals("R")) {
 				Rook rk = new Rook(turn, rowTo, colTo);
 				rk.removeCastleRights();
-				board[rowTo][colTo] = rk;
+				cboard[rowTo][colTo] = rk;
 			}
 			else if(lastCharacter.equals("B")) {
-				board[rowTo][colTo] = new Bishop(turn, rowTo, colTo);
+				cboard[rowTo][colTo] = new Bishop(turn, rowTo, colTo);
 			}
 			else if(lastCharacter.equals("N")) {
-				board[rowTo][colTo] = new Knight(turn, rowTo, colTo);
+				cboard[rowTo][colTo] = new Knight(turn, rowTo, colTo);
 			}
 		}
 		else if(move.isEnPassant()) {
-			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
-			board[rowFrom][colTo] = new EmptyPiece(rowFrom, colTo);
+			cboard[rowFrom][colFrom] = new EmptyPiece();
+			cboard[rowFrom][colTo] = new EmptyPiece();
 			
-			board[rowTo][colTo] = new Pawn(turn, rowTo, colTo);
+			cboard[rowTo][colTo] = new Pawn(turn, rowTo, colTo);
 		}
 		// Queen move
 		else if(move.getPieceMoved() == PieceType.QUEEN) {
-			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
-			board[rowTo][colTo] = new Queen(turn, rowTo, colTo);
+			cboard[rowFrom][colFrom] = new EmptyPiece();
+			cboard[rowTo][colTo] = new Queen(turn, rowTo, colTo);
 		}
 		// Rook move
 		else if(move.getPieceMoved() == PieceType.ROOK) {
 			Rook rk = new Rook(turn, rowTo, colTo);
 			rk.removeCastleRights();
-			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
-			board[rowTo][colTo] = rk;
+			cboard[rowFrom][colFrom] = new EmptyPiece();
+			cboard[rowTo][colTo] = rk;
 		}
 		// Bishop move
 		else if(move.getPieceMoved() == PieceType.BISHOP) {
-			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
-			board[rowTo][colTo] = new Bishop(turn, rowTo, colTo);
+			cboard[rowFrom][colFrom] = new EmptyPiece();
+			cboard[rowTo][colTo] = new Bishop(turn, rowTo, colTo);
 		}
 		// Knight move
 		else if(move.getPieceMoved() == PieceType.KNIGHT) {
-			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
-			board[rowTo][colTo] = new Knight(turn, rowTo, colTo);
+			cboard[rowFrom][colFrom] = new EmptyPiece();
+			cboard[rowTo][colTo] = new Knight(turn, rowTo, colTo);
 		}
 		// King move
 		else if(move.getPieceMoved() == PieceType.KING) {
-			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
-			board[rowTo][colTo] = new King(turn, rowTo, colTo, false);
+			cboard[rowFrom][colFrom] = new EmptyPiece();
+			cboard[rowTo][colTo] = new King(turn, rowTo, colTo, false);
 		}
 		// Pawn move
 		else {
-			board[rowFrom][colFrom] = new EmptyPiece(rowFrom, colFrom);
-			board[rowTo][colTo] = new Pawn(turn, rowTo, colTo);
+			cboard[rowFrom][colFrom] = new EmptyPiece();
+			cboard[rowTo][colTo] = new Pawn(turn, rowTo, colTo);
 		}
 		
 		
@@ -469,69 +464,9 @@ public class GameLogic {
 					}
 				}
 				else {
-					board[i][j] = new EmptyPiece(i, j);
+					board[i][j] = new EmptyPiece();
 				}
 			}
 		}
 	}
-	
-//	/**
-//	 * Debug purposes
-//	 * @param board
-//	 */
-//	public void printBoard(ChessPiece[][] board) {
-//        char[] letters = new char[] {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-//        System.out.println("  |-------------------------------|");
-//
-//		for(int i = 0; i < 9; i++) {
-//			for(int j = 0; j < 8; j++) {
-//				// Print Column letters
-//				if(i == 8) {
-//					if(j == 0) {
-//						System.out.print("    " + letters[j] + "  ");
-//					}
-//					else {
-//						System.out.print(" " + letters[j] + "  ");
-//					}
-//				}
-//				// Print pieces, then new row
-//				else if(j == 7) {
-//					System.out.print(board[i][j].getPieceChar() + " |\n");
-//					System.out.println("  |-------------------------------|");
-//				}
-//				// Print Row numbers
-//				else if(j == 0) {
-//					System.out.print((8-i) + " | " + board[i][j].getPieceChar() + " | ");
-//				}
-//				// Print pieces
-//				else {
-//					System.out.print(board[i][j].getPieceChar() + " | ");
-//				}
-//			}
-//		}
-//	}
-//	
-//	
-//	/**
-//	 * Debug purposes
-//	 * Creates a starting position
-//	 */
-//	public void testBoard() {
-//		for(int i = 0; i < 8; i++) {
-//			for(int j = 0; j < 8; j++) {
-//				if(i == 7 && j == 4) {
-//					board[i][j] = new King(0, i, j);
-//				}
-//				else if(i == 4 && j == 2) {
-//					board[i][j] = new Queen(1, i, j);
-//				}
-//				else if(i == 6 && j == 1) {
-//					board[i][j] = new Rook(1, i, j);
-//				}
-//				else {
-//					board[i][j] = new EmptyPiece(i, j);
-//				}
-//			}
-//		}
-//	}
 }

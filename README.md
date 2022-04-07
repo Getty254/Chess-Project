@@ -18,13 +18,15 @@ JavaFX library and CSS.
 
 
 ## Screenshots
-![Alt text](/screenshots/StartingScreen.png?raw=true "Starting Screen")
 
+#### Starting Screen
+![Alt text](/screenshots/StartingScreen.png?raw=true)
 
-![Alt text](/screenshots/GameInProgress.png?raw=true "Game in Progress")
+#### Game in Progress
+![Alt text](/screenshots/GameInProgress.png?raw=true)
 
+#### Load a PGN
+![Alt text](/screenshots/LoadPGN.png?raw=true)
 
-![Alt text](/screenshots/LoadPGN.png?raw=true "Load a PGN")
-
-
-![Alt text](/screenshots/Colors.png?raw=true "Changing Board Colors")
+#### Changing Board Colors
+![Alt text](/screenshots/Colors.png?raw=true)

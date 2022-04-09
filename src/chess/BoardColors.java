@@ -83,79 +83,68 @@ public class BoardColors extends Stage {
 		this.show();
 		
 		squareColorOne.setOnAction((eventColor) -> {
-			int numSquares = 0;
-			
 			// Loop through each square of the board
-			for(int i = 0; i < 8; i++) {
-				numSquares++;
-				for(int j = 0; j < 8; j++) {
+			for(int row = 0; row < 8; row++) {
+				for(int column = 0; column < 8; column++) {
 					StackPane stack = (StackPane)
 							chessBoard.getChildren()
-							.get(i * 8 + j);
+							.get(row * 8 + column);
 					Rectangle square = (Rectangle)
 							stack.getChildren().get(0);
 					
 					// Alternate squares
-				    if (numSquares % 2 != 0) {
+				    if(!(row % 2 == 0 ^ column % 2 == 0)) {
 				    	// Set square color
 				    	colorOne = squareColorOne.getValue();
 				    	square.setFill(colorOne);
 				    }
-
-				    numSquares++;
 				}
 			}
 		});
 		
 		squareColorTwo.setOnAction((eventColor) -> {
-			int numSquares = 0;
-			
 			// Loop through each square of the board
-			for(int i = 0; i < 8; i++) {
-				numSquares++;
-				for(int j = 0; j < 8; j++) {
+			for(int row = 0; row < 8; row++) {
+				for(int column = 0; column < 8; column++) {
 					StackPane stack = (StackPane)
 							chessBoard.getChildren()
-							.get(i * 8 + j);
+							.get(row * 8 + column);
 					Rectangle square = (Rectangle)
 							stack.getChildren().get(0);
 					
 					// Alternate squares
-				    if (numSquares % 2 == 0) {
+				    if((row % 2 == 0 ^ column % 2 == 0)) {
 				    	// Set square color
 				    	colorTwo = squareColorTwo.getValue();
 				    	square.setFill(colorTwo);
 				    }
-
-				    numSquares++;
 				}
 			}
 		});
 		
 		// Change board colors back to light/dark brown
 		defaultColors.setOnAction((eventDefault) -> {
-			int numSquares = 0;
 			// Loop through each square of the board
-			for(int i = 0; i < 8; i++) {
-				numSquares++;
-				for(int j = 0; j < 8; j++) {
+			for(int row = 0; row < 8; row++) {
+				for(int column = 0; column < 8; column++) {
 					StackPane stack = (StackPane)
 							chessBoard.getChildren()
-							.get(i * 8 + j);
+							.get(row * 8 + column);
 					Rectangle square = (Rectangle)
 							stack.getChildren().get(0);
 					
 					// Alternate squares
-				    if (numSquares % 2 != 0) {
+				    if(!(row % 2 == 0 ^ column % 2 == 0)) {
 				    	// Light brown
-				    	square.setFill(Color.rgb(222, 184, 135));
+				    	colorOne = Color.rgb(222, 184, 135);
+				    	square.setFill(colorOne);
+				    	
 				    }
 				    else {
 				    	// Dark Brown
-				    	square.setFill(Color.rgb(139, 69, 19));
+				    	colorTwo = Color.rgb(139, 69, 19);
+				    	square.setFill(colorTwo);
 				    }
-
-				    numSquares++;
 				}
 			}
 		});

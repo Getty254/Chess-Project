@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
@@ -95,20 +96,17 @@ public class ChessBoard extends GridPane {
 		
 		// Add css class
     	this.getStyleClass().add("chess-board");
-    	
-		
-		int numberOfSquares = 0;
+    			
 		double sqSize = 100;
 		
 		// Create 64 rectangles (squares) and add them to the grid
 		for (int row = 0; row < 8; row++) {
-			numberOfSquares++;
 			for (int column = 0; column < 8; column++) {
 				Rectangle square =
 					new Rectangle(sqSize, sqSize, sqSize, sqSize);
 
 				// Color square light brown
-			    if (numberOfSquares % 2 != 0) {
+			    if (!(row % 2 == 0 ^ column % 2 == 0)) {
 			    	square.setFill(BoardColors.colorOne);
 			    }
 			    // Color square dark brown
@@ -124,6 +122,26 @@ public class ChessBoard extends GridPane {
 			    // Add piece and labels to the square
 			    setStackLayout(square, row, column,
 			    			squareStack, chessPiece);
+			    
+			    // Highlight square when clicked
+			    squareStack.setOnMouseClicked((click) -> {
+			    	int squareRow = GridPane.getRowIndex(squareStack);
+			    	int squareCol = GridPane.getColumnIndex(squareStack);
+
+			    	// Left click, highlight red
+			    	if(click.getButton() == MouseButton.PRIMARY) {
+			    		square.setFill(Color.RED);
+			    	}
+			    	// Right click, set square to original color
+			    	else if(click.getButton() == MouseButton.SECONDARY) {
+			    		if(!(squareRow % 2 == 0 ^ squareCol % 2 == 0)) {
+				    		square.setFill(BoardColors.colorOne);
+				    	}
+				    	else {
+				    		square.setFill(BoardColors.colorTwo);
+				    	}
+			    	}
+			    });
 			    
 			    squareStack.setOnDragDetected((MouseEvent event) -> {	
 			    	if(!BoardGUI.isGameOver) {
@@ -233,7 +251,6 @@ public class ChessBoard extends GridPane {
 
 			    // Listen for illegal drop
 			    checkDropOutside();
-			    numberOfSquares++;
 			}
 		}
 	}
@@ -581,6 +598,32 @@ public class ChessBoard extends GridPane {
 		squareFrom.getChildren().remove(3);
 		// Add a placeholder to the square
 		squareFrom.getChildren().add(new Text());
+		// Reset square colors in case any are highlighted
+		resetSquareColor();
+	}
+	
+	/**
+	 * Resets all square colors to what they
+	 * were before any highlights.
+	 */
+	private void resetSquareColor() {
+		// Loop through all squares
+		for(int row = 0; row < 8; row++) {
+			for(int column = 0; column < 8; column++) {
+				StackPane stackPane = (StackPane)
+						this.getChildren().get(row * 8 + column);
+				Rectangle square = (Rectangle)
+						stackPane.getChildren().get(0);
+				
+				// Set the square color
+				if(!(row % 2 == 0 ^ column % 2 == 0)) {
+		    		square.setFill(BoardColors.colorOne);
+		    	}
+		    	else {
+		    		square.setFill(BoardColors.colorTwo);
+		    	}
+			}
+		}
 	}
 	
 	/**

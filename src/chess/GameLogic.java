@@ -371,8 +371,8 @@ public class GameLogic {
 		}
 		// Pawn Promotion
 		else if(move.isPawnPromo()){
-			String lastCharacter = move.getMoveLAN().
-					substring(move.getMoveLAN().length() - 1);
+			String lastCharacter = move.getMoveLAN()
+					.substring(move.getMoveLAN().length() - 1);
 			
 			cboard[rowFrom][colFrom] = new EmptyPiece();
 			

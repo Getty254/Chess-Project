@@ -464,12 +464,12 @@ public class ChessBoard extends GridPane {
 	public void placePiece(Move move) {
 		// Get the squares used for the move
 		StackPane squareFrom =
-				(StackPane) this.getChildren().
-				get(move.getRowFrom() * 8
+				(StackPane) this.getChildren()
+				.get(move.getRowFrom() * 8
 					+ move.getColumnFrom());
 		StackPane squareTo =
-				(StackPane) this.getChildren().
-				get(move.getRowTo() * 8
+				(StackPane) this.getChildren()
+				.get(move.getRowTo() * 8
 					+ move.getColumnTo());
 
 		Text chessPieceMoved = setChessPiece(move);

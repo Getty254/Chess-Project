@@ -32,6 +32,7 @@ public abstract class ChessPiece {
 	 * 			 moves a pice can make
 	 */
 	public abstract ArrayList<Move> getMoves(ChessPiece[][] board);
+
 	/**
 	 * Gets the color of the piece.
 	 * 0 for white. 1 for black.
@@ -39,6 +40,7 @@ public abstract class ChessPiece {
 	 * @return int color of the piece
 	 */
 	public abstract int getPieceColor();
+	
 	/**
 	 * Gets if a piece is attacking the opponent's king.
 	 * 

@@ -62,23 +62,9 @@ public class Bishop extends ChessPiece {
 			
 			bishopMove = new Move(moveLAN, row, column,
 					rowTo, colTo, PieceType.BISHOP);
-			
-			// Move to empty square
-			if(board[rowTo][colTo] instanceof EmptyPiece) {
-				moves.add(bishopMove);
-			}
-			// Capture opponent's piece
-			else if(board[rowTo][colTo].getPieceColor()
-					!= this.pieceColor) {
-				moves.add(bishopMove);
-				
-				if(board[rowTo][colTo] instanceof King) {
-					isAttackingKing = true;
-				}
-				break;
-			}
-			// Same color piece, so cannot go to the square
-			else {
+			// Check if move is possible
+			if(checkMove(board, rowTo, colTo, 
+					moves, bishopMove) == -1) {
 				break;
 			}
 		}
@@ -93,23 +79,9 @@ public class Bishop extends ChessPiece {
 			
 			bishopMove = new Move(moveLAN, row, column,
 					rowTo, colTo, PieceType.BISHOP);
-			
-			// Move to empty square
-			if(board[rowTo][colTo] instanceof EmptyPiece) {
-				moves.add(bishopMove);
-			}
-			// Capture opponent's piece
-			else if(board[rowTo][colTo].getPieceColor()
-					!= this.pieceColor) {
-				moves.add(bishopMove);
-				
-				if(board[rowTo][colTo] instanceof King) {
-					isAttackingKing = true;
-				}
-				break;
-			}
-			// Same color piece, so cannot go to the square
-			else {
+			// Check if move is possible
+			if(checkMove(board, rowTo, colTo, 
+					moves, bishopMove) == -1) {
 				break;
 			}
 		}
@@ -124,23 +96,9 @@ public class Bishop extends ChessPiece {
 			
 			bishopMove = new Move(moveLAN, row, column,
 					rowTo, colTo, PieceType.BISHOP);
-			
-			// Move to empty square
-			if(board[rowTo][colTo] instanceof EmptyPiece) {
-				moves.add(bishopMove);
-			}
-			// Capture opponent's piece
-			else if(board[rowTo][colTo].getPieceColor()
-					!= this.pieceColor) {
-				moves.add(bishopMove);
-				
-				if(board[rowTo][colTo] instanceof King) {
-					isAttackingKing = true;
-				}
-				break;
-			}
-			// Same color piece, so cannot go to the square
-			else {
+			// Check if move is possible
+			if(checkMove(board, rowTo, colTo, 
+					moves, bishopMove) == -1) {
 				break;
 			}
 		}
@@ -155,23 +113,9 @@ public class Bishop extends ChessPiece {
 			
 			bishopMove = new Move(moveLAN, row, column,
 					rowTo, colTo, PieceType.BISHOP);
-			
-			// Move to empty square
-			if(board[rowTo][colTo] instanceof EmptyPiece) {
-				moves.add(bishopMove);
-			}
-			// Capture opponent's piece
-			else if(board[rowTo][colTo].getPieceColor()
-					!= this.pieceColor) {
-				moves.add(bishopMove);
-				
-				if(board[rowTo][colTo] instanceof King) {
-					isAttackingKing = true;
-				}
-				break;
-			}
-			// Same color piece, so cannot go to the square
-			else {
+			// Check if move is possible
+			if(checkMove(board, rowTo, colTo, 
+					moves, bishopMove) == -1) {
 				break;
 			}
 		}
@@ -200,5 +144,39 @@ public class Bishop extends ChessPiece {
 	@Override
 	public boolean isAttackingKing() {
 		return isAttackingKing;
+	}
+	
+	/**
+	 * Checks if the bishop move is possible.
+	 *
+	 * @param board ChessPiece 2d array of the chess board
+	 * @param rowTo int of the row the piece can move to
+	 * @param colTo int of the column the piece can move to
+	 * @param moves ArrayList of the possible moves
+	 * @param bishopMove Move containing the move details
+	 * @return int 0 if moving to an empty square, -1 if
+	 * 			there is already a piece on the square
+	 */
+	private int checkMove(ChessPiece[][] board, int rowTo,
+			int colTo, ArrayList<Move> moves, Move bishopMove) {
+	
+		// Move to empty square
+		if(board[rowTo][colTo] instanceof EmptyPiece) {
+			moves.add(bishopMove);
+			return 0;
+		}
+		// Capture opponent's piece
+		else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
+			moves.add(bishopMove);
+			
+			if(board[rowTo][colTo] instanceof King) {
+				isAttackingKing = true;
+			}
+			return -1;
+		}
+		// Same color piece, so cannot go to the square
+		else {
+			return -1;
+		}
 	}
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * This class represents a spot on the chess board
  * that does not contain a piece.
- * 
+ *
  * @author Seth Steinbrook and Getty Muthiani
  * @version 1.0
  */
@@ -19,7 +19,7 @@ public class EmptyPiece extends ChessPiece{
 	
 	/**
 	 * No moves can be made by an empty piece.
-	 * 
+	 *
 	 * @return ArrayList null, this is not an
 	 * 			actual piece
 	 */
@@ -30,7 +30,7 @@ public class EmptyPiece extends ChessPiece{
 
 	/**
 	 * No piece, so color is neither white nor black.
-	 * 
+	 *
 	 * @return int 2
 	 */
 	@Override
@@ -39,6 +39,8 @@ public class EmptyPiece extends ChessPiece{
 	}
 
 	/**
+	 * No piece, so it cannot attack a king.
+	 *
 	 * @return boolean false
 	 */
 	@Override

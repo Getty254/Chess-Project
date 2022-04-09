@@ -90,8 +90,8 @@ public class BoardColors extends Stage {
 				numSquares++;
 				for(int j = 0; j < 8; j++) {
 					StackPane stack = (StackPane)
-							chessBoard.getChildren().
-							get(i * 8 + j);
+							chessBoard.getChildren()
+							.get(i * 8 + j);
 					Rectangle square = (Rectangle)
 							stack.getChildren().get(0);
 					
@@ -115,8 +115,8 @@ public class BoardColors extends Stage {
 				numSquares++;
 				for(int j = 0; j < 8; j++) {
 					StackPane stack = (StackPane)
-							chessBoard.getChildren().
-							get(i * 8 + j);
+							chessBoard.getChildren()
+							.get(i * 8 + j);
 					Rectangle square = (Rectangle)
 							stack.getChildren().get(0);
 					
@@ -140,8 +140,8 @@ public class BoardColors extends Stage {
 				numSquares++;
 				for(int j = 0; j < 8; j++) {
 					StackPane stack = (StackPane)
-							chessBoard.getChildren().
-							get(i * 8 + j);
+							chessBoard.getChildren()
+							.get(i * 8 + j);
 					Rectangle square = (Rectangle)
 							stack.getChildren().get(0);
 					

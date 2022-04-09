@@ -47,129 +47,76 @@ public class Rook extends ChessPiece {
 	public ArrayList<Move> getMoves(ChessPiece[][] board) {
 		isAttackingKing = false;
 		ArrayList<Move> moves = new ArrayList<Move>();
-		
+
 		char colFromLetter = (char) (column + 97);
 		char colToLetter;
 		String moveLAN;
-		
+
 		Move rookMove;
-		
+
 		// North moves
 		for(int rowTo = row - 1; rowTo >= 0; rowTo--) {
-			
+
 			colToLetter = (char) (column + 97);
 			moveLAN = "R" + colFromLetter + (8-row)
 					+ colToLetter + (8-rowTo);
-			
+
 			rookMove = new Move(moveLAN, row, column,
 					rowTo, column, PieceType.ROOK);
-			
-			// Move to empty square
-			if(board[rowTo][column] instanceof EmptyPiece) {
-				moves.add(rookMove);
-			}
-			// Capture opponent's piece
-			else if(board[rowTo][column].getPieceColor() != this.pieceColor) {
-				moves.add(rookMove);
-				
-				if(board[rowTo][column] instanceof King) {
-					isAttackingKing = true;
-				}
-				break;
-			}
-			// Same color piece, so cannot go to the square
-			else {
+			// Check if move is possible
+			if(checkMove(board, rowTo, column, 
+					moves, rookMove) == -1) {
 				break;
 			}
 		}
-		
+
 		// South moves
 		for(int rowTo = row + 1; rowTo <= 7; rowTo++) {
-			
+
 			colToLetter = (char) (column + 97);
 			moveLAN = "R" + colFromLetter + (8-row)
 					+ colToLetter + (8-rowTo);
-			
+
 			rookMove = new Move(moveLAN, row, column,
 					rowTo, column, PieceType.ROOK);
-			
-			// Move to empty square
-			if(board[rowTo][column] instanceof EmptyPiece) {
-				moves.add(rookMove);
-			}
-			// Capture opponent's piece
-			else if(board[rowTo][column].getPieceColor() != this.pieceColor) {
-				moves.add(rookMove);
-				
-				if(board[rowTo][column] instanceof King) {
-					isAttackingKing = true;
-				}
-				break;
-			}
-			// Same color piece, so cannot go to the square
-			else {
+			// Check if move is possible
+			if(checkMove(board, rowTo, column, 
+					moves, rookMove) == -1) {
 				break;
 			}
 		}
-		
+
 		// East moves
 		for(int colTo = column + 1; colTo <= 7; colTo++) {
-			
+
 			colToLetter = (char) (colTo + 97);
 			moveLAN = "R" + colFromLetter + (8-row)
 					+ colToLetter + (8-row);
-			
+
 			rookMove = new Move(moveLAN, row, column,
 					row, colTo, PieceType.ROOK);
-			
-			// Move to empty square
-			if(board[row][colTo] instanceof EmptyPiece) {
-				moves.add(rookMove);
-			}
-			// Capture opponent's piece
-			else if(board[row][colTo].getPieceColor() != this.pieceColor) {
-				moves.add(rookMove);
-				
-				if(board[row][colTo] instanceof King) {
-					isAttackingKing = true;
-				}
-				break;
-			}
-			// Same color piece, so cannot go to the square
-			else {
+			// Check if move is possible
+			if(checkMove(board, row, colTo, 
+					moves, rookMove) == -1) {
 				break;
 			}
 		}
 
 		// West moves
 		for(int colTo = column - 1; colTo >= 0; colTo--) {
-			
+
 			colToLetter = (char) (colTo + 97);
 			moveLAN = "R" + colFromLetter + (8-row)
 					+ colToLetter + (8-row);
-			
+
 			rookMove = new Move(moveLAN, row, column,
 					row, colTo, PieceType.ROOK);
-			
-			// Move to empty square
-			if(board[row][colTo] instanceof EmptyPiece) {
-				moves.add(rookMove);
-			}
-			// Capture opponent's piece
-			else if(board[row][colTo].getPieceColor() != this.pieceColor) {
-				moves.add(rookMove);
-				
-				if(board[row][colTo] instanceof King) {
-					isAttackingKing = true;
-				}
-				break;
-			}
-			// Same color piece, so cannot go to the square
-			else {
+			// Check if move is possible
+			if(checkMove(board, row, colTo, 
+					moves, rookMove) == -1) {
 				break;
 			}
 		}
-		
 		
 		return moves;
 	}
@@ -177,7 +124,7 @@ public class Rook extends ChessPiece {
 	/**
 	 * Gets the color of the piece.
 	 * 0 for white. 1 for black.
-	 * 
+	 *
 	 * @return int color of the piece
 	 */
 	@Override
@@ -187,7 +134,7 @@ public class Rook extends ChessPiece {
 
 	/**
 	 * Gets if the rook is attacking the opponent's king.
-	 * 
+	 *
 	 * @return boolean true is the piece is attacking
 	 * 			the opponent's king, false if not
 	 */
@@ -203,15 +150,49 @@ public class Rook extends ChessPiece {
 	public void removeCastleRights() {
 		canCastle = false;
 	}
-	
+
 	/**
 	 * Gets if the king is allow to castle to the
 	 * side that rook is on.
-	 * 
+	 *
 	 * @return boolean true if the rook has never moved,
 	 * 					false if otherwise
 	 */
 	public boolean canCastle() {
 		return canCastle;
+	}
+
+	/**
+	 * Checks if the rook move is possible.
+	 *
+	 * @param board ChessPiece 2d array of the chess board
+	 * @param rowTo int of the row the piece can move to
+	 * @param colTo int of the column the piece can move to
+	 * @param moves ArrayList of the possible moves
+	 * @param rookMove Move containing the move details
+	 * @return int 0 if moving to an empty square, -1 if
+	 * 			there is already a piece on the square
+	 */
+	private int checkMove(ChessPiece[][] board, int rowTo,
+			int colTo, ArrayList<Move> moves, Move rookMove) {
+
+		// Move to empty square
+		if(board[rowTo][colTo] instanceof EmptyPiece) {
+			moves.add(rookMove);
+			return 0;
+		}
+		// Capture opponent's piece
+		else if(board[rowTo][colTo].getPieceColor() != this.pieceColor) {
+			moves.add(rookMove);
+			
+			if(board[rowTo][colTo] instanceof King) {
+				isAttackingKing = true;
+			}
+			return -1;
+		}
+		// Same color piece, so cannot go to the square
+		else {
+			return -1;
+		}
 	}
 }

@@ -1,7 +1,6 @@
 package chess;
 
 import java.awt.MouseInfo;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

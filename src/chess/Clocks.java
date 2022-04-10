@@ -71,9 +71,8 @@ public class Clocks {
 		timerLabelP1.getStyleClass().add("clocks");
 		timerLabelP2.getStyleClass().add("clocks");
 		
-		gameInfo.getChildren().add(timerLabelP2);
-		gameInfo.getChildren().add(endGameButtons);
-		gameInfo.getChildren().add(timerLabelP1);
+		gameInfo.getChildren().addAll(timerLabelP2,
+				endGameButtons, timerLabelP1);
 		
 		
 		initializeClocks();

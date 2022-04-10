@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
@@ -362,6 +363,12 @@ public class BoardGUI extends Application {
 					// Switch names
 					playerOneLabel.setText(nameP2);
 					playerTwoLabel.setText(nameP1);
+					
+					// Switch clocks
+					gameInfo.getChildren().clear();
+					gameInfo.getChildren().addAll(timerLabelP1,
+							endGameButtons, timerLabelP2);
+					
 
 					// Loop through each square of the board
 					for(int i = 0; i < 8; i++) {
@@ -371,8 +378,7 @@ public class BoardGUI extends Application {
 							chessBoard.getChildren().get(
 									i * 8 + j).setRotate(180);
 
-							// Bottom row of the board
-							// when viewed before the flip
+							// Row with column letters
 							if(i == 7) {
 								StackPane stack = (StackPane)
 										chessBoard.getChildren().get(i * 8 + j);
@@ -384,8 +390,7 @@ public class BoardGUI extends Application {
 								StackPane.setAlignment(colLet,
 										Pos.TOP_LEFT);
 							}
-							// Leftmost column of the board
-							// when viewed before the flip
+							// Column with row numbers
 							if(j == 0) {
 								StackPane stack = (StackPane)
 										chessBoard.getChildren().get(i * 8 + j);
@@ -407,7 +412,12 @@ public class BoardGUI extends Application {
 					// Switch names
 					playerOneLabel.setText(nameP2);
 					playerTwoLabel.setText(nameP1);
-
+					
+					// Switch clocks
+					gameInfo.getChildren().clear();
+					gameInfo.getChildren().addAll(timerLabelP2,
+							endGameButtons, timerLabelP1);
+					
 					// Loop through each square of the board
 					for(int i = 0; i < 8; i++) {
 						for(int j = 0; j < 8; j++) {
@@ -415,8 +425,7 @@ public class BoardGUI extends Application {
 							// are not upside down
 							chessBoard.getChildren().get(i * 8 + j).setRotate(0);
 
-							// Top row of the board
-							// when viewed before the flip
+							// Row with column letters
 							if(i == 7) {
 								StackPane stack = (StackPane)
 										chessBoard.getChildren().get(i * 8 + j);
@@ -428,8 +437,7 @@ public class BoardGUI extends Application {
 								StackPane.setAlignment(colLet,
 										Pos.BOTTOM_RIGHT);
 							}
-							// Leftmost column of the board
-							// when viewed before the flip
+							// Column with row numbers
 							if(j == 0) {
 								StackPane stack = (StackPane)
 										chessBoard.getChildren().get(i * 8 + j);
@@ -549,28 +557,29 @@ public class BoardGUI extends Application {
 				HBox pgnButtons = new HBox();
 				Button submitPGN = new Button("Submit");
 				Button cancelPGN = new Button("Cancel");
-				TextField loadPgnTF = new TextField();
+				TextArea loadPgnTA = new TextArea();
 
-				// Textfield settings
-				loadPgnTF.setPromptText("Paste your pgn here\r\r\r"
+				// Textarea settings
+				loadPgnTA.setPromptText("Paste your pgn here\r\r\r"
 						+ "Example:\r"
 						+ "1. e2e4 e7e5 2. Ng1f3 Nb8c6 \r"
 						+ "3. Bf1b5 Ng8f6 4. O-O Nf6e4");
-				loadPgnTF.setPrefHeight(500);
-				loadPgnTF.setMaxWidth(200);
+				loadPgnTA.setPrefHeight(500);
+				loadPgnTA.setMaxWidth(200);
+				loadPgnTA.setWrapText(true);
 
 				// Add elements to the layout
 				pgnButtons.getChildren().addAll(
 						submitPGN, cancelPGN);
 				loadPgnLayout.getChildren().addAll(
-						loadPgnTF, pgnButtons);
+						loadPgnTA, pgnButtons);
 
 				// Center alignment for textfield and buttons
 				pgnButtons.setAlignment(Pos.CENTER);
 				loadPgnLayout.setAlignment(Pos.CENTER);
 
 				// Spacing between textfield and buttons
-				VBox.setMargin(loadPgnTF, new Insets(0, 0, 20, 0));
+				VBox.setMargin(loadPgnTA, new Insets(0, 0, 20, 0));
 				HBox.setMargin(submitPGN, new Insets(0, 20, 0, 0));
 
 				movesSection.setCenter(loadPgnLayout);
@@ -601,7 +610,7 @@ public class BoardGUI extends Application {
 					// Allow moves to be made
 					isGameOver = false;
 
-					String gamePGN = loadPgnTF.getText();
+					String gamePGN = loadPgnTA.getText();
 
 					// Remove all move numbers, periods,
 					// and space directly after the periods
@@ -711,8 +720,9 @@ public class BoardGUI extends Application {
 		new MatchSettings(root, gameInfo, clocks);
 
 		// Reset board perspective to white's POV
-		isWhitesPerspective = false;
-		Event.fireEvent(flipBoard, new ActionEvent());
+		if(!isWhitesPerspective) {
+			Event.fireEvent(flipBoard, new ActionEvent());
+		}
 	}
 
 	/**

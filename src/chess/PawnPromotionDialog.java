@@ -56,7 +56,7 @@ public class PawnPromotionDialog extends Stage {
 		knight.getStyleClass().add("promotion");
 		
 		// Set promo piece color to white
-		if(BoardGUI.turn == 0) {
+		if(BoardGUI.getTurn() == 0) {
 			queen.getStyleClass().add("white-piece");
 			rook.getStyleClass().add("white-piece");
 			bishop.getStyleClass().add("white-piece");

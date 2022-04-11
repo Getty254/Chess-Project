@@ -24,9 +24,9 @@ import javafx.stage.Stage;
 public class BoardColors extends Stage {
 
 	/** RGB color for half of squares.*/
-	public static Color colorOne = Color.rgb(222, 184, 135);
+	private static Color colorOne = Color.rgb(222, 184, 135);
 	/** RGB color for half of squares.*/
-	public static Color colorTwo = Color.rgb(139, 69, 19);
+	private static Color colorTwo = Color.rgb(139, 69, 19);
 	
 	/**
 	 * BoardColors constructor.
@@ -148,5 +148,39 @@ public class BoardColors extends Stage {
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Set the color for one half of the squares.
+	 * 
+	 * @param c Color
+	 */
+	public static void setColorOne(Color c) {
+		colorOne = c;
+	}
+	
+	/**
+	 * Set the color for the second half of the squares.
+	 *
+	 * @param c Color
+	 */
+	public static void setColorTwo(Color c) {
+		colorTwo = c;
+	}
+	
+	/**
+	 * Get the color for one half of the squares.
+	 * @return Color
+	 */
+	public static Color getColorOne() {
+		return colorOne;
+	}
+	
+	/**
+	 * Get the color for the second half of the squares.
+	 * @return Color
+	 */
+	public static Color getColorTwo() {
+		return colorTwo;
 	}
 }

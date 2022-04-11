@@ -100,13 +100,13 @@ public class Clocks {
 				new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent event) {
 						// Stop the clock if the game is over
-						if(BoardGUI.isGameOver) {
+						if(BoardGUI.getIsGameOver()) {
 					    	timelineP1.stop();
 					    }
 						// Player one's clock runs out
 					    if(timerP1 <= 0) {
 					    	timelineP1.stop();
-					    	BoardGUI.isGameOver = true;
+					    	BoardGUI.setIsGameOver(true);
 					    }
 					    
 					    minP1 = TimeUnit.SECONDS.toMinutes(timerP1);
@@ -123,13 +123,13 @@ public class Clocks {
 				new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent event) {
 						// Stop the clock if the game is over
-					    if(BoardGUI.isGameOver) {
+					    if(BoardGUI.getIsGameOver()) {
 					    	timelineP2.stop();
 					    }
 						// Player two's clock runs out
 					    if(timerP2 <= 0) {
 					    	timelineP2.stop();
-					    	BoardGUI.isGameOver = true;
+					    	BoardGUI.setIsGameOver(true);
 					    }
 					    
 					    minP2 = TimeUnit.SECONDS.toMinutes(timerP2);
@@ -155,7 +155,7 @@ public class Clocks {
 	 */
 	public void updatePlayerClocks() {
 		// White's turn
-    	if(BoardGUI.turn == 0) {
+    	if(BoardGUI.getTurn() == 0) {
     		// Stop player one's timer
     		timelineP1.stop();
     		// Start player two's timer

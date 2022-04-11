@@ -108,7 +108,7 @@ public class GameOverDialog extends Alert {
 							new FileWriter(fileSelected);
 
 					// Write the moves to the file
-					fileWriter.write(MovesList.movesPGN.toString());
+					fileWriter.write(MovesList.getMovesPGN());
 
 					// Close the file
 					fileWriter.close();
@@ -187,7 +187,7 @@ public class GameOverDialog extends Alert {
 		}
 		// 1 checkmate
 		else if(result == 1) {
-			if(BoardGUI.turn == 0) {
+			if(BoardGUI.getTurn() == 0) {
 				resultHeading.setText(
 						"Player Two won by checkmate!!");
 				gameResult.setText(
@@ -207,7 +207,7 @@ public class GameOverDialog extends Alert {
 		}
 		// 3 resign
 		else if(result == 3) {
-			if(BoardGUI.turn == 0) {
+			if(BoardGUI.getTurn() == 0) {
 				resultHeading.setText(
 						"Player Two won by resignation!!");
 				gameResult.setText(
@@ -222,7 +222,7 @@ public class GameOverDialog extends Alert {
 		}
 		// 4 timeout
 		else {
-			if(BoardGUI.turn == 0) {
+			if(BoardGUI.getTurn() == 0) {
 				resultHeading.setText(
 						"Player Two won on time!!");
 				gameResult.setText(

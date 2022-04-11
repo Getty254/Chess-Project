@@ -42,13 +42,13 @@ import javafx.geometry.Rectangle2D;
 public class BoardGUI extends Application {
 
 	/** True if the game is finished, false if game is still going.*/
-	public static boolean isGameOver = true;
+	private static boolean isGameOver = true;
 	/** 0 if white's turn, 1 if black's turn.*/
-	public static int turn = 0;
+	private static int turn = 0;
 	/** Keeps track of the current move number.*/
-	public static int moveNumber = 1;
+	private static int moveNumber = 1;
 
-
+	
 	/** Controls the logic for the piece movements.*/
 	private GameLogic logic = new GameLogic();
 	/** Used when rotating the board, true if the board is viewed
@@ -81,7 +81,7 @@ public class BoardGUI extends Application {
 	/** ScrollPane to allow players to scroll through the
 	* moves list if it goes down too far.
 	*/
-	ScrollPane scrollPane = new ScrollPane();
+	private ScrollPane scrollPane = new ScrollPane();
 	/** Right section of the main screen that holds
 	 * the moves list, textfield, and flip board button.
 	 */
@@ -714,8 +714,8 @@ public class BoardGUI extends Application {
 			movesSection.setCenter(scrollPane);
 		}
 
-		moveNumber = 1;
-		turn = 0;
+		BoardGUI.resetMoveNumber();
+		BoardGUI.resetTurn();
 
 		new MatchSettings(root, gameInfo, clocks);
 
@@ -723,6 +723,72 @@ public class BoardGUI extends Application {
 		if(!isWhitesPerspective) {
 			Event.fireEvent(flipBoard, new ActionEvent());
 		}
+	}
+	
+	/**
+	 * Get if the game is over or not.
+	 * 
+	 * @return boolean true if the game is over,
+	 * 			false if otherwise
+	 */
+	public static boolean getIsGameOver() {
+		return isGameOver;
+	}
+	
+	/**
+	 * Get which player's turn it is.
+	 * 
+	 * @return int 0 if white's turn, 1 if black's turn
+	 */
+	public static int getTurn() {
+		return turn;
+	}
+	
+	/**
+	 * Get the move number.
+	 * 
+	 * @return int of the move number
+	 */
+	public static int getMoveNumber() {
+		return moveNumber;
+	}
+	
+	/**
+	 * Set if the game is over or not.
+	 * 
+	 * @param gameOver boolean true if the game is over,
+	 * 			false if otherwise
+	 */
+	public static void setIsGameOver(boolean gameOver) {
+		isGameOver = gameOver;
+	}
+	
+	/**
+	 * Change which player's turn it is.
+	 */
+	public static void changeTurn() {
+		turn = (turn == 0) ? 1 : 0;
+	}
+	
+	/**
+	 * Reset the turn to white.
+	 */
+	public static void resetTurn() {
+		turn = 0;
+	}
+	
+	/**
+	 * Increments the move number by one.
+	 */
+	public static void incMoveNumber() {
+		moveNumber++;
+	}
+	
+	/**
+	 * Reset the move number to one.
+	 */
+	public static void resetMoveNumber() {
+		moveNumber = 1;
 	}
 
 	/**

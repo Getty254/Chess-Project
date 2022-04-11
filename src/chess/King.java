@@ -96,7 +96,7 @@ public class King extends ChessPiece {
 		// Castling
 		if(canCastle) {
 			// White's move
-			if(this.pieceColor == 0 && !GameLogic.isInCheckP1) {
+			if(this.pieceColor == 0 && !GameLogic.getIsInCheckP1()) {
 				// Short Castle
 				if(row == 7 && column == 4 
 					&& board[7][5] instanceof EmptyPiece
@@ -127,7 +127,7 @@ public class King extends ChessPiece {
 				}
 			}
 			// Black's move
-			else if(this.pieceColor == 1 && !GameLogic.isInCheckP2){
+			else if(this.pieceColor == 1 && !GameLogic.getIsInCheckP2()){
 				// Short Castle
 				if(row == 0 && column == 4 
 					&& board[0][5] instanceof EmptyPiece

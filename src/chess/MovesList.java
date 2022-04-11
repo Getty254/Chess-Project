@@ -16,9 +16,9 @@ import java.util.ArrayList;
 public class MovesList extends GridPane {
 
 	/** List of moves.*/
-	public static ArrayList<Move> movesAL = new ArrayList<Move>();
+	private static ArrayList<Move> movesAL = new ArrayList<Move>();
 	/** String of moves with move numbers.*/
-	public static StringBuilder movesPGN = new StringBuilder();
+	private static StringBuilder movesPGN = new StringBuilder();
 	/** Label to listen for change in move number.*/
 	private Label triggerMoveNum;
 
@@ -39,6 +39,23 @@ public class MovesList extends GridPane {
 
 	}
 
+	/**
+	 * Get the list of moves.
+	 * 
+	 * @return ArrayList of Move objects
+	 */
+	public static ArrayList<Move> getMovesAl() {
+		return movesAL;
+	}
+	
+	/**
+	 * Gets the Portable Game Notation (PGN).
+	 *
+	 * @return String of all the moves of the game
+	 */
+	public static String getMovesPGN() {
+		return movesPGN.toString();
+	}
 
 	/**
 	 * Adds the player's move to the list of moves on the right
@@ -48,43 +65,34 @@ public class MovesList extends GridPane {
 	 * 				Long Algebraic Notation
 	 */
 	public void updateMovesList(String move) {
-		if(BoardGUI.turn == 0) {
+		if(BoardGUI.getTurn() == 0) {
         	// Add move number to move list
-    		Label moveNumLabel = new Label(BoardGUI.moveNumber + ".");
+    		Label moveNumLabel = new Label(BoardGUI.getMoveNumber() + ".");
     		GridPane.setHalignment(moveNumLabel, HPos.CENTER);
-    		this.add(moveNumLabel, 0, BoardGUI.moveNumber);
+    		this.add(moveNumLabel, 0, BoardGUI.getMoveNumber());
 
     		// Add white move to move list
     		Label whiteMove = new Label(move);
 			GridPane.setHalignment(whiteMove, HPos.CENTER);
-			this.add(whiteMove, 1, BoardGUI.moveNumber);
+			this.add(whiteMove, 1, BoardGUI.getMoveNumber());
 
 			triggerMoveNum.setText("moved");
-			movesPGN.append(BoardGUI.moveNumber + ". " + move);
+			movesPGN.append(BoardGUI.getMoveNumber() + ". " + move);
     	}
     	else {
     		// Add black move to move list
     		Label blackMove = new Label(move);
 			GridPane.setHalignment(blackMove, HPos.CENTER);
-			this.add(blackMove, 2, BoardGUI.moveNumber);
+			this.add(blackMove, 2, BoardGUI.getMoveNumber());
 
 			movesPGN.append(" " + move + " ");
 
 			// Only increment move number after Black's turn
-			BoardGUI.moveNumber++;
+			BoardGUI.incMoveNumber();
     	}
 
 		// Change whose turn it is
-		BoardGUI.turn = (BoardGUI.turn == 0) ? 1 : 0;
-	}
-
-	/**
-	 * Gets the Portable Game Notation (PGN).
-	 *
-	 * @return String of all the moves of the game
-	 */
-	public String getPGN() {
-		return movesPGN.toString();
+		BoardGUI.changeTurn();
 	}
 
 	/**

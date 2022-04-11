@@ -107,11 +107,11 @@ public class ChessBoard extends GridPane {
 
 				// Color square light brown
 			    if (!(row % 2 == 0 ^ column % 2 == 0)) {
-			    	square.setFill(BoardColors.colorOne);
+			    	square.setFill(BoardColors.getColorOne());
 			    }
 			    // Color square dark brown
 			    else {
-			    	square.setFill(BoardColors.colorTwo);
+			    	square.setFill(BoardColors.getColorTwo());
 			    }
 			    
 			    StackPane squareStack = new StackPane(); 
@@ -135,16 +135,16 @@ public class ChessBoard extends GridPane {
 			    	// Right click, set square to original color
 			    	else if(click.getButton() == MouseButton.SECONDARY) {
 			    		if(!(squareRow % 2 == 0 ^ squareCol % 2 == 0)) {
-				    		square.setFill(BoardColors.colorOne);
+				    		square.setFill(BoardColors.getColorOne());
 				    	}
-				    	else {
-				    		square.setFill(BoardColors.colorTwo);
+			    		else {
+				    		square.setFill(BoardColors.getColorTwo());
 				    	}
 			    	}
 			    });
 			    
 			    squareStack.setOnDragDetected((MouseEvent event) -> {	
-			    	if(!BoardGUI.isGameOver) {
+			    	if(!BoardGUI.getIsGameOver()) {
 				    	// Piece being dragged
 				    	Text pieceText = (Text)
 				    			squareStack.getChildren().get(3);
@@ -159,10 +159,10 @@ public class ChessBoard extends GridPane {
 				    					    		
 				    		// if player trys to pick up 
 				    		// opponents pieces cancel the drag
-				    		if((BoardGUI.turn == 1
+				    		if((BoardGUI.getTurn() == 1
 				    			&& pieceText.getFill().equals(
 				    					Color.rgb(250, 249, 246)))
-				    			|| (BoardGUI.turn == 0 
+				    			|| (BoardGUI.getTurn() == 0 
 				    			&& pieceText.getFill().equals(
 				    					Color.rgb(0, 0, 0)))) {
 				    			
@@ -275,7 +275,7 @@ public class ChessBoard extends GridPane {
             chessPieceDropped.getStyleClass().add("chess-pieces");
             
             // Set piece color to white if it's white's BoardGUI.turn
-            if(BoardGUI.turn == 0) {
+            if(BoardGUI.getTurn() == 0) {
             	chessPieceDropped.setFill(Color.rgb(250, 249, 246));
             }
             
@@ -408,8 +408,8 @@ public class ChessBoard extends GridPane {
 
 		// Check if move is a Pawn Promotion
 		if(pieceDragged.equals(ChessPiece.PAWN) 
-		 		&& ((BoardGUI.turn == 0 && rowTo == 0) 
-		 		|| (BoardGUI.turn == 1 && rowTo == 7))) {
+		 		&& ((BoardGUI.getTurn() == 0 && rowTo == 0) 
+		 		|| (BoardGUI.getTurn() == 1 && rowTo == 7))) {
 		 					            	
 		 	// Pick promotion piece here
 			PawnPromotionDialog dialog = new PawnPromotionDialog();	
@@ -447,11 +447,11 @@ public class ChessBoard extends GridPane {
 		}
 		// Check if move is Castle
 		else if(pieceDragged.equals(ChessPiece.KING) 
-		 		&& ((BoardGUI.turn == 0 
+		 		&& ((BoardGUI.getTurn() == 0 
 		 		&& rowFrom == 7 && rowTo == 7 
 		 		&& colFrom == 4 
 		 		&& (colTo == 6 || colTo == 2)) 
-		 		|| (BoardGUI.turn == 1 
+		 		|| (BoardGUI.getTurn() == 1 
 		 		&& rowFrom == 0 && rowTo == 0 
 		            && colFrom == 4 
 		            && (colTo == 6 || colTo == 2)))) {
@@ -522,7 +522,7 @@ public class ChessBoard extends GridPane {
             rookText.getStyleClass().add("chess-pieces");
 
 	    	// White's Castles
-        	if(BoardGUI.turn == 0) {
+        	if(BoardGUI.getTurn() == 0) {
         		rookText.setFill(
         			Color.rgb(250, 249, 246));
 		    	// Castle short side
@@ -617,10 +617,10 @@ public class ChessBoard extends GridPane {
 				
 				// Set the square color
 				if(!(row % 2 == 0 ^ column % 2 == 0)) {
-		    		square.setFill(BoardColors.colorOne);
+		    		square.setFill(BoardColors.getColorOne());
 		    	}
 		    	else {
-		    		square.setFill(BoardColors.colorTwo);
+		    		square.setFill(BoardColors.getColorTwo());
 		    	}
 			}
 		}
@@ -689,7 +689,7 @@ public class ChessBoard extends GridPane {
         
         // Set piece color to white
         // if it's white's BoardGUI.turn
-        if(BoardGUI.turn == 0) {
+        if(BoardGUI.getTurn() == 0) {
         	piece.setFill(Color.rgb(250, 249, 246));
         }
 		
@@ -811,7 +811,7 @@ public class ChessBoard extends GridPane {
 	private void setDragIcon(Dragboard db, Text piece) {
 		 PieceIcon icn = new PieceIcon();
          // Set drag icon to corresponding Black piece
-         if(BoardGUI.turn == 1) {
+         if(BoardGUI.getTurn() == 1) {
          	if(piece.getText().equals(ChessPiece.PAWN)) {
          		db.setDragView(icn.getBP());
          	}

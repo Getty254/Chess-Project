@@ -27,7 +27,7 @@ public class MatchSettings extends BorderPane {
 	 */
 	public MatchSettings(BorderPane root, VBox gameInfo, Clocks clocks) {
 		// Prevent pieces from being moved
-		BoardGUI.isGameOver = true;
+		BoardGUI.setIsGameOver(true);
 
 		VBox centerLayout = new VBox();
 
@@ -131,7 +131,7 @@ public class MatchSettings extends BorderPane {
 		// Event handler to start the game
 		startGame.setOnAction((event) -> {
 			// Allow game to begin
-			BoardGUI.isGameOver = false;
+			BoardGUI.setIsGameOver(false);
 
 			// Set starting times
 			clocks.setTimePlayerOne(

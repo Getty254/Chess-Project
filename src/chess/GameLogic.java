@@ -15,9 +15,10 @@ public class GameLogic {
 	/** Matrix of the chess board containing all the pieces.*/
 	private ChessPiece[][] board = new ChessPiece[8][8];
 	/** Indicates if the white king is in check.*/
-	public static boolean isInCheckP1 = false;
+	private static boolean isInCheckP1 = false;
 	/** Indicates if the black king is in check.*/
-	public static boolean isInCheckP2 = false;
+	private static boolean isInCheckP2 = false;
+	
 	
 	/**
 	 * Creates a new instance of the logic.
@@ -59,7 +60,7 @@ public class GameLogic {
 	 */
 	private boolean isMoveValid(String move) {
 		
-		ArrayList<Move> allMoves = getAllMoves(board, BoardGUI.turn);
+		ArrayList<Move> allMoves = getAllMoves(board, BoardGUI.getTurn());
 
 		for(int i = 0; i < allMoves.size(); i++) {
 			if(allMoves.get(i).getMoveLAN().equals(move)) {
@@ -80,7 +81,7 @@ public class GameLogic {
 	 */
 	public Move isInputMoveValid(String move) {
 		
-		ArrayList<Move> allMoves = getAllMoves(board, BoardGUI.turn);
+		ArrayList<Move> allMoves = getAllMoves(board, BoardGUI.getTurn());
 
 		for(int i = 0; i < allMoves.size(); i++) {
 			
@@ -108,10 +109,10 @@ public class GameLogic {
 		if(isMoveValid(move.getMoveLAN())) {
 			
 			// Set king to be out of check
-			if(BoardGUI.turn == 0) {
+			if(BoardGUI.getTurn() == 0) {
 				isInCheckP1 = false;
 			}
-			else if(BoardGUI.turn == 1) {
+			else if(BoardGUI.getTurn() == 1) {
 				isInCheckP2 = false;
 			}
 			
@@ -122,29 +123,29 @@ public class GameLogic {
 			// Move is short castle
 			if(move.getMoveLAN().equals("O-O")) {
 				Move tempMove;
-				if(BoardGUI.turn == 0) {
+				if(BoardGUI.getTurn() == 0) {
 					tempMove = new Move("Ke1f1", 
 							move.getRowFrom(),
 							move.getColumnFrom(),
 							move.getRowTo(),
 							move.getColumnFrom()+1, PieceType.KING);
 					// Make the move on the temp board
-					updateBoard(tempBoard, tempMove, BoardGUI.turn);
+					updateBoard(tempBoard, tempMove, BoardGUI.getTurn());
 				}
-				else if(BoardGUI.turn == 1) {
+				else if(BoardGUI.getTurn() == 1) {
 					tempMove = new Move("Ke8f8", 
 							move.getRowFrom(),
 							move.getColumnFrom(),
 							move.getRowTo(),
 							move.getColumnFrom()+1, PieceType.KING);
 					// Make the move on the temp board
-					updateBoard(tempBoard, tempMove, BoardGUI.turn);
+					updateBoard(tempBoard, tempMove, BoardGUI.getTurn());
 				}
 					
 				// Cannot castle if an opponent's piece
 				// is attacking the square the king has
 				// to pass through
-				if(isOwnKingAttacked(tempBoard, BoardGUI.turn)) {
+				if(isOwnKingAttacked(tempBoard, BoardGUI.getTurn())) {
 					return -1;
 				}
 				else {
@@ -154,29 +155,29 @@ public class GameLogic {
 			// Move is long castle
 			else if(move.getMoveLAN().equals("O-O-O")) {
 				Move tempMove;
-				if(BoardGUI.turn == 0) {
+				if(BoardGUI.getTurn() == 0) {
 					tempMove = new Move("Ke1d1", 
 							move.getRowFrom(),
 							move.getColumnFrom(),
 							move.getRowTo(),
 							move.getColumnFrom()-1, PieceType.KING);
 					// Make the move on the temp board
-					updateBoard(tempBoard, tempMove, BoardGUI.turn);
+					updateBoard(tempBoard, tempMove, BoardGUI.getTurn());
 				}
-				else if(BoardGUI.turn == 1) {
+				else if(BoardGUI.getTurn() == 1) {
 					tempMove = new Move("Ke8d8", 
 							move.getRowFrom(),
 							move.getColumnFrom(),
 							move.getRowTo(),
 							move.getColumnFrom()-1, PieceType.KING);
 					// Make the move on the temp board
-					updateBoard(tempBoard, tempMove, BoardGUI.turn);
+					updateBoard(tempBoard, tempMove, BoardGUI.getTurn());
 				}
 					
 				// Cannot castle if an opponent's piece
 				// is attacking the square the king has
 				// to pass through
-				if(isOwnKingAttacked(tempBoard, BoardGUI.turn)) {
+				if(isOwnKingAttacked(tempBoard, BoardGUI.getTurn())) {
 					return -1;
 				}
 				else {
@@ -186,18 +187,18 @@ public class GameLogic {
 			
 			
 			// Make the move on the temp board
-			updateBoard(tempBoard, move, BoardGUI.turn);
+			updateBoard(tempBoard, move, BoardGUI.getTurn());
 			
 			// Move does not put yourself in check
-			if(!isOwnKingAttacked(tempBoard, BoardGUI.turn)) {
+			if(!isOwnKingAttacked(tempBoard, BoardGUI.getTurn())) {
 				
 				// Update the main board
-				updateBoard(board, move, BoardGUI.turn);
+				updateBoard(board, move, BoardGUI.getTurn());
 				
-				MovesList.movesAL.add(move);
+				MovesList.getMovesAl().add(move);
 				// Get all moves to see if you put your
 				// opponent in check
-				getAllMoves(board, BoardGUI.turn);
+				getAllMoves(board, BoardGUI.getTurn());
 				boolean isCheck = false;
 				
 				// Figure out if a piece is attacking the
@@ -209,10 +210,10 @@ public class GameLogic {
 							
 							// Set opposing king to be in check
 							// to prevent castling
-							if(BoardGUI.turn == 0) {
+							if(BoardGUI.getTurn() == 0) {
 								isInCheckP2 = true;
 							}
-							else if(BoardGUI.turn == 1) {
+							else if(BoardGUI.getTurn() == 1) {
 								isInCheckP1 = true;
 							}
 						}
@@ -238,7 +239,7 @@ public class GameLogic {
 	 */
 	private int isMate(boolean isCheck) {
 		// All opponent moves
-		ArrayList<Move> allMoves = getAllMoves(board, ((BoardGUI.turn==0)?1:0));
+		ArrayList<Move> allMoves = getAllMoves(board, ((BoardGUI.getTurn()==0)?1:0));
 
 		// Create a temporary board
 		ChessPiece[][] tempBoard = new ChessPiece[8][8];
@@ -248,10 +249,10 @@ public class GameLogic {
 			Move move = allMoves.get(i);
 
 			// Make the move on the temp board
-			updateBoard(tempBoard, move, ((BoardGUI.turn==0)?1:0));
+			updateBoard(tempBoard, move, ((BoardGUI.getTurn()==0)?1:0));
 			
 			// Move does not put yourself in check
-			if(!isOwnKingAttacked(tempBoard, ((BoardGUI.turn==0)?1:0))) {
+			if(!isOwnKingAttacked(tempBoard, ((BoardGUI.getTurn()==0)?1:0))) {
 				return 0;
 			}
 			
@@ -262,12 +263,12 @@ public class GameLogic {
 		
 		// Checkmate
 		if(isCheck) {
-			BoardGUI.isGameOver = true;
+			BoardGUI.setIsGameOver(true);
 			return 1;
 		}
 		// Stalemate
 		else {
-			BoardGUI.isGameOver = true;
+			BoardGUI.setIsGameOver(true);
 			return 2;
 		}
 	}
@@ -468,5 +469,45 @@ public class GameLogic {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Get if player one is in check.
+	 *
+	 * @return boolean true if player one is in check,
+	 * 			false if otherwise
+	 */
+	public static boolean getIsInCheckP1() {
+		return isInCheckP1;
+	}
+	
+	/**
+	 * Get if player two is in check.
+	 *
+	 * @return boolean true if player two is in check,
+	 * 			false if otherwise
+	 */
+	public static boolean getIsInCheckP2() {
+		return isInCheckP2;
+	}
+	
+	/**
+	 * Set if player one is in check.
+	 * 
+	 * @param check boolean true if player one is in check,
+	 * 			false if otherwise
+	 */
+	public static void setIsInCheckP1(boolean check) {
+		isInCheckP1 = check;
+	}
+	
+	/**
+	 * Set if player two is in check.
+	 * 
+	 * @param check boolean true if player two is in check,
+	 * 			false if otherwise
+	 */
+	public static void setIsInCheckP2(boolean check) {
+		isInCheckP2 = check;
 	}
 }

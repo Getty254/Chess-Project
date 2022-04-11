@@ -128,8 +128,9 @@ public class Pawn extends ChessPiece {
 			}
 		}
 		
-		if(!MovesList.movesAL.isEmpty()) {
-			Move prevMove = MovesList.movesAL.get(MovesList.movesAL.size()-1);
+		if(!MovesList.getMovesAl().isEmpty()) {
+			Move prevMove = MovesList.getMovesAl()
+					.get(MovesList.getMovesAl().size()-1);
 			
 			// Previous move was a pawn move
 			if(prevMove.getPieceMoved() == PieceType.PAWN) {

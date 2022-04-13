@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  * of the squares on the chess board.
  * 
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class BoardColors extends Stage {
 

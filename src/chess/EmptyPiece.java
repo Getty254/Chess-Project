@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * that does not contain a piece.
  *
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class EmptyPiece extends ChessPiece{
 

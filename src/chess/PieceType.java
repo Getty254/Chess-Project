@@ -5,7 +5,7 @@ package chess;
  * types of chess pieces.
  * 
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public enum PieceType {
 	/** King piece.*/

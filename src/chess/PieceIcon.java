@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
  * every type of chess piece.
  *
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public final class PieceIcon {
 	/** Height of the image.*/

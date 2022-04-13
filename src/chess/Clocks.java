@@ -14,7 +14,7 @@ import javafx.util.Duration;
  * This class controls the clocks for both players.
  * 
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class Clocks {
 	

@@ -14,7 +14,7 @@ import javafx.stage.StageStyle;
  * to display the pieces a player can promote a pawn to.
  * 
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class PawnPromotionDialog extends Stage {
 

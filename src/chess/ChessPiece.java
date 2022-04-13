@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * This is the parent class of each chess piece class.
  *
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public abstract class ChessPiece {
 	/** Unicode character for a pawn.*/

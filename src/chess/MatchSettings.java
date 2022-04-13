@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
  * select the time that each player starts with.
  *
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class MatchSettings extends BorderPane {
 

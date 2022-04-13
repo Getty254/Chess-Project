@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  * to display the results when the game has concluded.
  *
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class GameOverDialog extends Alert {
 

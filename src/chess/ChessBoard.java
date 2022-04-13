@@ -23,7 +23,7 @@ import javafx.scene.text.Text;
  * the pieces.
  * 
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class ChessBoard extends GridPane {
 	/** Top section of the main screen that holds

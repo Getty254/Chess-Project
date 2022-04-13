@@ -37,7 +37,7 @@ import javafx.geometry.Rectangle2D;
  * for a chess game.
  *
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class BoardGUI extends Application {
 
@@ -47,7 +47,6 @@ public class BoardGUI extends Application {
 	private static int turn = 0;
 	/** Keeps track of the current move number.*/
 	private static int moveNumber = 1;
-
 	
 	/** Controls the logic for the piece movements.*/
 	private GameLogic logic = new GameLogic();
@@ -96,7 +95,7 @@ public class BoardGUI extends Application {
 	 */
 	private MovesList movesList = new MovesList(triggerMoveNum);
 	/** Label headings to indicate the list of moves section.*/
-	private Label movesLabel = new Label("Game Moves");
+	private Label movesHeading = new Label("Game Moves");
 	/** Layout that holds the textfield and flip board button.*/
 	private VBox inputAndFlip = new VBox();
 	/** Textfield where players can type in their moves.*/
@@ -130,25 +129,16 @@ public class BoardGUI extends Application {
 
 
 	/**
-	 * Creates all the GUI elements for the
-	 * chess application.
+	 * Creates and brings together all of the 
+	 * GUI elements for the chess application.
 	 *
 	 * @param primaryStage Stage for the main window
 	 */
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-
 			// Application Title
 			primaryStage.setTitle("Chess");
-
-			//**************************************
-			//	Left Column Timers and Buttons
-			//**************************************
-
-			// Add css class
-			resignButton.getStyleClass().add("resign-button");
-			drawButton.getStyleClass().add("draw-button");
 
 			// Resign and Draw Buttons height and width
 			resignButton.setPrefWidth(75);
@@ -156,50 +146,20 @@ public class BoardGUI extends Application {
 			resignButton.setPrefHeight(35);
 			drawButton.setPrefHeight(35);
 
-			// Add css class
-			gameInfo.getStyleClass().add("game-info");
-
 			endGameButtons.getChildren().add(resignButton);
 			endGameButtons.getChildren().add(drawButton);
 
-
-			// Game over if player one has no time left
+			// Listener for player one to run out of time
 			timerLabelP1.textProperty().addListener((changed) -> {
-				if(timerLabelP1.getText().equals("00:00")) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							GameOverDialog dialog =
-									new GameOverDialog(4);
-							if(dialog.getCloseStatus()
-									== GameOverDialog.NEWGAME){
-								startNewGame();
-					    	}
-						}
-					});
-				}
+				timeOutGameOver(timerLabelP1.getText());
 			});
 
-			// Game over if player two has no time left
+			// Listener for player two to run out of time
 			timerLabelP2.textProperty().addListener((changed) -> {
-				if(timerLabelP2.getText().equals("00:00")) {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							GameOverDialog dialog =
-									new GameOverDialog(4);
-							if(dialog.getCloseStatus()
-									== GameOverDialog.NEWGAME){
-								startNewGame();
-					    	}
-						}
-					});
-				}
+				timeOutGameOver(timerLabelP2.getText());
 			});
 
-
-			// if the label changes then display
-			// the game over popup
+			// Listener to show the game over popup
 			triggerGameOver.textProperty().addListener((changed) -> {
 				// Game ended in checkmate
 				if(triggerGameOver.getText().equals("checkmate")) {
@@ -219,23 +179,13 @@ public class BoardGUI extends Application {
 				triggerGameOver.setText("");
 			});
 
-
-			// Spacings for left column
+			// Spacings for resign/draw buttons
 			VBox.setMargin(endGameButtons,
 						new Insets(75, 50, 75, 50));
 			HBox.setMargin(resignButton,
 						new Insets(0, 25, 0, 0));
 
 			gameInfo.setAlignment(Pos.CENTER);
-
-
-			//**************************************
-			//		Player Names and Ratings
-			//**************************************
-
-			// Add css class
-			playerOneLabel.getStyleClass().add("player-names");
-			playerTwoLabel.getStyleClass().add("player-names");
 
 			topScreen.setCenter(playerTwoLabel);
 			BorderPane.setAlignment(playerTwoLabel,
@@ -245,22 +195,12 @@ public class BoardGUI extends Application {
 			BorderPane.setAlignment(playerOneLabel,
 								Pos.CENTER_LEFT);
 
-
-			//**************************************
-			//			Move List
-			//**************************************
-
 	    	// Adds the moves list to the ScrollPane
 	    	scrollPane.setContent(movesList);
-	    	// Add css class
-	    	scrollPane.getStyleClass().add("scroll-pane");
 
-	    	// Add css id
-	    	movesLabel.getStyleClass().add("heading");
-	    	movesSection.setTop(movesLabel);
-
-	    	// Center Moves Heading
-	    	BorderPane.setAlignment(movesLabel, Pos.CENTER);
+	    	// Add and center the moves heading
+	    	movesSection.setTop(movesHeading);
+	    	BorderPane.setAlignment(movesHeading, Pos.CENTER);
 
 	    	// Input box for players to enter their move
 	    	inputMove.setPromptText("Enter your move here");
@@ -279,64 +219,18 @@ public class BoardGUI extends Application {
 	    	movesSection.setCenter(scrollPane);
 	    	movesSection.setBottom(inputAndFlip);
 
-	    	// Add css class
-	    	movesSection.getStyleClass().add("moves-section");
-
-
-	    	//**************************************
-			//		Textfield Input
-			//**************************************
-
+	    	// Listen for textfield input
 	    	inputMove.setOnKeyPressed(new EventHandler<KeyEvent>() {
 	    	    @Override
 	    	    public void handle(KeyEvent ke) {
 	    	    	// Press enter to execute move
 	    	        if (ke.getCode().equals(KeyCode.ENTER)) {
-
-	    	        	// Textfield only works if the game is not over
-	    	        	if(!isGameOver) {
-
-	    	        		// Verify if input is valid
-	    	        		Move move =
-	    	        				logic.isInputMoveValid(
-	    	        				inputMove.getText());
-	    	        		if(move != null) {
-
-	    	        			int moveStatus =
-	    	        					logic.isMoveLegal(move);
-
-	    	        			// Illegal move
-	    	        			if(moveStatus == -1) {
-	    	        				System.out.println("illegal");
-	    	        			}
-	    	        			else {
-	    	        				chessBoard.placePiece(move);
-	    	        			}
-	    	        			
-	    	        			// Update clocks and moves list
-	    	        			// if the move was not illegal
-	    	        			if(moveStatus != -1) {
-	    	        				clocks.updatePlayerClocks();
-			    	        		movesList.updateMovesList(inputMove.getText());
-	    	        			}
-
-	    	        			// Checkmate
-			    	    		if(moveStatus == 1) {
-			    	    			triggerGameOver.setText("checkmate");
-			    	    		}
-			    	    		// Stalemate
-			    	    		else if(moveStatus == 2) {
-			    	    			triggerGameOver.setText("stalemate");
-			    	    		}
-	    	        		}
-	    	        	}
-
+	    	        	attemptMove(inputMove.getText());
 	    	        	// Clear input field
 	    	    		inputMove.clear();
 	    	        }
 	    	    }
 	    	});
-
 
 			flipBoard.setPrefWidth(40);
 			flipBoard.setPrefHeight(40);
@@ -353,172 +247,20 @@ public class BoardGUI extends Application {
 
 			// Flip board button is clicked
 			flipBoard.setOnAction((event) -> {
-
-				String nameP1 = playerOneLabel.getText();
-				String nameP2 = playerTwoLabel.getText();
-
-				if(isWhitesPerspective) {
-					chessBoard.setRotate(180);
-
-					// Switch names
-					playerOneLabel.setText(nameP2);
-					playerTwoLabel.setText(nameP1);
-					
-					// Switch clocks
-					gameInfo.getChildren().clear();
-					gameInfo.getChildren().addAll(timerLabelP1,
-							endGameButtons, timerLabelP2);
-					
-
-					// Loop through each square of the board
-					for(int i = 0; i < 8; i++) {
-						for(int j = 0; j < 8; j++) {
-							// Flip pieces so they
-							// are not upside down
-							chessBoard.getChildren().get(
-									i * 8 + j).setRotate(180);
-
-							// Row with column letters
-							if(i == 7) {
-								StackPane stack = (StackPane)
-										chessBoard.getChildren().get(i * 8 + j);
-								Text colLet = (Text)
-										stack.getChildren().get(1);
-
-								// Align column letters to
-								// the top left of the square
-								StackPane.setAlignment(colLet,
-										Pos.TOP_LEFT);
-							}
-							// Column with row numbers
-							if(j == 0) {
-								StackPane stack = (StackPane)
-										chessBoard.getChildren().get(i * 8 + j);
-								Text rowNum = (Text)
-										stack.getChildren().get(2);
-
-								// Align row numbers to the bottom right of the square
-								StackPane.setAlignment(rowNum,
-										Pos.BOTTOM_RIGHT);
-							}
-						}
-					}
-
-					isWhitesPerspective = false;
-				}
-				else {
-					chessBoard.setRotate(0);
-
-					// Switch names
-					playerOneLabel.setText(nameP2);
-					playerTwoLabel.setText(nameP1);
-					
-					// Switch clocks
-					gameInfo.getChildren().clear();
-					gameInfo.getChildren().addAll(timerLabelP2,
-							endGameButtons, timerLabelP1);
-					
-					// Loop through each square of the board
-					for(int i = 0; i < 8; i++) {
-						for(int j = 0; j < 8; j++) {
-							// Flip pieces so they
-							// are not upside down
-							chessBoard.getChildren().get(i * 8 + j).setRotate(0);
-
-							// Row with column letters
-							if(i == 7) {
-								StackPane stack = (StackPane)
-										chessBoard.getChildren().get(i * 8 + j);
-								Text colLet = (Text)
-										stack.getChildren().get(1);
-
-								// Align column letters to
-								// the top left of the square
-								StackPane.setAlignment(colLet,
-										Pos.BOTTOM_RIGHT);
-							}
-							// Column with row numbers
-							if(j == 0) {
-								StackPane stack = (StackPane)
-										chessBoard.getChildren().get(i * 8 + j);
-								Text rowNum = (Text)
-										stack.getChildren().get(2);
-
-								// Align row numbers to the
-								// bottom right of the square
-								StackPane.setAlignment(rowNum,
-										Pos.TOP_LEFT);
-							}
-						}
-					}
-
-					isWhitesPerspective = true;
-				}
+				flipBoardAction();
 			});
 
 			// Resign button is clicked
 			resignButton.setOnAction((event) -> {
-				// Button only works if the game is not over
-				if(!isGameOver) {
-					Alert alertResign = new Alert(AlertType.NONE);
-					alertResign.setTitle("Resignation Confirmation");
-					alertResign.setContentText("Are you sure you want to resign?");
-
-					ButtonType buttonTypeYes =
-							new ButtonType("Yes", ButtonData.YES);
-					ButtonType buttonTypeNo =
-							new ButtonType("No", ButtonData.NO);
-
-					alertResign.getButtonTypes().add(buttonTypeNo);
-					alertResign.getButtonTypes().add(buttonTypeYes);
-
-					alertResign.showAndWait();
-
-					// Player clicks yes
-					if(alertResign.getResult() == buttonTypeYes) {
-						isGameOver = true;
-						GameOverDialog dialog = new GameOverDialog(3);
-						if(dialog.getCloseStatus() == GameOverDialog.NEWGAME){
-							startNewGame();
-				    	}
-					}
-				}
+				endGameButtonAction(false);
 			});
 
 			// Draw button is clicked
 			drawButton.setOnAction((event) -> {
-				// Button only works if the game is not over
-				if(!isGameOver) {
-					Alert alertDraw = new Alert(AlertType.NONE);
-					alertDraw.setTitle("Draw Offer");
-					alertDraw.setContentText("Accept draw offer?");
-
-					ButtonType buttonTypeYes =
-							new ButtonType("Yes", ButtonData.YES);
-					ButtonType buttonTypeNo =
-							new ButtonType("No", ButtonData.NO);
-
-					alertDraw.getButtonTypes().add(buttonTypeNo);
-					alertDraw.getButtonTypes().add(buttonTypeYes);
-
-					alertDraw.showAndWait();
-
-					// Player clicks yes
-					if(alertDraw.getResult() == buttonTypeYes) {
-						isGameOver = true;
-						GameOverDialog dialog = new GameOverDialog(0);
-						if(dialog.getCloseStatus() == GameOverDialog.NEWGAME){
-							startNewGame();
-				    	}
-					}
-				}
+				endGameButtonAction(true);
 			});
 
-
-			//**************************************
-			//			Settings
-			//**************************************
-
+			// Create menu buttons
 			MenuItem menuNewGame =
 					new MenuItem("New Game");
 	        MenuItem menuBoardColor =
@@ -545,106 +287,8 @@ public class BoardGUI extends Application {
 			});
 
 			menuLoadPGN.setOnAction((event) -> {
-				// Start a new game if there is a game in progress
-				if(moveNumber != 1 || turn != 0) {
-					startNewGame();
-				}
-
-				// Displays the clocks
-				root.setLeft(gameInfo);
-
-				VBox loadPgnLayout = new VBox();
-				HBox pgnButtons = new HBox();
-				Button submitPGN = new Button("Submit");
-				Button cancelPGN = new Button("Cancel");
-				TextArea loadPgnTA = new TextArea();
-
-				// Textarea settings
-				loadPgnTA.setPromptText("Paste your pgn here\r\r\r"
-						+ "Example:\r"
-						+ "1. e2e4 e7e5 2. Ng1f3 Nb8c6 \r"
-						+ "3. Bf1b5 Ng8f6 4. O-O Nf6e4");
-				loadPgnTA.setPrefHeight(500);
-				loadPgnTA.setMaxWidth(200);
-				loadPgnTA.setWrapText(true);
-
-				// Add elements to the layout
-				pgnButtons.getChildren().addAll(
-						submitPGN, cancelPGN);
-				loadPgnLayout.getChildren().addAll(
-						loadPgnTA, pgnButtons);
-
-				// Center alignment for textfield and buttons
-				pgnButtons.setAlignment(Pos.CENTER);
-				loadPgnLayout.setAlignment(Pos.CENTER);
-
-				// Spacing between textfield and buttons
-				VBox.setMargin(loadPgnTA, new Insets(0, 0, 20, 0));
-				HBox.setMargin(submitPGN, new Insets(0, 20, 0, 0));
-
-				movesSection.setCenter(loadPgnLayout);
-
-				// Reset trigger
-				triggerMoveNum.setText("");
-
-				// Listener to switch the load pgn textfield
-				// back to the moves list
-				triggerMoveNum.textProperty().addListener((changed) -> {
-					// if player made a move instead of loading a pgn
-					if(triggerMoveNum.getText().equals("moved")) {
-						movesSection.setCenter(scrollPane);
-					}
-				});
-
-				// Player cancels the pgn
-				cancelPGN.setOnAction((click) -> {
-					movesSection.setCenter(scrollPane);
-				});
-
-				// Player submits pgn
-				submitPGN.setOnAction((click) -> {
-					// Set clocks to 10 minutes with no increment
-					clocks.setDefaultTimes();
-					clocks.resetClocks();
-
-					// Allow moves to be made
-					isGameOver = false;
-
-					String gamePGN = loadPgnTA.getText();
-
-					// Remove all move numbers, periods,
-					// and space directly after the periods
-					gamePGN = gamePGN.replaceAll("[0-9]{1,2}\\p{Punct}\\s", "");
-
-					// Turn the string into an array of strings with
-					// each move being its own element
-					String[] pgnArr = gamePGN.split(" ");
-
-					// Type each move in the textfield
-					for(String currentMove: pgnArr){
-						Move move = logic.isInputMoveValid(currentMove);
-			            int moveStatus = -1;
-			            
-			            if(move != null) {
-			            	moveStatus = logic.isMoveLegal(move);
-			            }
-			            // Illegal move, so do not try to
-			            // play the remaining moves
-	    	    		if(moveStatus == -1) {
-	    	    			break;
-	    	    		}
-	    	    		// Play move and display it on the moves list
-	    	    		else {
-	    	    			chessBoard.placePiece(move);				            
-		    	    		movesList.updateMovesList(currentMove);
-	    	    		}
-					}
-
-					// Display the moves list
-					movesSection.setCenter(scrollPane);
-				});
+				loadPgnMenuAction();
 			});
-
 
 			// Move player names when window width is adjusted
 			primaryStage.widthProperty().addListener(
@@ -658,20 +302,18 @@ public class BoardGUI extends Application {
 							chessBoard.getLayoutX()));
 			});
 
+			// Place all elements in main layout
 			new MatchSettings(root, gameInfo, clocks);
 			root.setBottom(bottomScreen);
 			root.setTop(topScreen);
 			root.setRight(movesSection);
-
-			// Place chess board in center of app
 			root.setCenter(chessBoard);
-			// Add css class
-			root.getStyleClass().add("root");
 
 			Scene scene = new Scene(root);
 
 			// Use css file to style elements
 			scene.getStylesheets().add("stylesheet.css");
+			setStyles();
 			primaryStage.setScene(scene);
 
 			Rectangle2D screenBounds =
@@ -690,12 +332,11 @@ public class BoardGUI extends Application {
 		}
 	}
 
-
 	/**
 	 * Sets up everything needed to create a new
 	 * chess game.
 	 */
-	public void startNewGame() {
+	private void startNewGame() {
 		logic = new GameLogic();
 
 		// Reset board
@@ -723,6 +364,350 @@ public class BoardGUI extends Application {
 		if(!isWhitesPerspective) {
 			Event.fireEvent(flipBoard, new ActionEvent());
 		}
+	}
+	
+	/**
+	 * Flips the board perspective.
+	 */
+	private void flipBoardAction() {
+		String nameP1 = playerOneLabel.getText();
+		String nameP2 = playerTwoLabel.getText();
+
+		if(isWhitesPerspective) {
+			chessBoard.setRotate(180);
+
+			// Switch names
+			playerOneLabel.setText(nameP2);
+			playerTwoLabel.setText(nameP1);
+			
+			// Switch clocks
+			gameInfo.getChildren().clear();
+			gameInfo.getChildren().addAll(timerLabelP1,
+					endGameButtons, timerLabelP2);
+			
+			// Loop through each square of the board
+			for(int i = 0; i < 8; i++) {
+				for(int j = 0; j < 8; j++) {
+					// Flip pieces so they
+					// are not upside down
+					chessBoard.getChildren().get(
+							i * 8 + j).setRotate(180);
+
+					// Row with column letters
+					if(i == 7) {
+						StackPane stack = (StackPane)
+								chessBoard.getChildren().get(i * 8 + j);
+						Text colLet = (Text)
+								stack.getChildren().get(1);
+
+						// Align column letters to
+						// the top left of the square
+						StackPane.setAlignment(colLet,
+								Pos.TOP_LEFT);
+					}
+					// Column with row numbers
+					if(j == 0) {
+						StackPane stack = (StackPane)
+								chessBoard.getChildren().get(i * 8 + j);
+						Text rowNum = (Text)
+								stack.getChildren().get(2);
+
+						// Align row numbers to the bottom right of the square
+						StackPane.setAlignment(rowNum,
+								Pos.BOTTOM_RIGHT);
+					}
+				}
+			}
+
+			isWhitesPerspective = false;
+		}
+		else {
+			chessBoard.setRotate(0);
+
+			// Switch names
+			playerOneLabel.setText(nameP2);
+			playerTwoLabel.setText(nameP1);
+			
+			// Switch clocks
+			gameInfo.getChildren().clear();
+			gameInfo.getChildren().addAll(timerLabelP2,
+					endGameButtons, timerLabelP1);
+			
+			// Loop through each square of the board
+			for(int i = 0; i < 8; i++) {
+				for(int j = 0; j < 8; j++) {
+					// Flip pieces so they
+					// are not upside down
+					chessBoard.getChildren().get(i * 8 + j).setRotate(0);
+
+					// Row with column letters
+					if(i == 7) {
+						StackPane stack = (StackPane)
+								chessBoard.getChildren().get(i * 8 + j);
+						Text colLet = (Text)
+								stack.getChildren().get(1);
+
+						// Align column letters to
+						// the bottom right of the square
+						StackPane.setAlignment(colLet,
+								Pos.BOTTOM_RIGHT);
+					}
+					// Column with row numbers
+					if(j == 0) {
+						StackPane stack = (StackPane)
+								chessBoard.getChildren().get(i * 8 + j);
+						Text rowNum = (Text)
+								stack.getChildren().get(2);
+
+						// Align row numbers to the
+						// top left of the square
+						StackPane.setAlignment(rowNum,
+								Pos.TOP_LEFT);
+					}
+				}
+			}
+
+			isWhitesPerspective = true;
+		}
+	}
+	
+	/**
+	 * Displays the confirmation to resign or draw.
+	 * Displays the game over popup if player confirms.
+	 *
+	 * @param isDraw boolean true if a draw is offered,
+	 * 				false for a resignation
+	 */
+	private void endGameButtonAction(boolean isDraw) {
+		// Buttons only works if the game is not over
+		if(!isGameOver) {
+			Alert alertWindow = new Alert(AlertType.NONE);
+			
+			// Player clicked draw
+			if(isDraw) {
+				alertWindow.setTitle("Draw Offer");
+				alertWindow.setContentText("Accept draw offer?");
+			}
+			// Player clicked resign
+			else {
+				alertWindow.setTitle("Resignation Confirmation");
+				alertWindow.setContentText("Are you sure you want to resign?");
+			}
+
+			ButtonType buttonTypeYes =
+					new ButtonType("Yes", ButtonData.YES);
+			ButtonType buttonTypeNo =
+					new ButtonType("No", ButtonData.NO);
+
+			alertWindow.getButtonTypes().add(buttonTypeNo);
+			alertWindow.getButtonTypes().add(buttonTypeYes);
+
+			alertWindow.showAndWait();
+
+			// Player clicks yes
+			if(alertWindow.getResult() == buttonTypeYes) {
+				isGameOver = true;
+				GameOverDialog dialog;
+				// Game was drawn
+				if(isDraw) {
+					dialog = new GameOverDialog(0);
+				}
+				// A player resigned
+				else {
+					dialog = new GameOverDialog(3);
+				}
+
+				if(dialog.getCloseStatus() == GameOverDialog.NEWGAME){
+					startNewGame();
+		    	}
+			}
+		}
+	}
+	
+	/**
+	 * Display for the load pgn menu.
+	 */
+	private void loadPgnMenuAction() {
+		// Start a new game if there is a game in progress
+		if(moveNumber != 1 || turn != 0) {
+			startNewGame();
+		}
+
+		// Displays the clocks
+		root.setLeft(gameInfo);
+
+		VBox loadPgnLayout = new VBox();
+		HBox pgnButtons = new HBox();
+		Button submitPGN = new Button("Submit");
+		Button cancelPGN = new Button("Cancel");
+		TextArea loadPgnTA = new TextArea();
+
+		// Textarea settings
+		loadPgnTA.setPromptText("Paste your pgn here\r\r\r"
+				+ "Example:\r"
+				+ "1. e2e4 e7e5 2. Ng1f3 Nb8c6 \r"
+				+ "3. Bf1b5 Ng8f6 4. O-O Nf6e4");
+		loadPgnTA.setPrefHeight(500);
+		loadPgnTA.setMaxWidth(200);
+		loadPgnTA.setWrapText(true);
+
+		// Add elements to the layout
+		pgnButtons.getChildren().addAll(
+				submitPGN, cancelPGN);
+		loadPgnLayout.getChildren().addAll(
+				loadPgnTA, pgnButtons);
+
+		// Center alignment for textfield and buttons
+		pgnButtons.setAlignment(Pos.CENTER);
+		loadPgnLayout.setAlignment(Pos.CENTER);
+
+		// Spacing between textfield and buttons
+		VBox.setMargin(loadPgnTA, new Insets(0, 0, 20, 0));
+		HBox.setMargin(submitPGN, new Insets(0, 20, 0, 0));
+
+		movesSection.setCenter(loadPgnLayout);
+
+		// Reset trigger
+		triggerMoveNum.setText("");
+
+		// Listener to switch the load pgn textfield
+		// back to the moves list
+		triggerMoveNum.textProperty().addListener((changed) -> {
+			// if player made a move instead of loading a pgn
+			if(triggerMoveNum.getText().equals("moved")) {
+				movesSection.setCenter(scrollPane);
+			}
+		});
+
+		// Player cancels the pgn
+		cancelPGN.setOnAction((click) -> {
+			movesSection.setCenter(scrollPane);
+		});
+
+		// Player submits pgn
+		submitPGN.setOnAction((click) -> {
+			submitPgnAction(loadPgnTA);
+		});
+	}
+	
+	/**
+	 * Play the moves when a player submits a pgn.
+	 * 
+	 * @param txtArea TextArea where a player types or pastes a pgn
+	 */
+	private void submitPgnAction(TextArea txtArea) {
+		// Set clocks to 10 minutes with no increment
+		clocks.setDefaultTimes();
+		clocks.resetClocks();
+
+		// Allow moves to be made
+		isGameOver = false;
+
+		String gamePGN = txtArea.getText();
+
+		// Remove all move numbers, periods,
+		// and space directly after the periods
+		gamePGN = gamePGN.replaceAll("[0-9]{1,2}\\p{Punct}\\s", "");
+
+		// Turn the string into an array of strings with
+		// each move being its own element
+		String[] pgnArr = gamePGN.split(" ");
+
+		// Type each move in the textfield
+		for(String currentMove: pgnArr){
+			// Stop playing moves if one is illegal
+			if(attemptMove(currentMove) == -1) {
+				break;
+			}
+		}
+
+		// Display the moves list
+		movesSection.setCenter(scrollPane);
+	}
+	
+	/**
+	 * Play the move if it legal.
+	 * 
+	 * @param moveStr String of the move
+	 * @return int 0 if the move was played,
+	 * 			-1 if the move was illegal
+	 */
+	private int attemptMove(String moveStr) {
+		// Moves can be made if the game is not over
+    	if(!isGameOver) {
+    		// Verify if input is valid
+    		Move move = logic.isInputMoveValid(moveStr);
+    		
+    		if(move != null) {
+    			int moveStatus = logic.isMoveLegal(move);
+
+    			// Illegal move
+    			if(moveStatus == -1) {
+    				return -1;
+    			}
+    			else {
+    				chessBoard.placePiece(move);
+    			}
+    			
+    			// Update clocks and moves list
+    			// if the move was not illegal
+    			if(moveStatus != -1) {
+    				clocks.updatePlayerClocks();
+	        		movesList.updateMovesList(moveStr);
+    			}
+
+    			// Checkmate
+	    		if(moveStatus == 1) {
+	    			triggerGameOver.setText("checkmate");
+	    		}
+	    		// Stalemate
+	    		else if(moveStatus == 2) {
+	    			triggerGameOver.setText("stalemate");
+	    		}
+    		}
+    		
+    		return 0;
+    	}
+    	
+    	return -1;
+	}
+	
+	/**
+	 * Displays the game over popup if a player
+	 * runs out of time.
+	 *
+	 * @param timeLeft String of the time left on the player's clock
+	 */
+	private void timeOutGameOver(String timeLeft) {
+		if(timeLeft.equals("00:00")) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					GameOverDialog dialog =
+							new GameOverDialog(4);
+					if(dialog.getCloseStatus()
+							== GameOverDialog.NEWGAME){
+						startNewGame();
+			    	}
+				}
+			});
+		}
+	}
+	
+	/**
+	 * Sets the CSS styles for the elements within
+	 * the main window.
+	 */
+	private void setStyles() {
+		root.getStyleClass().add("root");
+		playerOneLabel.getStyleClass().add("player-names");
+		playerTwoLabel.getStyleClass().add("player-names");
+		resignButton.getStyleClass().add("resign-button");
+		drawButton.getStyleClass().add("draw-button");
+		scrollPane.getStyleClass().add("scroll-pane");
+    	movesHeading.getStyleClass().add("heading");
+    	movesSection.getStyleClass().add("moves-section");
+		gameInfo.getStyleClass().add("game-info");
 	}
 	
 	/**

@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * identify all of the moves a rook can make.
  * 
  * @author Seth Steinbrook and Getty Muthiani
- * @version 1.0
+ * @version 2.0
  */
 public class Rook extends ChessPiece {
 

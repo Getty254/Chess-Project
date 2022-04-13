@@ -490,24 +490,4 @@ public class GameLogic {
 	public static boolean getIsInCheckP2() {
 		return isInCheckP2;
 	}
-	
-	/**
-	 * Set if player one is in check.
-	 * 
-	 * @param check boolean true if player one is in check,
-	 * 			false if otherwise
-	 */
-	public static void setIsInCheckP1(boolean check) {
-		isInCheckP1 = check;
-	}
-	
-	/**
-	 * Set if player two is in check.
-	 * 
-	 * @param check boolean true if player two is in check,
-	 * 			false if otherwise
-	 */
-	public static void setIsInCheckP2(boolean check) {
-		isInCheckP2 = check;
-	}
 }

@@ -234,9 +234,6 @@ public class ChessBoard extends GridPane {
 					            event.setDropCompleted(true);
 				            }
 			            } 
-			            else {
-			                event.setDropCompleted(false);
-			            }
 		            }
 		            else {
 		            	event.setDropCompleted(false);
@@ -772,11 +769,8 @@ public class ChessBoard extends GridPane {
 				case 5:
 					rowNum = new Text(" 3 ");
 					break;
-				case 6:
-					rowNum = new Text(" 2 ");
-					break;
 				default:
-					rowNum = new Text(" ");
+					rowNum = new Text(" 2 ");
 	    	}
 	    	
 	    	squareStack.getChildren().addAll(

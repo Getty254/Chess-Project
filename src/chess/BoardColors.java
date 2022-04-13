@@ -151,24 +151,6 @@ public class BoardColors extends Stage {
 	}
 	
 	/**
-	 * Set the color for one half of the squares.
-	 * 
-	 * @param c Color
-	 */
-	public static void setColorOne(Color c) {
-		colorOne = c;
-	}
-	
-	/**
-	 * Set the color for the second half of the squares.
-	 *
-	 * @param c Color
-	 */
-	public static void setColorTwo(Color c) {
-		colorTwo = c;
-	}
-	
-	/**
 	 * Get the color for one half of the squares.
 	 * @return Color
 	 */

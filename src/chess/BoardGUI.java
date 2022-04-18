@@ -581,6 +581,12 @@ public class BoardGUI extends Application {
 
 		// Player cancels the pgn
 		cancelPGN.setOnAction((click) -> {
+			// Allow moves to be made
+			isGameOver = false;
+			// Set clocks to 10 minutes with no increment
+			clocks.setDefaultTimes();
+			clocks.resetClocks();
+			
 			movesSection.setCenter(scrollPane);
 		});
 

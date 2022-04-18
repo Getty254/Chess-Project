@@ -141,8 +141,14 @@ public class MatchSettings extends BorderPane {
 			clocks.setIncrementPlayerOne(
 					incSpinner.getValue());
 
+			// Set times to 10 minutes if either start time is zero
+			if(minSpinner.getValue() + secSpinner.getValue() <= 0
+					|| minSpinner2.getValue() + 
+						secSpinner2.getValue() <= 0) {
+				clocks.setDefaultTimes();
+			}
 			// If time odds is checked
-			if(checkBox.isSelected()) {
+			else if(checkBox.isSelected()) {
 				// Set starting times
 				clocks.setTimePlayerTwo(
 						minSpinner2.getValue(),
